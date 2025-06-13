@@ -1,8 +1,11 @@
-{{#if note}}<h3>{{note.title}}</h3>{{/if}}
-{{#if note}}<p>{{ note.body }}</p> {{/if}}
-<p>Key: {{ notekey }}</p>
-{{#if notekey }}
-<hr>
-<p><a href="/notes/destroy?key={{notekey}}">Delete</a>
-| <a href="/notes/edit?key={{notekey}}">Edit</a></p>
-{{/if}}
+<div class=" max-w-lg m-auto p-8  bg-base-100 shadow-2xl rounded-2xl">
+  {{#if note}}<h3 class=" text-xl p-2">{{note.title}}</h3>{{/if}}
+  {{#if note}}<p class=" p-2 bg-base-200 shadow-lg rounded-md">{{ note.body }}</p> {{/if}}
+  <p class=" p-2 ">Key: {{ notekey }}</p>
+  {{#if notekey }}
+  <hr>
+  <p class=" p-4 "><a class=" btn btn-warning" href="/notes/destroy?key={{notekey}}">Delete</a>
+    <a class=" pl-2 btn btn-secondary" href="/notes/edit?key={{notekey}}">Edit</a>
+  </p>
+  {{/if}}
+</div>

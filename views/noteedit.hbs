@@ -1,16 +1,16 @@
-<form method='POST' action='/notes/save'>
+<form class=" p-8 max-w-lg m-auto bg-base-100 rounded-box shadow-2xl" method='POST' action='/notes/save'>
   <input type='hidden' name='docreate' value='<%=
 docreate ? "create" : "update"%>'>
-  <p>Key:
+  <p class=" text-xl p-2 "><span class=" w-[6rem]">Key: </span>
     {{#if docreate }}
-    <input type='text' name='notekey' value='' />
+    <input  class=" input input-neutral text-lg" type='text' name='notekey' value='' />
     {{else}}
     {{#if note }}{{notekey}}{{/if}}
     <input type='hidden' name='notekey' value='{{#if note }}{{notekey}}{{/if}}' />
     {{/if}}
   </p>
-  <p>Title: <input type='text' name='title' value='{{#if note }}{{note.title}}{{/if}}' /></p>
-  <br /><textarea rows=5 cols=40 name='body'>
+  <p class=" text-xl p-2"><span class=" w-[10rem]">Title: </span><input class=" input input-neutral text-lg" type='text' name='title' value='{{#if note }}{{note.title}}{{/if}}' /></p>
+  <br /><textarea class=" textarea textarea-neutral text-[1.05rem]  p-2 max-w-[85vw]" rows=5 cols=60 name='body'>
 {{#if note }}{{note.body}}{{/if}}</textarea>
-  <br /><input type='submit' value='Submit' />
+  <br /><input class=" btn btn-primary mt-2" type='submit' value='Submit' />
 </form>

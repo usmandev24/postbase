@@ -1,6 +1,7 @@
 import * as express from 'express';
 import * as util from "node:util";
 import { NotesStore as notes } from '../app.mjs';
+import { title } from 'node:process';
 export const router = express.Router();
 /* GET home page. */
 router.get('/', async (req, res, next) => {
@@ -10,8 +11,11 @@ router.get('/', async (req, res, next) => {
     const keyPromises = keylist.map(key => {
       return notes.read(key);
     });
-    const notelist = await Promise.all(keyPromises);
+    let notelist = await Promise.all(keyPromises);
     //console.log(util.inspect(notelist));
+    if (notelist.length === 0) {
+      notelist = [{key: "No note added", title:""}]
+    }
     res.render('index', { title: 'Notes', notelist: notelist });
   } catch (err) {
     next(err);
