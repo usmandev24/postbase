@@ -1,21 +1,42 @@
 
 
-export class Note { 
+export class Note {
     #_note_key;
     #_note_title;
     #_note_body;
-    constructor(key, title, body) { 
-        this.#_note_key = key; 
-        this.#_note_title = title; 
-        this.#_note_body = body; 
-    } 
+    constructor(key, title, body) {
+        this.#_note_key = key;
+        this.#_note_title = title;
+        this.#_note_body = body;
+    }
 
     get key() { return this.#_note_key; }
     get title() { return this.#_note_title; }
     set title(newTitle) { this.#_note_title = newTitle; }
     get body() { return this.#_note_body; }
     set body(newBody) { this.#_note_body = newBody; }
+    get JSON() {
+        return JSON.stringify({
+            key: this.key, title: this.title, body: this.body
+        });
+    }
+
+    static fromJSON(json) {
+        const data = JSON.parse(json);
+        if (typeof data !== 'object'
+            || !data.hasOwnProperty('key')
+            || typeof data.key !== 'string'
+            || !data.hasOwnProperty('title')
+            || typeof data.title !== 'string'
+            || !data.hasOwnProperty('body')
+            || typeof data.body !== 'string') {
+            throw new Error(`Not a Note: ${json}`);
+        }
+        const note = new Note(data.key, data.title, data.body);
+        return note;
+    }
 }
+        
 
 export class AbstractNotesStore {
     async update(key, title, body) { }

@@ -46,6 +46,9 @@ export function onError(error) {
             console.error(`${bind} is already in use`);
             process.exit(1);
             break;
+        case 'ENOTESSTORE':
+            console.error(`Notes date store initialization failure because
+                ${error.error}`)
         default:
             throw error;
     }

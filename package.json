@@ -5,7 +5,8 @@
   "type": "module",
   "scripts": {
     "start": " REQUEST_LOG_FILE=log.txt  REQUEST_LOG_FORMAT=common cross-env DEBUG=notes:* node ./app.mjs",
-    "nodemon": "LOGS=yes cross-env DEBUG=notes:error nodemon --ext js,mjs,json,hbs,css ./app.mjs",
+    "fs": "NOTES_MODEL=fs cross-env DEBUG=notes:* node ./app.mjs",
+    "nodemon": "cross-env DEBUG=notes:error nodemon --ext js,mjs,json,hbs,css ./app.mjs",
     "watch": "npx @tailwindcss/cli -i ./public/assets/stylesheets/input.css -o ./public/assets/stylesheets/styles.css --watch"
   },
   "dependencies": {
@@ -15,6 +16,7 @@
     "debug": "^4.1.1",
     "express": "^4.17.1",
     "feather-icons": "4.25.x",
+    "fs-extra": "^11.3.0",
     "hbs": "^4.0.6",
     "http-errors": "^1.7.3",
     "jquery": "3.5.x",

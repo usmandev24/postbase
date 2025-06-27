@@ -12,8 +12,11 @@ const __dirname = approotdir;
 import {
     normalizePort, onError, onListening, handle404, basicErrorHandler
 } from './appsupport.mjs';
-import { InMemoryNotesStore } from './models/notes-memory.mjs';
-export const NotesStore = new InMemoryNotesStore();
+import { useModel as useNotesModel } from './models/notes-store.mjs';
+useNotesModel(process.env.NOTES_MODEL ? process.env.NOTES_MODEL :
+    "memory"
+).then(store => { })
+.catch(error => {onError({code: 'ENOTESTORE' , error })});
 
 import { router as indexRouter } from './routes/index.mjs';
 import { router as notesRouter }  from './routes/notes.mjs'; 
@@ -31,9 +34,6 @@ hbs.registerPartials(path.join(__dirname, 'partials'));
 
 // uncomment after placing your favicon in /public
 //app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
-if (process.env.LOGS) {
-    app.use(logger('dev'));
-}
 app.use(logger(process.env.REQUEST_LOG_FORMAT || 'dev', {
     stream: process.env.REQUEST_LOG_FILE ? createStream(process.env.REQUEST_LOG_FILE, {
         size: '10M',
