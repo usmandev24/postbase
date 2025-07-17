@@ -42,6 +42,7 @@ app.use(logger(process.env.REQUEST_LOG_FORMAT || 'dev', {
     }) : process.stdout
 }))
 app.use(bodyParser.json());
+
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
