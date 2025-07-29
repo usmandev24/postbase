@@ -4,6 +4,7 @@
   "private": true,
   "type": "module",
   "scripts": {
+    "mongodb-start": "cross-env DEBUG=notes* MONGO_URL=mongodb://localhost/ MONGO_DBNAME=chap07 NOTES_MODEL=mongo REQUEST_LOG_FILE=log.txt nodemon --ext js,mjs,css,json ./app.mjs",
     "sequlz-start": "cross-env DEBUG=notes:* SEQUELIZE_CONNECT=models/sequelize-sqlite.yaml NOTES_MODEL=sequelize REQUEST_LOG_FILE=log.txt nodemon --ext js,mjs,hbs,css,json ./app.mjs",
     "start": " REQUEST_LOG_FILE=log.txt  REQUEST_LOG_FORMAT=common cross-env DEBUG=notes:* nodemon --ext js,mjs,hbs,css,json ./app.mjs",
     "fs": "NOTES_MODEL=fs cross-env DEBUG=notes:* node ./app.mjs",
@@ -23,12 +24,12 @@
     "http-errors": "^1.7.3",
     "jquery": "3.5.x",
     "js-yaml": "3.13.x",
+    "mongodb": "^6.18.0",
     "morgan": "^1.9.1",
     "popper.js": "1.16.x",
     "rotating-file-stream": "^3.2.6",
     "sequelize": "^6.37.7",
-    "sqlite3": "^5.1.7",
-    "mongodb": "^3.7.4"
+    "sqlite3": "^5.1.7"
   },
   "devDependencies": {
     "@tailwindcss/cli": "^4.1.3",

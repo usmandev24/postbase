@@ -14,7 +14,7 @@ router.get('/', async (req, res, next) => {
     let notelist = await Promise.all(keyPromises);
     //console.log(util.inspect(notelist));
     if (notelist.length === 0) {
-      notelist = [{key: "No note added", title:""}]
+      notelist = false;
     }
     res.render('index', { title: 'Notes', notelist: notelist });
   } catch (err) {

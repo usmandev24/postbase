@@ -1,4 +1,5 @@
 <div class="p-4 list w-full  m-auto bg-base-100  ">
+  {{#if notelist}}
   {{#each notelist}}
   <div class=" collapse collapse-arrow bg-base-200 m-1">
     <input type="radio" name="note">
@@ -23,5 +24,10 @@
     </div>
   </div>
   {{/each}}
-  
+  {{else}}
+  <h1 class=" text-2xl p-8 m-auto">No Note Added Yet.</h1>
+  <p class=" m-auto w-[12rem]">
+      <a class="btn btn-block btn-primary" href="/notes/add">ADD Note</a>
+    </p>
+  {{/if}}
 </div>
