@@ -63,17 +63,10 @@ export default class MongoNotesStore extends AbstractNotesStore {
   async keylist() {
     await connectDB();
     const collection = db().collection('notes');
-    const keyz = await new Promise((resolve, reject) => {
-      const keyz = [];
-      collection.find({}).forEach(
-        note => { keyz.push(note.notekey); },
-        err => {
-          if (err) reject(err);
-          else resolve(keyz);
-        }
-      );
-    });
+    const notes = await collection.find({}).toArray();
+    const keyz = notes.map(note => note.notekey);
     return keyz;
+
   }
   async count() {
     await connectDB();
