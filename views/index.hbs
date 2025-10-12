@@ -1,33 +1,22 @@
 <div class="p-4 list w-full  m-auto bg-base-100  ">
   {{#if notelist}}
   {{#each notelist}}
-  <div class=" collapse collapse-arrow bg-base-200 m-1">
-    <input type="radio" name="note">
-    <div class=" collapse-title">
-      <a class="text-xl p-1 text-primary " href="/notes/view?key={{key}}">{{title}}</a>
-
+  <li class=" flex flex-row justify-between items-center-safe bg-base-200 p-4 rounded-lg">
+    <div>
+      <a class="text-xl pl-2 text-primary " href="/notes/view?key={{key}}">{{title}}</a>
     </div>
-    <div class=" collapse-content">
-
-      <div class=" flex flex-row justify-end gap-4">
-        <a class=" flex flex-row gap-0.5" data-tip=" view external "
-          href="/notes/view?key={{key}}"><span class=" h-5 mb-2" data-feather="external-link"></span>View</a>
-        <a class="flex flex-row gap-0.5" data-tip=" Edit "
-          href="/notes/edit?key={{key}}"><span class=" h-5" data-feather="edit"></span>Edit</a>
-        <a class="mr-4 flex flex-row gap-0.5" data-tip=" Destroy " href="/notes/destroy?key={{key}}"><span
-            data-feather="trash-2" class="h-5">e</span>Delete</a>
-        
-      </div>
-      <div class=" bg-base-300 text-balance text-secondary text-[1.1rem] mt-2 p-3 rounded-[.5rem]">
-        {{body}}
-      </div>
+    <div>
+      <a class=" tooltip tooltip-bottom  ml-auto text-secondary mr-4 " data-tip=" Edit " href="/notes/edit?key={{key}}"><span
+          data-feather="edit"></span></a>
+      <a class=" tooltip  tooltip-warning text-warning" data-tip=" Destroy " href="/notes/destroy?key={{key}}"><span
+          data-feather="trash"></span></a>
     </div>
-  </div>
+  </li>
   {{/each}}
   {{else}}
   <h1 class=" text-2xl p-8 m-auto">No Note Added Yet.</h1>
   <p class=" m-auto w-[12rem]">
-      <a class="btn btn-block btn-primary" href="/notes/add">ADD Note</a>
-    </p>
+    <a class="btn btn-block btn-primary" href="/notes/add">ADD Note</a>
+  </p>
   {{/if}}
 </div>
