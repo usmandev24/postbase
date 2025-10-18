@@ -1,6 +1,6 @@
 dbname: notes
-username:
-password:
+username: usman
+password: '6262'
 params:
-  dialect: sqlite
-  storage: notes-sequelize.sqlite3
+  host: localhost
+  dialect: postgres
