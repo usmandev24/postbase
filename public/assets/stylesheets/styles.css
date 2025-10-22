@@ -929,6 +929,9 @@
   .z-1 {
     z-index: 1;
   }
+  .z-50 {
+    z-index: 50;
+  }
   .m-1 {
     margin: calc(var(--spacing) * 1);
   }
@@ -965,6 +968,9 @@
     align-items: center;
     width: 50%;
     justify-content: flex-start;
+  }
+  .block {
+    display: block;
   }
   .flex {
     display: flex;
@@ -1013,6 +1019,22 @@
   }
   .max-w-xl {
     max-width: var(--container-xl);
+  }
+  .link {
+    cursor: pointer;
+    text-decoration-line: underline;
+    &:focus {
+      --tw-outline-style: none;
+      outline-style: none;
+      @media (forced-colors: active) {
+        outline: 2px solid transparent;
+        outline-offset: 2px;
+      }
+    }
+    &:focus-visible {
+      outline: 2px solid currentColor;
+      outline-offset: 2px;
+    }
   }
   .flex-row {
     flex-direction: row;
@@ -1139,6 +1161,14 @@
   .text-warning {
     color: var(--color-warning);
   }
+  .link-hover {
+    text-decoration-line: none;
+    &:hover {
+      @media (hover: hover) {
+        text-decoration-line: underline;
+      }
+    }
+  }
   .caret-accent {
     caret-color: var(--color-accent);
   }
@@ -1173,6 +1203,13 @@
   .btn-warning {
     --btn-color: var(--color-warning);
     --btn-fg: var(--color-warning-content);
+  }
+  .hover\:bg-base-300 {
+    &:hover {
+      @media (hover: hover) {
+        background-color: var(--color-base-300);
+      }
+    }
   }
   .md\:p-8 {
     @media (width >= 48rem) {

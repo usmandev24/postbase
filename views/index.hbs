@@ -1,13 +1,14 @@
 <div class="p-4 md:p-8 list w-full m-auto bg-base-100  ">
   {{#if notelist}}
   <div class="rounded-2xl border border-gray-500 ">
-  {{#each notelist}}
+    {{#each notelist}}
 
-  <div class="p-4 border-b text-center border-base-300 ">
-    <a class="text-xl pl-2 text-primary " href="/notes/view?key={{key}}">{{title}}</a>
-  </div>
 
-  {{/each}}
+    <a class=" block hover:bg-base-300 transition-all text-xl text-primary p-4 border-b text-center border-base-300  "
+      href="/notes/view?key={{key}}">{{title}}</a>
+
+
+    {{/each}}
   </div>
 </div>
 {{else}}
