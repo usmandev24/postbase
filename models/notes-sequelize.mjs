@@ -6,6 +6,7 @@ import {
 } from './sequlz.mjs';
 import { default as DBG } from 'debug';
 
+
 const debug = DBG('notes:notes-sequelize');
 const dbgerror = DBG('notes:error-sequelize');
 
@@ -46,6 +47,10 @@ export default class SequelizeNotesStore extends AbstractNotesStore {
 
   async create(key, title, body) {
     await connectDB();
+    const isNote = await this.read(key);
+    if (isNote) {
+      return  isNote;
+    }
       const sqnote = await SQNote.create({
         notekey: key, title, body
       });
