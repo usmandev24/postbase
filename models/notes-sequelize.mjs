@@ -61,7 +61,7 @@ export default class SequelizeNotesStore extends AbstractNotesStore {
     await connectDB();
     const note = await SQNote.findOne({where: { notekey: key }})
     if (!note) {
-      throw new Error('No note found for '+key);
+      return undefined;
     } else {
       return new Note(note.notekey, note.title, note.body);
     }
