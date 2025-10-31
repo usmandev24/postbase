@@ -1,9 +1,9 @@
-import { default as express} from 'express';
-import { default as hbs } from'hbs';
-import * as path from'path';
+import { default as express } from 'express';
+import { default as hbs } from 'hbs';
+import * as path from 'path';
 // import * as favicon from'serve-favicon';
-import { default as logger } from'morgan';
-import { default as cookieParser } from'cookie-parser';
+import { default as logger } from 'morgan';
+import { default as cookieParser } from 'cookie-parser';
 import * as http from 'http';
 import { approotdir } from './approotdir.mjs';
 import { createStream } from 'rotating-file-stream';
@@ -15,21 +15,29 @@ import { useModel as useNotesModel } from './models/notes-store.mjs';
 useNotesModel(process.env.NOTES_MODEL ? process.env.NOTES_MODEL :
     "memory"
 ).then(store => { })
-.catch(error => {onError({code: 'ENOTESTORE' , error })});
+    .catch(error => { onError({ code: 'ENOTESTORE', error }) });
 
 import session from 'express-session';
 import sessionFileStore from "session-file-store"
+import connectPgSimple from 'connect-pg-simple';
+import { default as pg } from 'pg';
 import { router as indexRouter } from './routes/index.mjs';
-import { router as notesRouter }  from './routes/notes.mjs'; 
+import { router as notesRouter } from './routes/notes.mjs';
 import { initPassport, router as usersRouter } from './routes/users.mjs'
 import { default as DBG } from "debug";
+const debug = DBG('notes:debug');
+const dbgerror = DBG('notes:error')
+
+const pgPool = new pg.Pool({
+    user: process.env.SETTION_STORE_USER,
+    password: process.env.SETTION_STORE_PASSWORD,
+    database: process.env.SETTION_STORE_DATABASE,
+    host: process.env.SETTION_STORE_HOST
+})
 
 
-const debug =  DBG('notes:debug');
-const dbgerror = DBG('notes:error');
 export const sessionCookieName = "notesS!d"
 export const app = express();
-const FileStore = sessionFileStore(session)
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -46,25 +54,32 @@ app.use(logger(process.env.REQUEST_LOG_FORMAT || 'dev', {
     }) : process.stdout
 }))
 app.use(express.json());
-
-app.use(express.urlencoded({"extended": false}));
+app.use(express.urlencoded({ "extended": false }));
 app.use(cookieParser());
-app.use(session({
-    store: new FileStore({path : "session"}),
+app.use(express.static(path.join(__dirname, 'public')));
+app.use('/assets/vendor/feather-icons', express.static(path.join(__dirname, 'node_modules', 'feather-icons', 'dist')));
+
+const sessionRouter = express.Router()
+const FileStore = sessionFileStore(session)
+const connectPG = connectPgSimple(session)
+/*
+sessionRouter.use(session({
+    store: new connectPG({
+        pool: pgPool,
+        createTableIfMissing: true,
+    }),
     name: sessionCookieName,
     secret: "hello",
-    cookie: {httpOnly: true, path: "/", sameSite: "strict", maxAge: 1000*60*60*24*30},
+    cookie: { httpOnly: true, path: "/", sameSite: "strict", maxAge: 1000 * 60 * 60 * 24 * 30 },
     saveUninitialized: false,
     resave: false
 }))
-initPassport(app)
-app.use(express.static(path.join(__dirname, 'public')));
-
-app.use('/assets/vendor/feather-icons', express.static(path.join(__dirname, 'node_modules', 'feather-icons', 'dist')));
-// Router function lists
-app.use('/', indexRouter);
-app.use('/notes', notesRouter);
-app.use('/users', usersRouter);
+initPassport(sessionRouter)
+*/
+sessionRouter.use('/', indexRouter);
+sessionRouter.use('/notes', notesRouter);
+sessionRouter.use('/users', usersRouter);
+app.use(sessionRouter)
 
 // error handlers
 // catch 404 and forward to error handler
