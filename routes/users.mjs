@@ -3,7 +3,8 @@ import util from "node:util"
 import { Router } from "express";
 import { default as passport } from "passport";
 import { default as passportLocal } from "passport-local";
-import { default as passportJwt } from 'passport-jwt'
+import { default as passportJwt } from 'passport-jwt';
+import { default as passportGoogle } from 'passport-google-oauth20'
 import { default as jwt } from 'jsonwebtoken';
 import debug from "debug";
 import * as usersModel from '../models/user-superagent.mjs';
@@ -12,10 +13,10 @@ import { sessionCookieName } from '../app.mjs';
 export const router = Router();
 const LocalStrategy = passportLocal.Strategy;
 const JwtStrategy = passportJwt.Strategy
-
+const googleStrategy = passportGoogle.Strategy
 export function initPassport(app) {
   app.use(passport.initialize());
-  //app.use(passport.session());
+  app.use(passport.session());
 }
 
 export function ensureAuthenticated(req, res, next) {
@@ -30,35 +31,32 @@ router.get('/login', (req, res, next) => {
     massage: req.query.massage
   });
 })
-router.post('/login', async (req, res, next) => {
-  try {
-    let check = await usersModel.passwordCheck(req.body.username, req.body.password)
-    if (check.check) {
-      let token = jwt.sign({username: req.body.username}, 'secret', {expiresIn: 1000*60*16})
-      res.cookie(sessionCookieName, token, {httpOnly: true, path: '/', sameSite: 'strict', maxAge: 1000*60*16})
-      res.redirect('/')
-    } else {
-      res.redirect('/users/login?level=error&massage='+encodeURIComponent('Wrong password or username'))
-    }
-  } catch (error) {
-    next(error)
-  }
+
+router.get('/oauth/google', passport.authenticate('google', {
+  scope: ['profile', 'email']
+}))
+router.get('/oauth/google/redirect', passport.authenticate('google', {
+  failureRedirect: '/users/login?level=error&massage=' + encodeURIComponent('Wrong password or username'),
+}), (req, res, next) => {
+  res.redirect('/users/oauth/google/complete')
+})
+router.get('/oauth/google/complete', (req, res , next) => {
+  res.redirect('/')
 })
 
-/*
 router.post('/login', passport.authenticate('local', {
-  successRedirect: '/?level=success&massage='+encodeURIComponent('Login Success'),
-  failureRedirect: '/users/login?level=error&massage='+encodeURIComponent('Wrong password or username')
+  successRedirect: '/?level=success&massage=' + encodeURIComponent('Login Success'),
+  failureRedirect: '/users/login?level=error&massage=' + encodeURIComponent('Wrong password or username')
 }))
-*/
+
 
 
 router.get('/logout', async (req, res, next) => {
   try {
-    
-      res.clearCookie(sessionCookieName);
-      res.redirect('/?level=warning&massage=' + encodeURIComponent('Logout Complete'))
-    
+
+    res.clearCookie(sessionCookieName);
+    res.redirect('/?level=warning&massage=' + encodeURIComponent('Logout Complete'))
+
   } catch (error) {
     next(error)
   }
@@ -86,12 +84,28 @@ router.post('/create', async (req, res, next) => {
     res.redirect('/users/login?level=success&massage=' + encodeURIComponent("User account created. Now you can Login."))
   }
 })
+passport.use(new googleStrategy({
+  clientID: process.env.GOOGLE_CLIENT_ID,
+  clientSecret: process.env.GOOGLE_CLIENT_SECRET,
+  callbackURL: process.env.GOOGLE_AUTH_CALLBACKURL,
+}, async (accessToken, refreshToken, profile, done) => {
+  try {
+    const jsonProfile = profile._json
+    done(null, await usersModel.findOrCreate({
+      id: profile.id, username: profile.id, password:
+        "",
+      provider: profile.provider, familyName: jsonProfile.family_name,
+      givenName: jsonProfile.given_name, middleName: "",
+      photos: [jsonProfile.picture], emails: [jsonProfile.email]
+    }));
+  } catch (err) { done(err); }
+}))
 
 passport.use(new JwtStrategy({
   jwtFromRequest: (req) => { return req.cookies[sessionCookieName] },
   passReqToCallback: true,
   secretOrKey: 'secret'
-},async (req, payload, done) => {
+}, async (req, payload, done) => {
   try {
     const user = await usersModel.find(payload.username)
     if (user) {
@@ -104,7 +118,7 @@ passport.use(new JwtStrategy({
   }
 }))
 
-/* 
+
 passport.use(new LocalStrategy({
   usernameField: 'username',
   passwordField: 'password'
@@ -139,4 +153,3 @@ passport.deserializeUser(async (id, done) => {
     done(error)
   }
 })
-*/

@@ -24,20 +24,18 @@ import { default as pg } from 'pg';
 import { router as indexRouter } from './routes/index.mjs';
 import { router as notesRouter } from './routes/notes.mjs';
 import { initPassport, router as usersRouter } from './routes/users.mjs'
-import { default as DBG } from "debug";
-import passport from 'passport';
-import { error } from 'console';
+import { default as DBG } from "debug"
 const debug = DBG('notes:debug');
 const dbgerror = DBG('notes:error')
 
-/*
+
 const pgPool = new pg.Pool({
     user: process.env.SETTION_STORE_USER,
     password: process.env.SETTION_STORE_PASSWORD,
     database: process.env.SETTION_STORE_DATABASE,
     host: process.env.SETTION_STORE_HOST
 })
-*/
+
 
 export const sessionCookieName = "notesS!d"
 export const app = express();
@@ -62,11 +60,11 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 app.use('/assets/vendor/feather-icons', express.static(path.join(__dirname, 'node_modules', 'feather-icons', 'dist')));
 
-const sessionRouter = express.Router()
-/*
+const mainRouter = express.Router()
+
 const connectPG = connectPgSimple(session)
 
-sessionRouter.use(session({
+mainRouter.use(session({
     store: new connectPG({
         pool: pgPool,
         createTableIfMissing: true,
@@ -77,9 +75,11 @@ sessionRouter.use(session({
     saveUninitialized: false,
     resave: false
 }))
-*/
-initPassport(sessionRouter)
-sessionRouter.use((req, res, next) => {
+
+initPassport(mainRouter)
+/*
+For JWT ------------------------------------
+mainRouter.use((req, res, next) => {
     passport.authenticate('jwt', {session: false}, (err, user, info) => {
         if (user){
             passport.authenticate('jwt', {session:false})(req, res, next)
@@ -90,10 +90,12 @@ sessionRouter.use((req, res, next) => {
     })(req, res, next)
     
 })
-sessionRouter.use('/', indexRouter);
-sessionRouter.use('/notes', notesRouter);
-sessionRouter.use('/users', usersRouter);
-app.use(sessionRouter)
+    ------------------------------------------
+*/
+mainRouter.use('/', indexRouter);
+mainRouter.use('/notes', notesRouter);
+mainRouter.use('/users', usersRouter);
+app.use(mainRouter)
 
 // error handlers
 // catch 404 and forward to error handler
