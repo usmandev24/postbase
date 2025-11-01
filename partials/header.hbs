@@ -1,6 +1,6 @@
 <div class=" fixed top-0 z-50 max-w-[720px] navbar bg-base-300 text-base-content rounded-t-2xl">
   <div class="navbar-start gap-2 align-middle">
-    <a class="btn btn-sm sm:btn-md tooltip tooltip-bottom" data-tip=" Home " href="/"><i data-feather="home"></i></a>
+    <a class="btn btn-ghost  tooltip tooltip-bottom" data-tip=" Home " href="/"><i data-feather="home"></i></a>
     <h1 class="text-md sm:text-xl">{{title}}</h1>
   </div>
   {{#if user}}
@@ -15,11 +15,11 @@
     </div>
     {{else }}
     <div class=" navbar-end hidden sm:inline-flex">
-      <a class="btn btn-primary " href="/users/login">Login</a>
+      <a class="btn btn-outline rounded-full text-primary  " href="/users/login">Login</a>
     </div>
     {{/if}}
   <div class="navbar-end dropdown dropdown-end dropdown-bottom sm:hidden">
-    <div role="button" tabindex="0" class="btn btn-outline">Manu</div>
+    <div role="button" tabindex="0" class="btn btn-ghost"><span data-feather="menu"></span></div>
     {{#if user}}
     <div tabindex="-1" class="dropdown-content mt-4 bg-base-300 rounded-box z-1  p-3 shadow-sm">
       <p>
@@ -27,12 +27,12 @@
             class="p-1 bg-gray-300 rounded-2xl">{{user.givenName}}</span>LogOut</a>
       </p>
       <p class="">
-        <a class="btn btn-primary w-full mt-2" href="/notes/add">ADD Note</a>
+        <a class="btn btn-outline rounded-full text-primary  w-full mt-2" href="/notes/add">ADD Note</a>
       </p>
     </div>
     {{else }}
     <div tabindex="-1" class="dropdown-content mt-4  bg-base-300 rounded-box z-1 p-3 shadow-2xl">
-      <a class="btn btn-primary " href="/users/login">Login</a>
+      <a class="btn btn-outline rounded-full text-primary  " href="/users/login">Login</a>
     </div>
     {{/if}}
   </div>
