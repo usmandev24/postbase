@@ -16,7 +16,7 @@
   {{> header }}
   <div class=" h-[64px]"></div>
   {{#if level}}
-  <div id="alert" class="alert alert-{{level}} transition-opacity ease-in-out duration-1000">{{massage}}</div>
+  <div id="alert" class=" alert alert-{{level}} transition-opacity ease-in-out duration-1000 text-center w-fit m-auto">{{massage}}</div>
   {{/if}}
   <div style="display: none;" class="alert-error alert-success alert-warning"></div>
   {{{body}}}
@@ -27,6 +27,9 @@
     if (alert) {
       setTimeout(() => {
         alert.style.opacity = '0'
+        setTimeout(() => {
+          alert.style.display = 'none'
+        }, 900)
       }, 2000)
     }
 

@@ -25,16 +25,19 @@ import { router as indexRouter } from './routes/index.mjs';
 import { router as notesRouter } from './routes/notes.mjs';
 import { initPassport, router as usersRouter } from './routes/users.mjs'
 import { default as DBG } from "debug";
+import passport from 'passport';
+import { error } from 'console';
 const debug = DBG('notes:debug');
 const dbgerror = DBG('notes:error')
 
+/*
 const pgPool = new pg.Pool({
     user: 'usman',
     password: '8426',
     database: 'notes',
     host: 'localhost'
 })
-
+*/
 
 export const sessionCookieName = "notesS!d"
 export const app = express();
@@ -60,9 +63,9 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use('/assets/vendor/feather-icons', express.static(path.join(__dirname, 'node_modules', 'feather-icons', 'dist')));
 
 const sessionRouter = express.Router()
-const FileStore = sessionFileStore(session)
-const connectPG = connectPgSimple(session)
 /*
+const connectPG = connectPgSimple(session)
+
 sessionRouter.use(session({
     store: new connectPG({
         pool: pgPool,
@@ -74,8 +77,19 @@ sessionRouter.use(session({
     saveUninitialized: false,
     resave: false
 }))
-initPassport(sessionRouter)
 */
+initPassport(sessionRouter)
+sessionRouter.use((req, res, next) => {
+    passport.authenticate('jwt', {session: false}, (err, user, info) => {
+        if (user){
+            passport.authenticate('jwt', {session:false})(req, res, next)
+        }
+        else {
+            next()
+        }
+    })(req, res, next)
+    
+})
 sessionRouter.use('/', indexRouter);
 sessionRouter.use('/notes', notesRouter);
 sessionRouter.use('/users', usersRouter);
