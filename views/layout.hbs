@@ -16,7 +16,7 @@
   {{> header }}
   <div class=" h-[64px]"></div>
   {{#if level}}
-  <div id="alert" class=" alert alert-{{level}} transition-opacity ease-in-out duration-1000 text-center w-fit m-auto">{{massage}}</div>
+  <div id="alert" class=" absolute z-10 left-[50%]  transform translate-x-[-50%] opacity-90 alert alert-{{level}} transition-opacity ease-in-out duration-1000 text-center w-fit ">{{massage}}</div>
   {{/if}}
   <div style="display: none;" class="alert-error alert-success alert-warning"></div>
   {{{body}}}
