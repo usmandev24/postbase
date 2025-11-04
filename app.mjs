@@ -1,3 +1,4 @@
+import 'dotenv/config.js'
 import { default as express } from 'express';
 import { default as hbs } from 'hbs';
 import * as path from 'path';
@@ -30,10 +31,10 @@ const dbgerror = DBG('notes:error')
 
 
 const pgPool = new pg.Pool({
-    user: 'usman',
-    password: '8426',
-    database: 'notes',
-    host: 'localhost'
+    user: process.env.SETTION_STORE_USER,
+    password: process.env.SETTION_STORE_PASSWORD,
+    database: process.env.SETTION_STORE_DATABASE,
+    host: process.env.SETTION_STORE_HOST
 })
 
 
@@ -70,7 +71,7 @@ mainRouter.use(session({
         createTableIfMissing: true,
     }),
     name: sessionCookieName,
-    secret: "hello",
+    secret: process.env.SESSION_COOKIE_SECRET,
     cookie: { httpOnly: true, path: "/", sameSite: 'lax', maxAge: 1000 * 60 * 60 * 24 * 30 },
     saveUninitialized: false,
     resave: false

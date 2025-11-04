@@ -90,9 +90,9 @@ router.post('/create', async (req, res, next) => {
   }
 })
 passport.use(new googleStrategy({
-  clientID: '195953668721-ihgtc62k50q0cd697d7mpeuv2dt6qur9.apps.googleusercontent.com',
-  clientSecret: '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',
-  callbackURL: 'http://localhost:3000/users/oauth/google/redirect',
+  clientID: process.env.GOOGLE_CLIENT_ID,
+  clientSecret: process.env.GOOGLE_CLIENT_SECRET,
+  callbackURL: process.env.GOOGLE_AUTH_CALLBACKURL,
 }, async (accessToken, refreshToken, profile, done) => {
   try {
     const jsonProfile = profile._json
