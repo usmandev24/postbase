@@ -1,4 +1,4 @@
-import 'dotenv/config.js'
+import '@dotenvx/dotenvx/config.js'
 import { default as express } from 'express';
 import { default as hbs } from 'hbs';
 import * as path from 'path';
