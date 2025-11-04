@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "mongodb-start": "cross-env DEBUG=notes* MONGO_URL=mongodb://localhost/ MONGO_DBNAME=chap07 NOTES_MODEL=mongo REQUEST_LOG_FILE=log.txt nodemon --ext js,mjs,css,json ./app.mjs",
-    "start": "cross-env DEBUG=notes:* USER_SERVICE_URL=http://localhost:5858 SEQUELIZE_CONNECT=models/sequelize-psql.yaml NOTES_MODEL=sequelize REQUEST_LOG_FILE=log.txt nodemon --ext js,mjs,hbs,css ./app.mjs",
+    "start": "cross-env DEBUG=notes:*  nodemon --ext js,mjs,hbs,css ./app.mjs",
     "watch": "npx @tailwindcss/cli -i ./public/assets/stylesheets/input.css -o ./public/assets/stylesheets/styles.css --watch"
   },
   "dependencies": {
@@ -13,6 +13,7 @@
     "cookie-parser": "^1.4.7",
     "cross-env": "^10.1.0",
     "debug": "^4.4.3",
+    "dotenv": "^17.2.3",
     "express": "^5.1.0",
     "express-session": "^1.18.2",
     "feather-icons": "^4.29.2",

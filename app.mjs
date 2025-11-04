@@ -1,3 +1,4 @@
+import 'dotenv/config.js'
 import { default as express } from 'express';
 import { default as hbs } from 'hbs';
 import * as path from 'path';
@@ -70,7 +71,7 @@ mainRouter.use(session({
         createTableIfMissing: true,
     }),
     name: sessionCookieName,
-    secret: "hello",
+    secret: process.env.SESSION_COOKIE_SECRET,
     cookie: { httpOnly: true, path: "/", sameSite: 'lax', maxAge: 1000 * 60 * 60 * 24 * 30 },
     saveUninitialized: false,
     resave: false

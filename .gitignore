@@ -7,3 +7,4 @@ notes-sequelize.sqlite3
 notes.code-workspace
 session
 notes-chapter-8.code-workspace
+.env
