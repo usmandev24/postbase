@@ -6,8 +6,8 @@
   {{#if user}}
     <div class="navbar-end hidden sm:inline-flex">
       <p>
-        <a class="btn btn-accent" href="/users/logout"><span
-            class="p-1 bg-gray-300 rounded-2xl">{{user.givenName}}</span>LogOut</a>
+        <a class="btn rounded-full w-max" href="/users/logout"><span
+            class=" bg-gray-300 rounded-2xl">{{#if user.photos}}<img class=" h-8 rounded-full" src="{{{user.photos}}}" alt="">{{/if}}</span>{{user.givenName}}</a>
       </p>
       <p class="">
         <a class="btn  btn-primary ml-1" href="/notes/add">ADD Note</a>
@@ -23,9 +23,8 @@
     {{#if user}}
     <div tabindex="-1" class="dropdown-content mt-4 bg-base-300 rounded-box z-1  p-3 shadow-sm">
       <p>
-        <a class="btn btn-accent" href="/users/logout"><span
-            class="p-1 bg-gray-300 rounded-2xl">{{user.givenName}}</span>LogOut</a>
-      </p>
+        <a class="btn rounded-full w-max" href="/users/logout"><span
+            class=" bg-gray-300 rounded-2xl">{{#if user.photos}}<img class=" h-8 rounded-full" src="{{{user.photos}}}" alt="">{{/if}}</span>{{user.givenName}}</a>
       <p class="">
         <a class="btn btn-outline rounded-full text-primary  w-full mt-2" href="/notes/add">ADD Note</a>
       </p>
@@ -38,3 +37,6 @@
   </div>
 
 </div>
+<script>
+  console.log(`${{{user.photos}}}`)
+</script>

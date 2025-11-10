@@ -101,7 +101,7 @@ passport.use(new googleStrategy({
         "",
       provider: profile.provider, familyName: jsonProfile.family_name,
       givenName: jsonProfile.given_name, middleName: "",
-      photos: [jsonProfile.picture], emails: [jsonProfile.email]
+      photos: jsonProfile.picture, emails: jsonProfile.email
     }));
   } catch (err) { done(err); }
 }))

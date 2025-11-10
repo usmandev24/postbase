@@ -7,9 +7,12 @@ import debug from "debug";
 const URL = url.URL;
 const log = debug("notes:users-superagent");
 const error = debug('notes:error-superagent');
-
-var authid = process.env.USERS_AUTHID
-var authcode = process.env.USERS_AUTHCODE;
+const saltRound = 10;
+async function genHash(password) {
+  return await bcrypt.hash(password, saltRound)
+}
+var authid = process.env.USERS_AUTHID ;
+var authcode =process.env.USERS_AUTHCODE ;
 
 function reqURL(path) {
   const requrl = new URL(process.env.USER_SERVICE_URL);

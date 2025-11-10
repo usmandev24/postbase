@@ -909,15 +909,6 @@
   .top-0 {
     top: calc(var(--spacing) * 0);
   }
-  .top-1 {
-    top: calc(var(--spacing) * 1);
-  }
-  .top-\[2\%\] {
-    top: 2%;
-  }
-  .left-\[30vw\] {
-    left: 30vw;
-  }
   .left-\[50\%\] {
     left: 50%;
   }
@@ -1077,6 +1068,9 @@
   .hidden {
     display: none;
   }
+  .h-8 {
+    height: calc(var(--spacing) * 8);
+  }
   .h-\[64px\] {
     height: 64px;
   }
@@ -1109,16 +1103,8 @@
   .max-w-\[720px\] {
     max-width: 720px;
   }
-  .translate-x-1\/2 {
-    --tw-translate-x: calc(1/2 * 100%);
-    translate: var(--tw-translate-x) var(--tw-translate-y);
-  }
   .translate-x-\[-50\%\] {
     --tw-translate-x: -50%;
-    translate: var(--tw-translate-x) var(--tw-translate-y);
-  }
-  .translate-y-0 {
-    --tw-translate-y: calc(var(--spacing) * 0);
     translate: var(--tw-translate-x) var(--tw-translate-y);
   }
   .transform {
@@ -1226,6 +1212,9 @@
     --tw-font-weight: var(--font-weight-bold);
     font-weight: var(--font-weight-bold);
   }
+  .break-keep {
+    word-break: keep-all;
+  }
   .alert-error {
     @layer daisyui.modifier {
       color: var(--color-error-content);
@@ -1258,9 +1247,6 @@
   }
   .caret-accent {
     caret-color: var(--color-accent);
-  }
-  .opacity-70 {
-    opacity: 70%;
   }
   .opacity-90 {
     opacity: 90%;
