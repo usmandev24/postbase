@@ -1,13 +1,13 @@
 <div class=" p-8 m-auto bg-base-100">
   <div class="">
-    <img class="m-auto rounded-full" src="{{{user.photos}}}">
-    <h1 class="p-4 text-center text-2xl">Welcom {{user.givenName}} {{user.familyName}}</h1>
+    <img class="m-auto rounded-full" src="/users/photo">
+    <h1 class="p-4 text-center text-2xl">Welcome {{user.fullName}}</h1>
     <p class="text-lg text-center">View your info and manage account and take decision about your account</p>
     <div class=" border  border-gray-500 mt-2 p-2 rounded-lg">
       <h2 class=" text-xl p-2">Basic info</h2>
-      <p class="p-2  border-b  sm:grid grid-cols-2">Name <span class="text-lg  block  ">{{user.givenName}} {{user.familyName}}</span></p>
+      <p class="p-2  border-b  sm:grid grid-cols-2">Name <span class="text-lg  block  ">{{user.fullName}}</span></p>
       <p class="p-2  border-b sm:grid grid-cols-2">Provider <span class="text-lg block">{{user.provider}}</span></p>
-      <p class="p-2  border-b sm:grid grid-cols-2">Email <span class="text-lg block">{{user.emails}}</span></p>
+      <p class="p-2  border-b sm:grid grid-cols-2">Email <span class="text-lg block">{{user.email}}</span></p>
     </div>
   </div>
   <div class=" p-4  flex flex-row justify-center-safe gap-2">

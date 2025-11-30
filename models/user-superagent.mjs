@@ -21,14 +21,14 @@ function reqURL(path) {
 }
 
 export async function create(username, password,
-  provider, familyName, givenName, middleName,
-  emails, photos) {
-  password = await genHash(password)
+  provider, pid, displayName, fullName, firstName, lastName,
+  email, photoURL, photo) {
+  password_hash = await genHash(password)
   const res = await request.post(reqURL('/create-user'))
     .send({
-      username, password,
-      provider, familyName, givenName, middleName,
-      emails, photos
+      username, password_hash,
+      provider, pid, displayName, fullName, firstName, lastName,
+      email, photoURL, photo
     })
     .set("Content-type", "application/json")
     .set("Accept", "application/json")
@@ -37,14 +37,14 @@ export async function create(username, password,
 }
 
 export async function update(username, password,
-  provider, familyName, givenName, middleName,
-  emails, photos) {
-    password = await genHash(password)
+  provider, pid, displayName, fullName, firstName, lastName,
+  email, photoURL, photo) {
+    password_hash = await genHash(password)
   const res = await request.post(reqURL(`/update-user/${username}`))
     .send({
-      username, password,
-      provider, familyName, givenName, middleName,
-      emails, photos
+      username, password_hash,
+      provider, pid, displayName, fullName, firstName, lastName,
+      email, photoURL, photo
     })
     .set("Content-type", "application/json")
     .set("Accept", "application/json")
@@ -56,12 +56,13 @@ export async function findOrCreate(profile) {
   var res = await request
     .post(reqURL('/find-or-create'))
     .send({
-      username: profile.id, password: await genHash(profile.password),
-      provider: profile.provider,
-      familyName: profile.familyName,
-      givenName: profile.givenName,
-      middleName: profile.middleName,
-      emails: profile.emails, photos: profile.photos
+      username: profile.username, password_hash: await genHash(profile.password),
+      provider: profile.provider,pid: profile.pid,
+      displayName: profile.displayName,
+      fullName: profile.fullName,
+      firstName: profile.firstName,
+      lastName: profile.lastName,
+      email: profile.email, photoURL: profile.photoURL, photo: profile.photo
     }).set('Content-Type', 'application/json')
     .set('Acccept', 'application/json')
     .auth(authid, authcode);
@@ -100,4 +101,13 @@ export async function list() {
 }
 
 
+async function test() {
+  try {
+    const user =await find('hello')
+  } catch (error) {
+    if (error.status === 404) {
 
+    }
+    console.error(error)
+  }
+}
