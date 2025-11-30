@@ -105,7 +105,7 @@ router.post("/create", async (req, res, next) => {
     req.body.password, 
     "Local",
     null,
-    req.body.firstName,
+    req.body.fullName,
     req.body.fullName,
     req.body.firstName, 
     req.body.lastName,

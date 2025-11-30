@@ -23,7 +23,7 @@ function reqURL(path) {
 export async function create(username, password,
   provider, pid, displayName, fullName, firstName, lastName,
   email, photoURL, photo) {
-  password_hash = await genHash(password)
+  let password_hash = await genHash(password)
   const res = await request.post(reqURL('/create-user'))
     .send({
       username, password_hash,
@@ -39,7 +39,7 @@ export async function create(username, password,
 export async function update(username, password,
   provider, pid, displayName, fullName, firstName, lastName,
   email, photoURL, photo) {
-    password_hash = await genHash(password)
+    let password_hash = await genHash(password)
   const res = await request.post(reqURL(`/update-user/${username}`))
     .send({
       username, password_hash,
