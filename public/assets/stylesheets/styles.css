@@ -1070,14 +1070,8 @@
   .flex {
     display: flex;
   }
-  .grid {
-    display: grid;
-  }
   .hidden {
     display: none;
-  }
-  .inline-flex {
-    display: inline-flex;
   }
   .h-8 {
     height: calc(var(--spacing) * 8);
@@ -1088,13 +1082,31 @@
   .h-\[100vh\] {
     height: 100vh;
   }
+  .h-\[196px\] {
+    height: 196px;
+  }
   .btn-block {
     @layer daisyui.modifier {
       width: 100%;
     }
   }
+  .w-8 {
+    width: calc(var(--spacing) * 8);
+  }
+  .w-30 {
+    width: calc(var(--spacing) * 30);
+  }
+  .w-40 {
+    width: calc(var(--spacing) * 40);
+  }
+  .w-48 {
+    width: calc(var(--spacing) * 48);
+  }
   .w-\[12rem\] {
     width: 12rem;
+  }
+  .w-\[196px\] {
+    width: 196px;
   }
   .w-fit {
     width: fit-content;
@@ -1114,6 +1126,9 @@
   .max-w-\[720px\] {
     max-width: 720px;
   }
+  .max-w-max {
+    max-width: max-content;
+  }
   .translate-x-\[-50\%\] {
     --tw-translate-x: -50%;
     translate: var(--tw-translate-x) var(--tw-translate-y);
@@ -1129,9 +1144,6 @@
   }
   .items-center {
     align-items: center;
-  }
-  .justify-between {
-    justify-content: space-between;
   }
   .justify-center {
     justify-content: center;
@@ -1196,6 +1208,9 @@
   .bg-gray-300 {
     background-color: var(--color-gray-300);
   }
+  .bg-neutral {
+    background-color: var(--color-neutral);
+  }
   .p-2 {
     padding: calc(var(--spacing) * 2);
   }
@@ -1214,17 +1229,11 @@
   .pt-4 {
     padding-top: calc(var(--spacing) * 4);
   }
-  .pr-2 {
-    padding-right: calc(var(--spacing) * 2);
-  }
   .pr-8 {
     padding-right: calc(var(--spacing) * 8);
   }
   .pl-2 {
     padding-left: calc(var(--spacing) * 2);
-  }
-  .pl-4 {
-    padding-left: calc(var(--spacing) * 4);
   }
   .pl-8 {
     padding-left: calc(var(--spacing) * 8);
@@ -1277,6 +1286,9 @@
   }
   .text-base-content {
     color: var(--color-base-content);
+  }
+  .text-neutral {
+    color: var(--color-neutral);
   }
   .text-primary {
     color: var(--color-primary);
@@ -1406,19 +1418,9 @@
       display: none;
     }
   }
-  .sm\:inline {
-    @media (width >= 40rem) {
-      display: inline;
-    }
-  }
   .sm\:inline-flex {
     @media (width >= 40rem) {
       display: inline-flex;
-    }
-  }
-  .sm\:pl-8 {
-    @media (width >= 40rem) {
-      padding-left: calc(var(--spacing) * 8);
     }
   }
   .sm\:text-xl {

@@ -1,6 +1,8 @@
 <div class=" p-8 m-auto bg-base-100">
   <div class="">
+    {{#if user.photo}}
     <img class="m-auto rounded-full" src="/users/photo">
+    {{/if}}
     <h1 class="p-4 text-center text-2xl">Welcome {{user.fullName}}</h1>
     <p class="text-lg text-center">View your info and manage account and take decision about your account</p>
     <div class=" border  border-gray-500 mt-2 p-2 rounded-lg">
