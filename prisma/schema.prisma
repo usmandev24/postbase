@@ -1,0 +1,24 @@
+generator client {
+  provider = "prisma-client"
+  output   = "./generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model Notes {
+  key       String   @id @db.VarChar(255)
+  title     String?  @db.VarChar(255)
+  body      String?
+  createdAt DateTime @db.Timestamptz(6) @default(now())
+  updatedAt DateTime @db.Timestamptz(6) @updatedAt
+}
+
+model session {
+  sid    String   @id @db.VarChar
+  sess   Json     @db.Json
+  expire DateTime @db.Timestamp(6)
+
+  @@index([expire], map: "IDX_session_expire")
+}

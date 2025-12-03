@@ -9,3 +9,5 @@ session
 notes-chapter-8.code-workspace
 .env.keys
 notes-learning-nodejs.code-workspace
+
+/prisma/generated/prisma

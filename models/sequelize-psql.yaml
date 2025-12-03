@@ -1,6 +1,0 @@
-dbname: notes
-username: usman
-password: '8426'
-params:
-  host: localhost
-  dialect: postgres
