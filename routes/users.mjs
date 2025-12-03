@@ -153,13 +153,10 @@ passport.use(
     async (accessToken, refreshToken, profile, done) => {
       try {
         const jsonProfile = profile._json;
-        console.log(jsonProfile);
-        const username = await genUserName(jsonProfile.given_name, 1)
-        console.log(username)
         done(
           null,
           await usersModel.findOrCreate({
-            username: await genUserName(jsonProfile.given_name, 1),
+            username: await genUserName(jsonProfile.given_name, 10, jsonProfile.email),
             password: "",
             provider: "google",
             pid: jsonProfile.sub,
@@ -192,12 +189,21 @@ async function getPhoto(url) {
   
   return Buffer.from(blob).toString('base64');
 }
-async function genUserName(username, rounds) {
+async function genUserName(username, rounds, email) {
+  if (email) {
+    try {
+      const user = await usersModel.findViaEmail(email)
+      if (user) return username;
+    } catch (error) {
+      
+    }
+  }
   try {
+    username = username.toLowerCase( )
     const user = await usersModel.find(username);
     if (user) {
       rounds = rounds * 10;
-      username = username + String(Number(Math.random().toFixed(0)) * rounds * 10);
+      username = username + (Number(Math.random().toFixed(2)) * rounds).toFixed(0);
       return await genUserName(username, rounds);
     }
   } catch (error) {

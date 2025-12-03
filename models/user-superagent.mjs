@@ -92,6 +92,14 @@ export async function find(username) {
   return res.body;
 }
 
+export async function findViaEmail(email) {
+  const res = await request.get(reqURL(`/find/email/${email}`))
+    .set("Content-type", "application/json")
+    .set("Accept", "application/json")
+    .auth(authid, authcode);
+  return res.body;
+}
+
 export async function list() {
   const res = await request.get(reqURL(`/list`))
     .set("Content-type", "application/json")
