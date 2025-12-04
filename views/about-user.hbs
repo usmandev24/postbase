@@ -2,18 +2,35 @@
   <div class="">
     {{#if user.photo}}
     <img class="m-auto rounded-full" src="/users/photo">
+    {{else}}
+    <div class=" m-auto w-30 h-30">
+      <span id="dp2" class="inline-flex justify-center text-4xl items-center bg-pink-200 dark:bg-neutral rounded-full w-30 h-30">
+    </div>
     {{/if}}
+    </span>
     <h1 class="p-4 text-center text-2xl">Welcome {{user.fullName}}</h1>
     <p class="text-lg text-center">View your info and manage account and take decision about your account</p>
-    <div class=" border  border-gray-500 mt-2 p-2 rounded-lg">
-      <h2 class=" text-xl p-2">Basic info</h2>
-      <p class="p-2  border-b  sm:grid grid-cols-2">Name <span class="text-lg  block  ">{{user.fullName}}</span></p>
-      <p class="p-2  border-b sm:grid grid-cols-2">Provider <span class="text-lg block">{{user.provider}}</span></p>
-      <p class="p-2  border-b sm:grid grid-cols-2">Email <span class="text-lg block">{{user.email}}</span></p>
+    <div class="  mt-4 p-4 rounded-lg ">
+      <h2 class=" text-xl p-1">Acount info</h2>
+      <p class="p-2 border-b dark:border-b-gray-600 border-b-gray-400  sm:grid grid-cols-2">username <span class="text-lg  block  ">{{user.username}}</span></p>
+      <p class="p-2 border-b dark:border-b-gray-600 border-b-gray-400 sm:grid grid-cols-2">Provider <span class="text-lg block">{{user.provider}}</span></p>
+      <p class="p-2 border-b dark:border-b-gray-600 border-b-gray-400 sm:grid grid-cols-2">Email <span class="text-lg block">{{user.email}}</span></p>
     </div>
+    <div class=" mt-4 p-4 rounded-lg ">
+      <h2 class=" text-xl p-1">Personal info</h2>
+      <p class="p-2 border-b dark:border-b-gray-600 border-b-gray-400  sm:grid grid-cols-2">Name <span class="text-lg  block  ">{{user.fullName}}</span></p>
+      <p class="p-2 border-b dark:border-b-gray-600 border-b-gray-400  sm:grid grid-cols-2">First Name <span class="text-lg  block  ">{{user.firstName}}</span></p>
+      <p class="p-2 border-b dark:border-b-gray-600 border-b-gray-400  sm:grid grid-cols-2">Last Name <span class="text-lg  block  ">{{user.lastName}}</span></p>
   </div>
   <div class=" p-4  flex flex-row justify-center-safe gap-2">
     <a class="btn btn-warning " href="/users/logout">Logout</a>
     <a class="btn btn-error  " href="/users/destroy">Delete Account</a>
   </div>
 </div>
+{{#if user.photo}}
+{{else}}
+<script>
+  const dp2 = document.getElementById('dp2');
+  dp2.textContent = username.charAt(0).toUpperCase();
+</script>
+{{/if}}

@@ -6,7 +6,7 @@
   {{#if user}}
   <div class="navbar-end hidden sm:inline-flex">
     <p>
-      <a class="btn rounded-2xl w-max" href="/users/about-user"><span id="dp" class="flex justify-center items-center bg-neutral rounded-full w-8 h-8 ">{{#if
+      <a class="btn rounded-2xl w-max" href="/users/about-user"><span id="dp" class="flex justify-center items-center bg-pink-200 dark:bg-neutral rounded-full w-8 h-8 ">{{#if
           user.photo}}<img class="rounded-full" src="/users/photo?username={{user.username}}" alt="">
           {{else}}
           {{user.username}}
@@ -27,7 +27,7 @@
     {{#if user}}
     <div tabindex="-1" class="dropdown-content mt-4 bg-base-300 rounded-box z-1  p-3 shadow-sm">
       <p>
-        <a class="btn rounded-2xl w-full" href="/users/about-user"><span id="dp1" class="flex justify-center items-center bg-neutral rounded-full w-8 h-8 ">{{#if
+        <a class="btn rounded-2xl w-full" href="/users/about-user"><span id="dp1" class="flex justify-center items-center bg-pink-200 dark:bg-neutral rounded-full w-8 h-8 ">{{#if
           user.photo}}<img class="rounded-full" src="/users/photo?username={{user.username}}" alt="">
           {{else}}
           
