@@ -26,6 +26,7 @@ export default class PrismaNotesStore extends AbstractNotesStore {
         body: body
       }
     });
+    this.emitCreated(note)
     return new Note(note.notekey, note.title, note.body)
   }
 
@@ -36,7 +37,9 @@ export default class PrismaNotesStore extends AbstractNotesStore {
       throw new Error('No note found for '+notekey);
     } else {
       await prisma.notes.update({ where: {notekey}, data: {notekey, title, body}})
-      return await this.read(notekey);
+      const note = await this.read(notekey);
+      this.emitUpdated(note)
+      return note;
     }
   }
 
@@ -53,6 +56,7 @@ export default class PrismaNotesStore extends AbstractNotesStore {
   async destroy(notekey) {
     await connectDB();
     await prisma.notes.delete({where: {notekey}})
+    this.emitDestroyed(notekey)
   }
 
   async keylist() {

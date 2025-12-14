@@ -1,8 +1,31 @@
 import * as express from 'express';
 import * as util from "node:util";
 import { NotesStore as notes } from '../models/notes-store.mjs';
+import { WebSocketServer } from 'ws';
+
+
 
 export const router = express.Router();
+const ws = new WebSocketServer({ noServer: true})
+export function init(req, socket, head) {
+ if (req.url === "/home") {
+  ws.handleUpgrade(req, socket, head, (socket, req) => {
+    ws.emit('connection', socket, req)
+  })
+ }
+}
+  
+ws.on('connection', (socket, req) =>{
+  socket.send(JSON.stringify({type: 'connection', message: 'connected' }))
+  notes.on('notecreated', (note) => {
+    socket.send(JSON.stringify({type: "notecreated", note: note}));
+  })
+  notes.on('notedestroyed', (key) => {
+    socket.send(JSON.stringify({type: 'notedestroyed', key: key}));
+  })
+})
+
+
 /* GET home page. */
 router.get('/', async (req, res, next) => {
   try {
