@@ -1,12 +1,19 @@
 <div class="p-4 md:p-8 list w-full m-auto bg-base-100  ">
   {{#if notelist}}
-  <div id="notelist" class="p-2">
+  <div id="notelist" class="p-2 flex flex-row gap-2 flex-wrap ">
     {{#each notelist}}
 
-    <span id={{key}} class="p-1 block">
-      <a class="block p-2 hover:bg-base-300 hover:p-4 hover:shadow-lg hover:rounded-xl rounded-2xl shadow-primary shadow-md text-shadow-2xs text-center transition-all text-lg "
-        href="/notes/view?key={{key}}">{{title}}</a>
-    </span>
+    <div id={{key}} class="p-[1%] min-w-[49%] w-full xs:w-auto">
+      <a id="{{key}}-link" class="block p-2 hover:bg-base-300 hover:shadow-xl hover:rounded-xl rounded-2xl shadow-primary shadow-sm text-shadow-2xs border border-accent-content transition-all "
+        href="/notes/view?key={{key}}">
+        <span id="{{key}}-title" class="block p-1 text-xl text-accent">{{title}}</span>
+        <span id="{{key}}-body" class="block p-1 text-[1rem] ">{{body}}</span>
+        <div class="flex justify-end gap-2 pl-2 pr-2 text-sm opacity-90">
+          <span class=" text-secondary bg-base-200 rounded-lg p-[0.1rem]" id="{{key}}-info"></span><span
+            id="{{key}}-likes">0 Likes</span><span id="{{key}}-comments">0 Comments</span>
+        </div>
+      </a>
+    </div>
 
     {{/each}}
   </div>
@@ -32,18 +39,30 @@
     if (data.type === 'connection') {
       console.log(data.message)
     } else if (data.type === 'notecreated') {
-      const span = document.createElement('span');
+      const noteDiv = document.createElement('span');
+      noteDiv.className = "p-[1%] min-w-[49%] w-full xs:w-auto"
       const note = data.note;
-      span.id = note.key;
-      span.innerHTML = `
-        <a class="block p-2 hover:bg-base-300 hover:p-4 hover:shadow-lg rounded-2xl shadow-primary shadow-md text-shadow-2xs text-center transition-all text-lg "
-      href="/notes/view?key=${note.key}">${note.title}</a>
+      noteDiv.id = note.key;
+      noteDiv.innerHTML = `
+        <a id="${note.key}-link" class="block p-2 hover:bg-base-300 bg-base-300 hover:shadow-xl hover:rounded-xl rounded-2xl shadow-primary shadow-md text-shadow-2xs border border-accent-content transition-all "
+        href="/notes/view?key=${note.key}">
+        <span id="${note.key}-title" class="block p-1 text-xl text-accent">${note.title}</span>
+        <span id="${note.key}-body" class="block p-1 text-[1rem] ">${note.body}</span>
+        <div class="flex justify-end gap-2 pl-2 pr-2 text-sm opacity-90">
+          <span class=" text-secondary bg-base-200 rounded-lg p-[0.2rem]" id="${note.key}-info">New</span><span id="${note.key}-likes">0 Likes</span><span id="${note.key}-comments">0 Comments</span></div>
+        </a>
       `;
-      notelist.appendChild(span)
+      notelist.appendChild(noteDiv)
     } else if (data.type === 'notedestroyed') {
-      const noteSpan = document.getElementById(data.key);
-      if (noteSpan)
-      noteSpan.remove();
+      const noteInfo = document.getElementById(data.key+"-info");
+      const noteLink = document.getElementById(data.key + "-link")
+      if (noteInfo)
+        noteLink.onclick = (event)=> {
+          event.preventDefault()
+          
+        }
+        noteLink.className = "block p-2 opacity-70 rounded-2xl shadow-primary shadow-sm text-shadow-2xs border border-accent-content transition-all "
+        noteInfo.textContent = "Deleted"
     }
   })
 </script>
