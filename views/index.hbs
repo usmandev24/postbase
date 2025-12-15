@@ -42,7 +42,8 @@
       notelist.appendChild(span)
     } else if (data.type === 'notedestroyed') {
       const noteSpan = document.getElementById(data.key);
-      noteSpan.remove()
+      if (noteSpan)
+      noteSpan.remove();
     }
   })
 </script>

@@ -26,7 +26,7 @@ export default class PrismaNotesStore extends AbstractNotesStore {
         body: body
       }
     });
-    this.emitCreated(note)
+    this.emitCreated({key: note.notekey, title:note.title, body: note.body})
     return new Note(note.notekey, note.title, note.body)
   }
 
@@ -38,7 +38,7 @@ export default class PrismaNotesStore extends AbstractNotesStore {
     } else {
       await prisma.notes.update({ where: {notekey}, data: {notekey, title, body}})
       const note = await this.read(notekey);
-      this.emitUpdated(note)
+      this.emitUpdated({key: note.notekey, title:note.title, body: note.body})
       return note;
     }
   }
