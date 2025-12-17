@@ -13,22 +13,21 @@ import {
     normalizePort, onError, onListening, handle404, basicErrorHandler
 } from './appsupport.mjs';
 import { useModel as useNotesModel } from './models/notes-store.mjs';
-useNotesModel(process.env.NOTES_MODEL ? process.env.NOTES_MODEL :
-    "memory"
-).then(store => { })
-    .catch(error => { onError({ code: 'ENOTESTORE', error }) });
-
 import session from 'express-session';
 import sessionFileStore from "session-file-store"
 import connectPgSimple from 'connect-pg-simple';
 import { default as pg } from 'pg';
-import { router as indexRouter } from './routes/index.mjs';
+import { router as indexRouter, init as indexInit, addNoteListners as wsHomeListener } from './routes/index.mjs';
 import { router as notesRouter } from './routes/notes.mjs';
 import { initPassport, router as usersRouter } from './routes/users.mjs'
-import { default as DBG } from "debug"
+import { default as DBG } from "debug";
+
 const debug = DBG('notes:debug');
 const dbgerror = DBG('notes:error')
 
+const _noteStore = await useNotesModel(process.env.NOTES_MODEL ? process.env.NOTES_MODEL :
+    "memory"
+);
 
 const pgPool = new pg.Pool({
     user: process.env.SETTION_STORE_USER,
@@ -106,8 +105,17 @@ export const port = normalizePort(process.env.PORT || '3000');
 app.set('port', port);
 
 export const server = http.createServer(app);
-
 server.listen(port);
+server.on('upgrade', (req, socket, head)=> {
+    indexInit(req, socket, head)
+    //noteUpdateInit()
+    //noteDestroyInit()
+})
+addWsListeners()
+function addWsListeners() {
+    wsHomeListener()
+}
+
 server.on('error', onError);
 server.on('listening', onListening);
 server.on('request', (req, res) => {

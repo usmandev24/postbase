@@ -13,7 +13,7 @@ export default class PrismaNotesStore extends AbstractNotesStore {
   async close () {
     await prisma.$disconnect();
   }
-  async create(notekey,  title, body) {
+  async create(notekey,  title, body, autherName) {
     await connectDB()
     const isNote = await this.read(notekey);
     if (isNote) {
@@ -23,20 +23,24 @@ export default class PrismaNotesStore extends AbstractNotesStore {
       data: {
         notekey: notekey,
         title: title,
-        body: body
+        body: body,
+        autherName: autherName
       }
     });
-    return new Note(note.notekey, note.title, note.body)
+    this.emitCreated({key: note.notekey, title:note.title, body: note.body, autherName: note.autherName})
+    return new Note(note.notekey, note.title, note.body, note.autherName)
   }
 
-  async update (notekey, title, body) {
+  async update (notekey, title, body, autherName) {
     await connectDB();
     const note = await prisma.notes.findUnique({ where: {notekey}});
     if (!note) {
       throw new Error('No note found for '+notekey);
     } else {
-      await prisma.notes.update({ where: {notekey}, data: {notekey, title, body}})
-      return await this.read(notekey);
+      await prisma.notes.update({ where: {notekey}, data: {notekey, title, body, autherName}})
+      const note = await this.read(notekey);
+      this.emitUpdated({key: note.notekey, title:note.title, body: note.body, autherName: note.autherName})
+      return note;
     }
   }
 
@@ -46,13 +50,14 @@ export default class PrismaNotesStore extends AbstractNotesStore {
     if (!note) {
       return undefined;
     } else {
-      return new Note(note.notekey, note.title, note.body);
+      return new Note(note.notekey, note.title, note.body, note.autherName);
     }
   }
 
   async destroy(notekey) {
     await connectDB();
     await prisma.notes.delete({where: {notekey}})
+    this.emitDestroyed(notekey)
   }
 
   async keylist() {
@@ -61,7 +66,15 @@ export default class PrismaNotesStore extends AbstractNotesStore {
     const notekeys = notes.map(note => note.notekey);
     return notekeys;
   }
-
+  async getAllbyAutherName (autherName) {
+    await connectDB();
+    const notes =await prisma.notes.findMany({
+      where: {autherName: autherName}
+    })
+    return notes.map(note => {
+      return new Note(note.key, note.title, note.body, note.autherName)
+    })
+  }
   async count() {
     await connectDB();
     return await prisma.notes.count();

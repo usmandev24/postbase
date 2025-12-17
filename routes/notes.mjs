@@ -14,7 +14,7 @@ router.get('/add', ensureAuthenticated, (req, res, next) => {
     docreate: true,
     notekey: '',
     note: undefined,
-    user: req.user? req.user: undefined
+    user: req.user ? req.user : undefined
   })
 });
 
@@ -23,14 +23,18 @@ router.post('/save', ensureAuthenticated, async (req, res, next) => {
   try {
     let note;
     let notekey = req.body.notekey;
-    notekey = notekey.trim()
+    notekey = notekey.trim();
     debug(req.body.docreate);
-    if (req.body.docreate === "create") {  
-      note = await notes.create(notekey, req.body.title, req.body.body)
+    if (req.body.docreate === "create") {
+      note = await notes.create(notekey, req.body.title, req.body.body, req.user.username)
     } else {
-      note = await notes.update(notekey, req.body.title, req.body.body)
+      note = await notes.read(notekey)
+      if (note.autherName !== req.user.username) {
+        res.redirect("/")
+      }
+      note = await notes.update(notekey, req.body.title, req.body.body, req.user.username)
     }
-    res.redirect('/notes/view?key='+notekey)
+    res.redirect('/notes/view?key=' + notekey)
   } catch (err) {
     next(err)
   }
@@ -42,7 +46,7 @@ router.get('/view', async (req, res, next) => {
     res.render('noteview', {
       title: note ? note.title : "",
       notekey: req.query.key, note: note,
-      user: req.user? req.user: undefined
+      user: req.user ? req.user : undefined
     })
   } catch (err) { next(err) }
 })
@@ -51,11 +55,14 @@ router.get('/view', async (req, res, next) => {
 router.get('/edit', ensureAuthenticated, async (req, res, next) => {
   try {
     let note = await notes.read(req.query.key);
+    if (note.autherName !== req.user.username) {
+      res.redirect("/")
+    }
     res.render('noteedit', {
-      title: note ? ("Edit "+note.title) : "Add a Note",
-      docreate : false,
+      title: note ? ("Edit " + note.title) : "Add a Note",
+      docreate: false,
       notekey: req.query.key, note: note,
-      user: req.user? req.user: undefined
+      user: req.user ? req.user : undefined
     })
   } catch (err) {
     next(err)
@@ -66,18 +73,25 @@ router.get('/edit', ensureAuthenticated, async (req, res, next) => {
 router.get('/destroy', ensureAuthenticated, async (req, res, next) => {
   try {
     let note = await notes.read(req.query.key);
+    if (note.autherName !== req.user.username) {
+      res.redirect("/")
+    }
     res.render('notedestroy', {
       title: note ? note.title : "",
       notekey: req.query.key, note: note,
-      user: req.user? req.user: undefined
+      user: req.user ? req.user : undefined
     })
   } catch (err) {
     next(err)
   }
 })
 
-router.post('/destroy/confirm',ensureAuthenticated, async (req, res, next) => {
-  try { 
+router.post('/destroy/confirm', ensureAuthenticated, async (req, res, next) => {
+  try {
+    let note = await notes.read(req.body.key);
+    if (note.autherName !== req.user.username) {
+      res.redirect("/")
+    }
     await notes.destroy(req.body.notekey);
     res.redirect('/');
   } catch (err) {

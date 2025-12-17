@@ -8,11 +8,24 @@ datasource db {
 }
 
 model Notes {
-  notekey       String   @id @db.VarChar(255)
-  title     String?  @db.VarChar(255)
-  body      String?
-  createdAt DateTime @db.Timestamptz(6) @default(now())
-  updatedAt DateTime @db.Timestamptz(6) @updatedAt
+  notekey    String     @id @db.VarChar(255)
+  title      String?    @db.VarChar(255)
+  body       String?
+  autherName String     @db.VarChar(255)
+  public     Boolean    @default(true) @db.Boolean
+  likes      Int?       @db.Integer
+  comments   comments[]
+  createdAt  DateTime   @default(now()) @db.Timestamptz(6)
+  updatedAt  DateTime   @updatedAt @db.Timestamptz(6)
+}
+
+model comments {
+  id          Int      @id @default(autoincrement())
+  from        String   @db.VarChar(255)
+  body        String   @db.VarChar(1024)
+  note        Notes    @relation(fields: [noteNotekey], references: [notekey])
+  createdAt   DateTime @db.Timestamptz(6)
+  noteNotekey String   @db.VarChar(255)
 }
 
 model session {
