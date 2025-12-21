@@ -7,6 +7,15 @@ datasource db {
   provider = "postgresql"
 }
 
+model notesUsers {
+  id          Int    @id
+  username    String @unique @db.VarChar(255)
+  provider    String @db.VarChar(255)
+  displayName String @db.VarChar(255)
+  fullName    String @db.VarChar(255)
+  photo       Bytes  @db.ByteA
+}
+
 model Notes {
   notekey    String     @id @db.VarChar(255)
   title      String?    @db.VarChar(255)
