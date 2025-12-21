@@ -13,13 +13,13 @@ model notesUsers {
   provider    String     @db.VarChar(255)
   displayName String     @db.VarChar(255)
   fullName    String     @db.VarChar(255)
-  photo       Bytes      @db.ByteA
+  photo       Bytes?      @db.ByteA
   notes       Notes[]
   comments    comments[]
 }
 
 model Notes {
-  notekey    String     @id @db.VarChar(255)
+  key    String     @id @db.VarChar(255)
   title      String?    @db.VarChar(255)
   body       String?
   public     Boolean    @default(true) @db.Boolean
@@ -36,7 +36,7 @@ model comments {
   auther        notesUsers @relation(fields: [autherId], references: [id])
   autherId      String
   body        String     @db.VarChar(1024)
-  note        Notes      @relation(fields: [noteNotekey], references: [notekey])
+  note        Notes      @relation(fields: [noteNotekey], references: [key])
   createdAt   DateTime   @default(now()) @db.Timestamptz(6)
   noteNotekey String     @db.VarChar(255)
 }

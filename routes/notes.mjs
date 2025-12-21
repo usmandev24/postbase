@@ -26,13 +26,13 @@ router.post('/save', ensureAuthenticated, async (req, res, next) => {
     notekey = notekey.trim();
     debug(req.body.docreate);
     if (req.body.docreate === "create") {
-      note = await notes.create(notekey, req.body.title, req.body.body, req.user.username)
+      note = await notes.create(notekey, req.body.title, req.body.body, req.user.id)
     } else {
       note = await notes.read(notekey)
-      if (note.autherName !== req.user.username) {
+      if (note.autherId !== req.user.id) {
         res.redirect("/")
       }
-      note = await notes.update(notekey, req.body.title, req.body.body, req.user.username)
+      note = await notes.update(notekey, req.body.title, req.body.body, req.user.id)
     }
     res.redirect('/notes/view?key=' + notekey)
   } catch (err) {
@@ -55,7 +55,7 @@ router.get('/view', async (req, res, next) => {
 router.get('/edit', ensureAuthenticated, async (req, res, next) => {
   try {
     let note = await notes.read(req.query.key);
-    if (note.autherName !== req.user.username) {
+    if (note.autherId !== req.user.id) {
       res.redirect("/")
     }
     res.render('noteedit', {
@@ -73,7 +73,7 @@ router.get('/edit', ensureAuthenticated, async (req, res, next) => {
 router.get('/destroy', ensureAuthenticated, async (req, res, next) => {
   try {
     let note = await notes.read(req.query.key);
-    if (note.autherName !== req.user.username) {
+    if (note.autherId !== req.user.id) {
       res.redirect("/")
     }
     res.render('notedestroy', {
@@ -88,8 +88,8 @@ router.get('/destroy', ensureAuthenticated, async (req, res, next) => {
 
 router.post('/destroy/confirm', ensureAuthenticated, async (req, res, next) => {
   try {
-    let note = await notes.read(req.body.key);
-    if (note.autherName !== req.user.username) {
+    let note = await notes.read(req.body.notekey);
+    if (note.autherId !== req.user.id) {
       res.redirect("/")
     }
     await notes.destroy(req.body.notekey);

@@ -1,21 +1,21 @@
-import path from "node:path";
-import util from "node:util";
+
 import { Router } from "express";
 import { default as passport } from "passport";
 import { default as passportLocal } from "passport-local";
 import { default as passportJwt } from "passport-jwt";
 import { default as passportGoogle } from "passport-google-oauth20";
-import { default as jwt } from "jsonwebtoken";
+
 import debug from "debug";
 import * as usersModel from "../models/user-superagent.mjs";
+import { PrismaNotesUsersStore } from "../models/users-prisma.mjs";
 import { sessionCookieName } from "../app.mjs";
-import { title } from "node:process";
-import { json } from "sequelize";
+
 
 export const router = Router();
 const LocalStrategy = passportLocal.Strategy;
 const JwtStrategy = passportJwt.Strategy;
 const googleStrategy = passportGoogle.Strategy;
+const notesUsersStore = new PrismaNotesUsersStore()
 export function initPassport(app) {
   app.use(passport.initialize());
   app.use(passport.session());
@@ -153,9 +153,7 @@ passport.use(
     async (accessToken, refreshToken, profile, done) => {
       try {
         const jsonProfile = profile._json;
-        done(
-          null,
-          await usersModel.findOrCreate({
+        const user = await usersModel.findOrCreate({
             username: await genUserName(jsonProfile.given_name, 10, jsonProfile.email),
             password: "",
             provider: "google",
@@ -167,8 +165,14 @@ passport.use(
             photoURL: jsonProfile.picture,
             photo: await getPhoto(jsonProfile.picture),
             email: jsonProfile.email,
-          })
+          });
+        done(
+          null,
+          user
         );
+        const noteUser = await notesUsersStore.read(user.id);
+        if (!noteUser)
+        await notesUsersStore.create(user.id, user.username, user.displayName, user.fullName, user.provider, user.photo);
       } catch (err) {
         done(err);
       }
@@ -249,6 +253,11 @@ passport.use(
       try {
         let check = await usersModel.passwordCheck(username, password);
         if (check.check) {
+          const user = await usersModel.find(username);
+          const noteUser = await notesUsersStore.read(user.id);
+          if (!noteUser) 
+          await notesUsersStore.create(user.id, user.username, user.displayName, user.fullName, user.provider, user.photo);
+
           done(null, { username: check.username, id: check.username });
         } else {
           done(null, false, { message: check.message });

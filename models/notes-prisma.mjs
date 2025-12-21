@@ -1,4 +1,4 @@
-import { Note, AbstractNotesStore} from "./Notes.mjs"
+import { AbstractNotesStore} from "./Notes.mjs"
 import { default as DBG } from 'debug';
 import { prisma } from "./prisma.mjs";
 
@@ -13,66 +13,67 @@ export default class PrismaNotesStore extends AbstractNotesStore {
   async close () {
     await prisma.$disconnect();
   }
-  async create(notekey,  title, body, autherName) {
+  async create(key,  title, body, autherId) {
     await connectDB()
-    const isNote = await this.read(notekey);
+    const isNote = await this.read(key);
     if (isNote) {
       return  isNote;
     }
     const note = await prisma.notes.create({
       data: {
-        notekey: notekey,
+        key: key,
         title: title,
         body: body,
-        autherName: autherName
-      }
+        autherId: autherId
+      }, include : {auther: true}
     });
-    this.emitCreated({key: note.notekey, title:note.title, body: note.body, autherName: note.autherName})
-    return new Note(note.notekey, note.title, note.body, note.autherName)
+    
+    this.emitCreated(note)
+    return note
   }
 
-  async update (notekey, title, body, autherName) {
+  async update (key, title, body, autherId) {
     await connectDB();
-    const note = await prisma.notes.findUnique({ where: {notekey}});
+    const note = await prisma.notes.findUnique({ where: {key}});
     if (!note) {
-      throw new Error('No note found for '+notekey);
+      throw new Error('No note found for '+key);
     } else {
-      await prisma.notes.update({ where: {notekey}, data: {notekey, title, body, autherName}})
-      const note = await this.read(notekey);
-      this.emitUpdated({key: note.notekey, title:note.title, body: note.body, autherName: note.autherName})
+      await prisma.notes.update({ where: {key}, data: {key, title, body, autherId}})
+      const note = await this.read(key);
+      this.emitUpdated(note)
       return note;
     }
   }
 
-  async read(notekey) {
+  async read(key) {
     await connectDB();
-    const note = await prisma.notes.findUnique({where: {notekey}})
+    const note = await prisma.notes.findUnique({where: {key}, include: {auther: true}})
     if (!note) {
       return undefined;
     } else {
-      return new Note(note.notekey, note.title, note.body, note.autherName);
+      return note;
     }
   }
 
-  async destroy(notekey) {
+  async destroy(key) {
     await connectDB();
-    await prisma.notes.delete({where: {notekey}})
-    this.emitDestroyed(notekey)
+    await prisma.notes.delete({where: {key}})
+    this.emitDestroyed(key)
   }
 
   async keylist() {
     await connectDB();
     const notes = await prisma.notes.findMany();
-    const notekeys = notes.map(note => note.notekey);
-    return notekeys;
+    const keys = notes.map(note => note.key);
+    return keys;
   }
-  async getAllbyAutherName (autherName) {
+  async getAllbyautherId (autherId) {
     await connectDB();
     const notes =await prisma.notes.findMany({
-      where: {autherName: autherName}
+      where: {autherId: autherId}
     })
     return notes.map(note => {
-      return new Note(note.key, note.title, note.body, note.autherName)
+      return note
     })
   }
   async count() {
