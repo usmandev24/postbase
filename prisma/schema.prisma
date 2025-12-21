@@ -22,23 +22,22 @@ model Notes {
   notekey    String     @id @db.VarChar(255)
   title      String?    @db.VarChar(255)
   body       String?
-  autherName String     @db.VarChar(255)
   public     Boolean    @default(true) @db.Boolean
   likes      Int?       @db.Integer
   comments   comments[]
-  user       notesUsers @relation(fields: [userid], references: [id])
-  userid     String     @db.VarChar(255)
+  auther     notesUsers @relation(fields: [autherId], references: [id])
+  autherId   String     @db.VarChar(255)
   createdAt  DateTime   @default(now()) @db.Timestamptz(6)
   updatedAt  DateTime   @updatedAt @db.Timestamptz(6)
 }
 
 model comments {
   id          Int        @id @default(autoincrement())
-  user        notesUsers @relation(fields: [userid], references: [id])
-  userid      String
+  auther        notesUsers @relation(fields: [autherId], references: [id])
+  autherId      String
   body        String     @db.VarChar(1024)
   note        Notes      @relation(fields: [noteNotekey], references: [notekey])
-  createdAt   DateTime   @db.Timestamptz(6) @default(now())
+  createdAt   DateTime   @default(now()) @db.Timestamptz(6)
   noteNotekey String     @db.VarChar(255)
 }
 
