@@ -38,7 +38,7 @@ model comments {
   userid      String
   body        String     @db.VarChar(1024)
   note        Notes      @relation(fields: [noteNotekey], references: [notekey])
-  createdAt   DateTime   @db.Timestamptz(6)
+  createdAt   DateTime   @db.Timestamptz(6) @default(now())
   noteNotekey String     @db.VarChar(255)
 }
 
