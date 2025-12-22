@@ -3,7 +3,7 @@ import { prisma } from "./prisma.mjs"
 
 
 export class PrismaNotesUsersStore  {
-  async create(userId, userName, displayName, fullName, provider, photo) {
+  async create(userId, userName, displayName, fullName, provider, photo, photoType) {
     await prisma.$connect();
     const user = await prisma.notesUsers.create(
       {
@@ -14,6 +14,7 @@ export class PrismaNotesUsersStore  {
           fullName: fullName,
           provider: provider,
           photo: photo,
+          photoType: photoType
         }
       }
     )

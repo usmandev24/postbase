@@ -1,4 +1,4 @@
-/*! tailwindcss v4.1.17 | MIT License | https://tailwindcss.com */
+/*! tailwindcss v4.1.18 | MIT License | https://tailwindcss.com */
 @layer properties;
 @layer theme, base, components, utilities;
 @layer theme {
@@ -8,8 +8,10 @@
     --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono",
       "Courier New", monospace;
     --color-pink-200: oklch(89.9% 0.061 343.231);
+    --color-pink-300: oklch(82.3% 0.12 346.018);
     --color-gray-400: oklch(70.7% 0.022 261.325);
     --color-gray-600: oklch(44.6% 0.03 256.802);
+    --color-black: #000;
     --spacing: 0.25rem;
     --text-sm: 0.875rem;
     --text-sm--line-height: calc(1.25 / 0.875);
@@ -19,8 +21,6 @@
     --text-xl--line-height: calc(1.75 / 1.25);
     --text-2xl: 1.5rem;
     --text-2xl--line-height: calc(2 / 1.5);
-    --text-4xl: 2.25rem;
-    --text-4xl--line-height: calc(2.5 / 2.25);
     --font-weight-bold: 700;
     --radius-md: 0.375rem;
     --radius-lg: 0.5rem;
@@ -701,7 +701,7 @@
           --list-grid-cols: minmax(0, auto) minmax(0, auto) minmax(0, auto) minmax(0, auto)
           minmax(0, auto) 1fr;
         }
-        > :not(.list-col-wrap) {
+        > * {
           grid-row-start: 1;
         }
       }
@@ -773,7 +773,6 @@
         outline: 2px solid var(--input-color);
         outline-offset: 2px;
         isolation: isolate;
-        z-index: 1;
       }
       @media (pointer: coarse) {
         @supports (-webkit-touch-callout: none) {
@@ -1065,9 +1064,6 @@
   .hidden {
     display: none;
   }
-  .inline-flex {
-    display: inline-flex;
-  }
   .h-8 {
     height: calc(var(--spacing) * 8);
   }
@@ -1131,14 +1127,8 @@
   .flex-wrap {
     flex-wrap: wrap;
   }
-  .items-center {
-    align-items: center;
-  }
   .justify-between {
     justify-content: space-between;
-  }
-  .justify-center {
-    justify-content: center;
   }
   .justify-center-safe {
     justify-content: safe center;
@@ -1206,6 +1196,9 @@
   .bg-pink-200 {
     background-color: var(--color-pink-200);
   }
+  .bg-pink-300 {
+    background-color: var(--color-pink-300);
+  }
   .p-1 {
     padding: calc(var(--spacing) * 1);
   }
@@ -1260,10 +1253,6 @@
   .text-2xl {
     font-size: var(--text-2xl);
     line-height: var(--tw-leading, var(--text-2xl--line-height));
-  }
-  .text-4xl {
-    font-size: var(--text-4xl);
-    line-height: var(--tw-leading, var(--text-4xl--line-height));
   }
   .text-lg {
     font-size: var(--text-lg);
@@ -1520,6 +1509,11 @@
       border-bottom-color: var(--color-gray-600);
     }
   }
+  .dark\:bg-black {
+    @media (prefers-color-scheme: dark) {
+      background-color: var(--color-black);
+    }
+  }
   .dark\:bg-neutral {
     @media (prefers-color-scheme: dark) {
       background-color: var(--color-neutral);
@@ -1687,19 +1681,17 @@
 }
 @layer base {
   :root {
-    --page-scroll-bg-on: linear-gradient(var(--root-bg), var(--root-bg))
-    var(--root-bg);
+    background: var(--page-scroll-bg, var(--root-bg));
+    --page-scroll-bg-on: linear-gradient(var(--root-bg, #0000), var(--root-bg, #0000))
+    var(--root-bg, #0000);
     @supports (color: color-mix(in lab, red, red)) {
-      --page-scroll-bg-on: linear-gradient(var(--root-bg), var(--root-bg))
-    color-mix(in srgb, var(--root-bg), oklch(0% 0 0) calc(var(--page-has-backdrop, 0) * 40%));
+      --page-scroll-bg-on: linear-gradient(var(--root-bg, #0000), var(--root-bg, #0000))
+    color-mix(in srgb, var(--root-bg, #0000), oklch(0% 0 0) calc(var(--page-has-backdrop, 0) * 40%));
     }
     --page-scroll-transition-on: background-color 0.3s ease-out;
     transition: var(--page-scroll-transition);
     scrollbar-gutter: var(--page-scroll-gutter, unset);
     scrollbar-gutter: if(style(--page-has-scroll: 1): var(--page-scroll-gutter, unset) ; else: unset);
-  }
-  :root:root {
-    background: var(--page-scroll-bg, var(--root-bg, var(--color-base-100)));
   }
   @keyframes set-page-has-scroll {
     0%, to {
@@ -1709,7 +1701,7 @@
 }
 @layer base {
   :root, [data-theme] {
-    background-color: var(--root-bg, var(--color-base-100));
+    background: var(--page-scroll-bg, var(--root-bg));
     color: var(--color-base-content);
   }
   :where(:root, [data-theme]) {

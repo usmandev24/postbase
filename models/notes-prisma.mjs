@@ -47,7 +47,7 @@ export default class PrismaNotesStore extends AbstractNotesStore {
 
   async read(key) {
     await connectDB();
-    const note = await prisma.notes.findUnique({where: {key}, include: {auther: true}})
+    const note = await prisma.notes.findUnique({where: {key}, include: {auther: true, comments: true}})
     if (!note) {
       return undefined;
     } else {
