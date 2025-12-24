@@ -1,10 +1,10 @@
-<div class=" fixed top-0 z-50 navbar bg-base-300 text-base-content rounded-t-2xl">
-  <div class="navbar-start gap-2 align-middle">
-    <a class="btn btn-ghost  tooltip tooltip-bottom" data-tip=" Home " href="/"><i data-feather="home"></i></a>
+<div class=" fixed top-0 z-50 navbar justify-around bg-base-300 text-base-content rounded-t-2xl">
+  <div class=" navbar-start lg:justify-center lg:w-auto  gap-2 align-middle">
+    <a class="btn btn-ghost tooltip tooltip-bottom" data-tip=" Home " href="/"><i data-feather="home"></i></a>
     <h1 class="text-md sm:text-xl">{{title}}</h1>
   </div>
   {{#if user}}
-  <div class="navbar-end hidden sm:inline-flex">
+  <div class=" hidden sm:inline-flex">
     <p>
       <a class="btn rounded-2xl w-max" href="/users/about-user"><span
           class=""><img class=" bg-pink-200 dark:bg-neutral rounded-full w-8 h-8 " src="/users/photo/{{user.username}}" alt="">
@@ -15,7 +15,7 @@
     </p>
   </div>
   {{else }}
-  <div class=" navbar-end hidden sm:inline-flex">
+  <div class="  hidden sm:inline-flex">
     <a class="btn btn-outline rounded-full text-primary  " href="/users/login">Login</a>
   </div>
   {{/if}}
