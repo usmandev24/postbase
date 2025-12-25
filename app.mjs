@@ -17,10 +17,12 @@ import session from 'express-session';
 import sessionFileStore from "session-file-store"
 import connectPgSimple from 'connect-pg-simple';
 import { default as pg } from 'pg';
-import { router as indexRouter, init as indexInit, addNoteListners as wsHomeListener } from './routes/index.mjs';
-import { router as notesRouter } from './routes/notes.mjs';
+import { router as indexRouter, addNoteListners as wsHomeListener } from './routes/index.mjs';
+import { router as notesRouter, init as notesInit, addNoteListners as wsNotesListener } from './routes/notes.mjs';
 import { initPassport, router as usersRouter } from './routes/users.mjs'
 import { default as DBG } from "debug";
+import * as ws from 'ws';
+import { wsSession } from './models/ws-session.mjs';
 
 const debug = DBG('notes:debug');
 const dbgerror = DBG('notes:error')
@@ -105,15 +107,22 @@ export const port = normalizePort(process.env.PORT || '3000');
 app.set('port', port);
 
 export const server = http.createServer(app);
+export const WsServer = new ws.WebSocketServer({ server })
 server.listen(port);
-server.on('upgrade', (req, socket, head)=> {
-    indexInit(req, socket, head)
-    //noteUpdateInit()
-    //noteDestroyInit()
+
+WsServer.on("connection", async (socket, req) => {
+    const rawCookies = req.headers.cookie;
+    if (rawCookies)
+        socket.user = await wsSession(rawCookies);
+    socket.send(JSON.stringify({ type: 'connection', message: 'connected '+ JSON.stringify(socket.user) }))
+    notesInit(socket)
 })
+
+
 addWsListeners()
 function addWsListeners() {
     wsHomeListener()
+    wsNotesListener()
 }
 
 server.on('error', onError);

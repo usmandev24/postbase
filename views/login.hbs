@@ -1,27 +1,57 @@
-<form class=" pt-4 pl-8 pr-8 bg-base-100 max-w-90" method='POST' action='/users/login'>
-  <label class=" input input-primary m-2">
-    User Name:
-    <input type="text" name="username" required>
-  </label>
-  <label class=" input input-primary m-2">
-    Password:
-    <input type="text" name="password" required>
-  </label>
-  <div class="pl-2">
-    <input class="block btn btn-primary mt-2 " type="submit" value="Login">
-  </div>
-  
+<div class="max-w-xl mx-auto p-4 md:p-8">
+  <div class="card bg-base-100 shadow-2xl border border-base-300">
+    
+    <div class="bg-primary text-primary-content p-8 rounded-t-2xl text-center">
+      <h2 class="text-3xl font-bold">Welcome Back</h2>
+      <p class="text-sm opacity-80 mt-2">Log in to manage your notes</p>
+    </div>
 
-</form >
-<div class="ml-8 bg-base-100 max-w-85">
-  <p class="pl-2 mt-2  w-fit">New User?</p>
-<div class="pl-2 w-fit mt-2">
-  <a class="btn btn-outline border-[#e5e5e5] " href="/users/create">Create Account</a>
-</div>
-<div class="pl-2 w-fit mt-2">
-  <button class="btn btn-outline border-[#e5e5e5]">
-  <svg aria-label="Google logo" width="16" height="16" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><g><path d="m0 0H512V512H0" fill="#fff"></path><path fill="#34a853" d="M153 292c30 82 118 95 171 60h62v48A192 192 0 0190 341"></path><path fill="#4285f4" d="m386 400a140 175 0 0053-179H260v74h102q-7 37-38 57"></path><path fill="#fbbc02" d="m90 341a208 200 0 010-171l63 49q-12 37 0 73"></path><path fill="#ea4335" d="m153 219c22-69 116-109 179-50l55-54c-78-75-230-72-297 55"></path></g></svg>
-  <a href="/users/oauth/google">Login with Google</a>
-</button>
-</div>
+    <form class="card-body gap-4 p-6 md:p-8" method='POST' action='/users/login'>
+      
+      <div class="form-control w-full">
+        <label class="label">
+          <span class=" font-semibold">User Name</span>
+        </label>
+        <div class="input flex items-center gap-2 focus-within:input-primary transition-all">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" class="w-4 h-4 opacity-70"><path d="M8 8a3 3 0 1 0 0-6 3 3 0 0 0 0 6ZM12.735 14c.618 0 1.093-.561.872-1.139a6.002 6.002 0 0 0-11.215 0c-.22.578.254 1.139.872 1.139h9.472Z" /></svg>
+          <input type="text" name="username" class="grow" placeholder="Username" required />
+        </div>
+      </div>
+
+      <div class="form-control w-full">
+        <label class="label">
+          <span class=" font-semibold">Password</span>
+        </label>
+        <div class="input flex items-center gap-2 focus-within:input-primary transition-all">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" class="w-4 h-4 opacity-70"><path fill-rule="evenodd" d="M14 6a4 4 0 0 1-4.899 3.899l-1.955 1.955a.5.5 0 0 1-.353.146H5v1.5a.5.5 0 0 1-.5.5h-2a.5.5 0 0 1-.5-.5v-2.293a.5.5 0 0 1 .146-.353l3.955-3.955A4 4 0 1 1 14 6Zm-4-2a.75.75 0 0 0 0 1.5.5.5 0 0 1 .5.5.75.75 0 0 0 1.5 0 2 2 0 0 0-2-2Z" clip-rule="evenodd" /></svg>
+          <input type="password" name="password" class="grow" placeholder="••••••••" required />
+        </div>
+      </div>
+
+      <div class="form-control mt-4">
+        <button type="submit" class="btn btn-primary btn-block text-lg">
+          Login
+        </button>
+      </div>
+
+      <div class="divider text-xs opacity-50 uppercase">OR</div>
+
+      <a href="/users/oauth/google" class="btn btn-outline gap-3 w-full hover:bg-base-200">
+        <svg width="20" height="20" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+          <path fill="#fbbc05" d="M120 256c0-14.4 2.5-28.1 7-40.8L34.1 123C12.3 162.8 0 208 0 256s12.3 93.2 34.1 133L127 300.2c-4.5-12.7-7-26.4-7-44.2z"/>
+          <path fill="#ea4335" d="m423.4 163.4-66.2 54.1c-15.6-25-43.9-41.5-76.2-41.5-51.5 0-95.2 34.3-108 81.3l-92.9-72.2C118.4 110.1 201.3 58 296 58c63 0 120.1 23 164 61l-36.6 44.4z"/>
+          <path fill="#34a853" d="M296 454c-94.7 0-177.6-52.1-215.9-127.1l92.9-72.2c12.8 47 56.5 81.3 108 81.3 32.3 0 60.6-16.5 76.2-41.5l66.2 54.1C416.1 431 359 454 296 454z"/>
+          <path fill="#4285f4" d="m512 256c0-14.2-1.2-27.9-3.4-41.2H296v82.4h121.1c-5.2 27.9-20.9 51.7-44.5 67.4l66.2 54.1C482.3 379.7 512 324.2 512 256z"/>
+        </svg>
+        Continue with Google
+      </a>
+    </form>
+
+    <div class="bg-base-200 p-6 text-center rounded-b-2xl border-t border-base-300">
+      <p class="text-sm">
+        New User? 
+        <a href="/users/create" class="link link-primary font-bold ml-1">Create Account</a>
+      </p>
+    </div>
+  </div>
 </div>

@@ -22,13 +22,13 @@ function reqURL(path) {
 
 export async function create(username, password,
   provider, pid, displayName, fullName, firstName, lastName,
-  email, photoURL, photo) {
+  email, photoURL, photo, photoType) {
   let password_hash = await genHash(password)
   const res = await request.post(reqURL('/create-user'))
     .send({
       username, password_hash,
       provider, pid, displayName, fullName, firstName, lastName,
-      email, photoURL, photo
+      email, photoURL, photo, photoType
     })
     .set("Content-type", "application/json")
     .set("Accept", "application/json")
@@ -38,13 +38,13 @@ export async function create(username, password,
 
 export async function update(username, password,
   provider, pid, displayName, fullName, firstName, lastName,
-  email, photoURL, photo) {
+  email, photoURL, photo, photoType) {
     let password_hash = await genHash(password)
   const res = await request.post(reqURL(`/update-user/${username}`))
     .send({
       username, password_hash,
       provider, pid, displayName, fullName, firstName, lastName,
-      email, photoURL, photo
+      email, photoURL, photo, photoType
     })
     .set("Content-type", "application/json")
     .set("Accept", "application/json")
@@ -62,7 +62,9 @@ export async function findOrCreate(profile) {
       fullName: profile.fullName,
       firstName: profile.firstName,
       lastName: profile.lastName,
-      email: profile.email, photoURL: profile.photoURL, photo: profile.photo
+      email: profile.email, photoURL: profile.photoURL,
+      photo: profile.photo,
+      photoType: profile.photoType
     }).set('Content-Type', 'application/json')
     .set('Acccept', 'application/json')
     .auth(authid, authcode);

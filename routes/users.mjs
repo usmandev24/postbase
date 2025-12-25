@@ -1,21 +1,21 @@
-import path from "node:path";
-import util from "node:util";
+
 import { Router } from "express";
 import { default as passport } from "passport";
 import { default as passportLocal } from "passport-local";
 import { default as passportJwt } from "passport-jwt";
 import { default as passportGoogle } from "passport-google-oauth20";
-import { default as jwt } from "jsonwebtoken";
+import { TextEncoder } from "node:util";
 import debug from "debug";
 import * as usersModel from "../models/user-superagent.mjs";
+import { PrismaNotesUsersStore } from "../models/users-prisma.mjs";
 import { sessionCookieName } from "../app.mjs";
-import { title } from "node:process";
-import { json } from "sequelize";
+
 
 export const router = Router();
 const LocalStrategy = passportLocal.Strategy;
 const JwtStrategy = passportJwt.Strategy;
 const googleStrategy = passportGoogle.Strategy;
+const notesUsersStore = new PrismaNotesUsersStore()
 export function initPassport(app) {
   app.use(passport.initialize());
   app.use(passport.session());
@@ -99,19 +99,22 @@ router.post("/create", async (req, res, next) => {
       );
       return;
     }
-  } catch (error) { }
+  } catch (error) { } 
+  
+  const photo = createLogo(req.body.firstName, req.body.lastName)
   const user = await usersModel.create(
     req.body.username,
-    req.body.password, 
+    req.body.password,
     "Local",
     null,
     req.body.fullName,
     req.body.fullName,
-    req.body.firstName, 
+    req.body.firstName,
     req.body.lastName,
     req.body.email,
     null,
-    null
+    photo,
+    "svg"
   );
   if (user) {
     res.redirect(
@@ -130,6 +133,7 @@ router.get("/about-user", async (req, res, next) => {
 router.get("/destroy", async (req, res, next) => {
   try {
     const apiRes = await usersModel.destroy(req.user.username);
+    await notesUsersStore.destroy(req.user.id)
     req.logOut((err) => {
       if (err) console.error(err);
       req.session.destroy();
@@ -153,40 +157,50 @@ passport.use(
     async (accessToken, refreshToken, profile, done) => {
       try {
         const jsonProfile = profile._json;
+        const photo =  await getPhoto(jsonProfile.picture)
+        const user = await usersModel.findOrCreate({
+          username: await genUserName(jsonProfile.given_name, 10, jsonProfile.email),
+          password: "",
+          provider: "google",
+          pid: jsonProfile.sub,
+          lastName: jsonProfile.family_name,
+          firstName: jsonProfile.given_name,
+          fullName: jsonProfile.name,
+          displayName: jsonProfile.name,
+          photoURL: jsonProfile.picture,
+          photo: photo,
+          photoType: 'png',
+          email: jsonProfile.email,
+
+        });
         done(
           null,
-          await usersModel.findOrCreate({
-            username: await genUserName(jsonProfile.given_name, 10, jsonProfile.email),
-            password: "",
-            provider: "google",
-            pid: jsonProfile.sub,
-            lastName: jsonProfile.family_name,
-            firstName: jsonProfile.given_name,
-            fullName: jsonProfile.name,
-            displayName: jsonProfile.name,
-            photoURL: jsonProfile.picture,
-            photo: await getPhoto(jsonProfile.picture),
-            email: jsonProfile.email,
-          })
+          user
         );
+        const noteUser = await notesUsersStore.read(user.id);
+        if (!noteUser)
+          await notesUsersStore.create(user.id, user.username, user.displayName, user.fullName, user.provider, photo, user.photoType);
       } catch (err) {
         done(err);
       }
     }
   )
 );
-router.get('/photo', async (req, res, next)=> {
-  res.type('jpeg')
-  let photo = req.user.photo
+
+router.get('/photo/:username', async (req, res, next) => {
+  const user =await notesUsersStore.readByUserName(req.params.username)
+  res.type(user.photoType)
+  let photo = user.photo
   photo = Object.values(photo);
   photo = new Uint8Array(photo)
   res.send(photo)
 })
+
 async function getPhoto(url) {
   const res = await fetch(url)
   const data = await res.blob()
   const blob = await data.bytes()
-  
+
   return Buffer.from(blob).toString('base64');
 }
 async function genUserName(username, rounds, email) {
@@ -195,11 +209,11 @@ async function genUserName(username, rounds, email) {
       const user = await usersModel.findViaEmail(email)
       if (user) return username;
     } catch (error) {
-      
+
     }
   }
   try {
-    username = username.toLowerCase( )
+    username = username.toLowerCase()
     const user = await usersModel.find(username);
     if (user) {
       rounds = rounds * 10;
@@ -249,6 +263,13 @@ passport.use(
       try {
         let check = await usersModel.passwordCheck(username, password);
         if (check.check) {
+          const user = await usersModel.find(username);
+          const noteUser = await notesUsersStore.read(user.id);
+          if (!noteUser) {
+            const photo = Buffer.from(new Uint8Array(Object.values(user.photo))).toString('base64') ;
+            await notesUsersStore.create(user.id, user.username, user.displayName, user.fullName, user.provider, photo, 'svg' );
+          }
+          
           done(null, { username: check.username, id: check.username });
         } else {
           done(null, false, { message: check.message });
@@ -278,3 +299,25 @@ passport.deserializeUser(async (id, done) => {
     done(error);
   }
 });
+
+function createLogo(firstName , lastName) {
+  if (!lastName) lastName = ''
+  let text = firstName.charAt(0) + lastName.charAt(0)
+  const encoder =new TextEncoder()
+  const svg = encoder.encode(`<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32">
+  <text
+    x="50%"
+    y="50%"
+    text-anchor="middle"
+    dominant-baseline="middle"
+    font-family="monospace"
+    font-size="16"
+    fill="#00ff00"
+  >
+    ${text}
+  </text>
+</svg>
+`);
+const buffer = Buffer.from(svg).toString('base64')
+  return buffer
+}

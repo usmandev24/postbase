@@ -7,25 +7,39 @@ datasource db {
   provider = "postgresql"
 }
 
+model notesUsers {
+  id          String     @id @unique
+  username    String     @unique @db.VarChar(255)
+  provider    String     @db.VarChar(255)
+  displayName String     @db.VarChar(255)
+  fullName    String     @db.VarChar(255)
+  photo       Bytes?      @db.ByteA
+  photoType   String?    @db.VarChar(255)
+  notes       Notes[]
+  comments    comments[]
+}
+
 model Notes {
-  notekey    String     @id @db.VarChar(255)
+  key    String     @id @db.VarChar(255)
   title      String?    @db.VarChar(255)
   body       String?
-  autherName String     @db.VarChar(255)
   public     Boolean    @default(true) @db.Boolean
   likes      Int?       @db.Integer
   comments   comments[]
+  auther     notesUsers @relation(fields: [autherId], references: [id])
+  autherId   String     @db.VarChar(255)
   createdAt  DateTime   @default(now()) @db.Timestamptz(6)
   updatedAt  DateTime   @updatedAt @db.Timestamptz(6)
 }
 
 model comments {
-  id          Int      @id @default(autoincrement())
-  from        String   @db.VarChar(255)
-  body        String   @db.VarChar(1024)
-  note        Notes    @relation(fields: [noteNotekey], references: [notekey])
-  createdAt   DateTime @db.Timestamptz(6)
-  noteNotekey String   @db.VarChar(255)
+  id          Int        @id @default(autoincrement())
+  auther        notesUsers @relation(fields: [autherId], references: [id])
+  autherId      String
+  body        String     @db.VarChar(1024)
+  note        Notes      @relation(fields: [noteNotekey], references: [key])
+  createdAt   DateTime   @default(now()) @db.Timestamptz(6)
+  noteNotekey String     @db.VarChar(255)
 }
 
 model session {
