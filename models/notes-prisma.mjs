@@ -14,7 +14,7 @@ export default class PrismaNotesStore extends AbstractNotesStore {
     await prisma.$disconnect();
   }
   async create(key, title, body, autherId) {
-    await connectDB();c
+    await connectDB();
     const note = await prisma.notes.create({
       data: {
         key: key,
