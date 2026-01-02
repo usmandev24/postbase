@@ -7,7 +7,6 @@
       "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
     --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono",
       "Courier New", monospace;
-    --color-red-500: oklch(63.7% 0.237 25.331);
     --color-purple-300: oklch(82.7% 0.119 306.383);
     --color-pink-200: oklch(89.9% 0.061 343.231);
     --color-pink-300: oklch(82.3% 0.12 346.018);
@@ -1527,9 +1526,6 @@
   .hidden {
     display: none;
   }
-  .inline {
-    display: inline;
-  }
   .modal-bottom {
     @layer daisyui.l1.l2 {
       place-items: end;
@@ -1866,9 +1862,6 @@
   .pb-4 {
     padding-bottom: calc(var(--spacing) * 4);
   }
-  .pl-2 {
-    padding-left: calc(var(--spacing) * 2);
-  }
   .pl-4 {
     padding-left: calc(var(--spacing) * 4);
   }
@@ -2013,9 +2006,6 @@
   }
   .text-primary-content {
     color: var(--color-primary-content);
-  }
-  .text-red-500 {
-    color: var(--color-red-500);
   }
   .text-secondary {
     color: var(--color-secondary);
@@ -2552,16 +2542,16 @@
     :root:not([data-theme]) {
       color-scheme: dark;
       --color-base-100: oklch(14% 0.025 120.757);
-      --color-base-200: oklch(18% 0.028 122.328);
-      --color-base-300: oklch(22% 0.032 124.321);
-      --color-base-content: oklch(92% 0.015 120.757);
-      --color-primary: oklch(68% 0.18 0.584);
+      --color-base-200: oklch(22% 0.028 122.328);
+      --color-base-300: oklch(32% 0.032 124.321);
+      --color-base-content: oklch(85% 0.101 131.063);
+      --color-primary: oklch(76% 0.18 0.584);
       --color-primary-content: oklch(15% 0.05 0.584);
-      --color-secondary: oklch(45% 0.01 120);
+      --color-secondary: oklch(80% 0.01 120);
       --color-secondary-content: oklch(98% 0 0);
       --color-accent: oklch(72% 0.11 221.723);
       --color-accent-content: oklch(15% 0.03 221.723);
-      --color-neutral: oklch(28% 0.04 131.684);
+      --color-neutral: oklch(44% 0.2 131.684);
       --color-neutral-content: oklch(90% 0.02 120.757);
       --color-info: oklch(70% 0.12 250);
       --color-success: oklch(78% 0.14 150);
@@ -2578,16 +2568,16 @@
   :root:has(input.theme-controller[value=greenp-dark]:checked),[data-theme="greenp-dark"] {
     color-scheme: dark;
     --color-base-100: oklch(14% 0.025 120.757);
-    --color-base-200: oklch(18% 0.028 122.328);
-    --color-base-300: oklch(22% 0.032 124.321);
-    --color-base-content: oklch(92% 0.015 120.757);
-    --color-primary: oklch(68% 0.18 0.584);
+    --color-base-200: oklch(22% 0.028 122.328);
+    --color-base-300: oklch(32% 0.032 124.321);
+    --color-base-content: oklch(85% 0.101 131.063);
+    --color-primary: oklch(76% 0.18 0.584);
     --color-primary-content: oklch(15% 0.05 0.584);
-    --color-secondary: oklch(45% 0.01 120);
+    --color-secondary: oklch(80% 0.01 120);
     --color-secondary-content: oklch(98% 0 0);
     --color-accent: oklch(72% 0.11 221.723);
     --color-accent-content: oklch(15% 0.03 221.723);
-    --color-neutral: oklch(28% 0.04 131.684);
+    --color-neutral: oklch(44% 0.2 131.684);
     --color-neutral-content: oklch(90% 0.02 120.757);
     --color-info: oklch(70% 0.12 250);
     --color-success: oklch(78% 0.14 150);

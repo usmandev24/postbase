@@ -49,42 +49,29 @@
   prefersdark: true;
   color-scheme: "dark";
 
-  /* Surfaces: Deep, rich forest tones */
-  /* We use a very low L (12-18%) but keep a touch of C (0.02) to keep it from feeling 'dead' */
   --color-base-100: oklch(14% 0.025 120.757); 
-  --color-base-200: oklch(18% 0.028 122.328); 
-  --color-base-300: oklch(22% 0.032 124.321); 
+ --color-base-200: oklch(22% 0.028 122.328); 
+  --color-base-300: oklch(32% 0.032 124.321);
   
-  /* Text: Soft mint-white for readability without glare */
-  --color-base-content: oklch(92% 0.015 120.757);
-
-  /* Brand Colors: "Glowing" but controlled */
-  /* Primary: Red-Pink. We keep it vibrant but raise L so it doesn't look muddy */
-  --color-primary: oklch(68% 0.18 0.584); 
+  --color-base-content: oklch(85% 0.101 131.063);
+  --color-primary: oklch(76% 0.18 0.584); 
   --color-primary-content: oklch(15% 0.05 0.584);
   
-  /* Secondary: Muted Gray-Green */
-  --color-secondary: oklch(45% 0.01 120);
+  --color-secondary: oklch(80% 0.01 120);
   --color-secondary-content: oklch(98% 0 0);
 
-  /* Accent: Electric Blue-Cyan adjusted for dark surfaces */
   --color-accent: oklch(72% 0.11 221.723);
   --color-accent-content: oklch(15% 0.03 221.723);
 
-  /* Functional: High-contrast but desaturated */
-  --color-neutral: oklch(28% 0.04 131.684);
+  --color-neutral: oklch(44% 0.2 131.684);
   --color-neutral-content: oklch(90% 0.02 120.757);
 
   --color-info: oklch(70% 0.12 250);
   --color-success: oklch(78% 0.14 150);
   --color-warning: oklch(80% 0.15 60);
   --color-error: oklch(72% 0.16 25);
-
-  /* Maintaining your structural constraints */
   --radius-selector: 1rem;
   --radius-field: 0.5rem;
   --radius-box: 1rem;
   --border: 1.5px;
 }
-
-

@@ -2,7 +2,7 @@ import '@dotenvx/dotenvx/config.js'
 import { default as express } from 'express';
 import { default as hbs } from 'hbs';
 import * as path from 'path';
-// import * as favicon from'serve-favicon';
+import serveFavicon from'serve-favicon';
 import { default as logger } from 'morgan';
 import { default as cookieParser } from 'cookie-parser';
 import * as http from 'http';
@@ -14,7 +14,6 @@ import {
 } from './appsupport.mjs';
 import { useModel as useNotesModel } from './models/notes-store.mjs';
 import session from 'express-session';
-import sessionFileStore from "session-file-store"
 import connectPgSimple from 'connect-pg-simple';
 import { default as pg } from 'pg';
 import { router as indexRouter, addNoteListners as wsHomeListener } from './routes/index.mjs';
@@ -48,7 +47,7 @@ app.set('view engine', 'hbs');
 hbs.registerPartials(path.join(__dirname, 'partials'));
 
 // uncomment after placing your favicon in /public
-//app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
+app.use(serveFavicon(path.join(__dirname, "public", "assets", "favicon", "favicon.ico")));
 app.use(logger(process.env.REQUEST_LOG_FORMAT || 'dev', {
     stream: process.env.REQUEST_LOG_FILE ? createStream(process.env.REQUEST_LOG_FILE, {
         size: '10M',

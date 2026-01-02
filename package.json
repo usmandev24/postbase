@@ -1,6 +1,6 @@
 {
-  "name": "notes",
-  "version": "0.0.0",
+  "name": "open-notes",
+  "version": "0.1.0",
   "private": true,
   "type": "module",
   "scripts": {
@@ -20,10 +20,8 @@
     "express": "^5.2.1",
     "express-session": "^1.18.2",
     "feather-icons": "^4.29.2",
-    "fs-extra": "^11.3.3",
     "hbs": "^4.2.0",
     "http-errors": "^2.0.1",
-    "js-yaml": "^4.1.1",
     "jsonwebtoken": "^9.0.3",
     "morgan": "^1.10.1",
     "passport": "^0.7.0",
@@ -32,8 +30,7 @@
     "passport-local": "^1.0.0",
     "pg": "^8.16.3",
     "rotating-file-stream": "^3.2.7",
-    "session-file-store": "^1.5.0",
-    "sqlite3": "^5.1.7",
+    "serve-favicon": "^2.5.1",
     "superagent": "^10.2.3",
     "ws": "^8.18.3"
   },
