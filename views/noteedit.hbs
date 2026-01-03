@@ -15,24 +15,8 @@
         <input type='hidden' name='docreate' value="create">
       {{else}}
         <input type='hidden' name='docreate' value="update">
+        <input type='hidden' name='notekey' value='{{#if note }}{{notekey}}{{/if}}' />
       {{/if}}
-
-      <div class=" w-full">
-        <label class="label" for="notekey">
-          <span class=" font-semibold text-secondary">Note Key</span>
-        </label>
-        
-        {{#if docreate }}
-          <input id="notekey" type='text' name='notekey' value='' 
-                 class="input input-bordered w-full focus:input-primary transition-all font-mono" 
-                 placeholder="e.g., my-first-note" required />
-        {{else}}
-          <input type="text" value="{{#if note }}{{notekey}}{{/if}}" 
-                 class="input input-bordered w-full bg-base-200 text-base-content/50 font-mono cursor-not-allowed" 
-                 disabled />
-          <input type='hidden' name='notekey' value='{{#if note }}{{notekey}}{{/if}}' />
-        {{/if}}
-      </div>
 
       <div class=" w-full">
         <label class="label" for="title">
@@ -48,12 +32,12 @@
         <label class=" label" for="body">
           <span class=" font-semibold text-secondary">Content</span>
         </label>
-        <textarea id="body" name='body' rows="8" 
-                  class="block w-full textarea textarea-bordered text-base leading-relaxed h-64 focus:textarea-primary transition-all" 
+        <textarea id="body" name='body' rows="4" 
+                  class="block w-full textarea textarea-bordered text-base leading-relaxed h-32 focus:textarea-primary transition-all" 
                   placeholder="Write your note content here...">{{#if note }}{{note.body}}{{/if}}</textarea>
       </div>
 
-      <div class="card-actions justify-end mt-6 flex items-center gap-4">
+      <div class="card-actions justify-end mt-4 flex items-center gap-4">
         <a href="/" class="btn btn-ghost">Cancel</a>
         
         <button type='submit' class="btn btn-primary px-8 gap-2">

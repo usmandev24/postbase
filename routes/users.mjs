@@ -6,6 +6,7 @@ import { default as passportJwt } from "passport-jwt";
 import { default as passportGoogle } from "passport-google-oauth20";
 import { TextEncoder } from "node:util";
 import debug from "debug";
+
 import * as usersModel from "../models/user-superagent.mjs";
 import { PrismaNotesUsersStore } from "../models/users-prisma.mjs";
 import { sessionCookieName } from "../app.mjs";
@@ -187,7 +188,12 @@ passport.use(
 );
 
 router.get('/photo/:username', async (req, res, next) => {
-  const user =await notesUsersStore.readByUserName(req.params.username)
+  if (req.headers["if-none-match"]) {
+    res.status(304).end()
+    return
+  }
+  console.log("Reading Database")
+  const user = await notesUsersStore.readByUserName(req.params.username)
   res.type(user.photoType)
   let photo = user.photo
   photo = Object.values(photo);

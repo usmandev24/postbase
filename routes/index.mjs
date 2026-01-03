@@ -1,7 +1,5 @@
 import * as express from 'express';
-import * as util from "node:util";
 import { NotesStore as notes } from '../models/notes-store.mjs';
-import { toRelativeTime } from '../models/timeage.js';
 import { WsServer } from '../app.mjs';
 
 export const router = express.Router();
@@ -34,7 +32,7 @@ router.get('/', async (req, res, next) => {
       notelist = false;
     }
     res.render('index', {
-      title: 'Notes', notelist: notelist,
+      title: 'OpenNotes', notelist: notelist,
       user: req.user ? req.user : undefined,
       level: req.query.level,
       massage: req.query.massage

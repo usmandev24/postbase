@@ -56,8 +56,8 @@ export default class PrismaNotesStore extends AbstractNotesStore {
     });
     try {
       note.updatedAt = toRelativeTime(note.updatedAt);
+      note.createdAt = toRelativeTime(note.createdAt)
     } catch{}
-    note.createdAt = toRelativeTime(note.createdAt);
     try {
       if (note.comments) {
         note.commentsLength = note.comments.length;

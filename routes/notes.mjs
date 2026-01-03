@@ -4,6 +4,7 @@ import { default as DBG } from "debug";
 import { ensureAuthenticated } from "./users.mjs";
 import { WsServer } from "../app.mjs"
 import { PrismaCommentsStore } from "../models/comments-prisma.mjs";
+import * as crpto from 'node:crypto';
 
 const debug = DBG('notes:routs_notes.mjs')
 const dbgerror = DBG('notes:error')
@@ -55,12 +56,13 @@ router.get('/add', ensureAuthenticated, (req, res, next) => {
 router.post('/save', ensureAuthenticated, async (req, res, next) => {
   try {
     let note;
-    let notekey = req.body.notekey;
-    notekey = notekey.trim();
+    let notekey; 
     debug(req.body.docreate);
     if (req.body.docreate === "create") {
+      notekey = crpto.randomUUID();
       note = await notes.create(notekey, req.body.title, req.body.body, req.user.id)
     } else {
+      notekey = req.body.notekey
       note = await notes.read(notekey)
       if (note.autherId !== req.user.id) {
         res.redirect("/")
