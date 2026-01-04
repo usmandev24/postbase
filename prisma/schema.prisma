@@ -8,38 +8,40 @@ datasource db {
 }
 
 model notesUsers {
-  id          String     @id @unique
-  username    String     @unique @db.VarChar(255)
-  provider    String     @db.VarChar(255)
-  displayName String     @db.VarChar(255)
-  fullName    String     @db.VarChar(255)
-  photo       Bytes?      @db.ByteA
-  photoType   String?    @db.VarChar(255)
-  notes       Notes[]
-  comments    comments[]
+  id              String     @id @unique
+  username        String     @unique @db.VarChar(255)
+  provider        String     @db.VarChar(255)
+  displayName     String     @db.VarChar(255)
+  firstName       String?    @db.VarChar(255)
+  email           String?    @db.VarChar(255)
+  photo           Bytes?
+  photoType       String?    @db.VarChar(255)
+  photo_updatedAt DateTime?  @updatedAt @db.Timestamptz(6)
+  notes           Notes[]
+  comments        comments[]
 }
 
 model Notes {
-  key    String     @id @db.VarChar(255)
-  title      String?    @db.VarChar(255)
-  body       String?
-  public     Boolean    @default(true) @db.Boolean
-  likes      Int?       @db.Integer
-  comments   comments[]
-  auther     notesUsers @relation(fields: [autherId], references: [id], onDelete: Cascade)
-  autherId   String     @db.VarChar(255)
-  createdAt  DateTime   @default(now()) @db.Timestamptz(6)
-  updatedAt  DateTime   @updatedAt @db.Timestamptz(6)
+  title     String?    @db.VarChar(255)
+  body      String?
+  createdAt DateTime   @default(now()) @db.Timestamptz(6)
+  updatedAt DateTime   @updatedAt @db.Timestamptz(6)
+  likes     Int?
+  public    Boolean    @default(true)
+  autherId  String     @db.VarChar(255)
+  key       String     @id @db.VarChar(255)
+  auther    notesUsers @relation(fields: [autherId], references: [id], onDelete: Cascade)
+  comments  comments[]
 }
 
 model comments {
   id          Int        @id @default(autoincrement())
-  auther        notesUsers @relation(fields: [autherId], references: [id], onDelete: Cascade)
-  autherId      String
   body        String     @db.VarChar(1024)
-  note        Notes      @relation(fields: [noteNotekey], references: [key], onDelete: Cascade)
   createdAt   DateTime   @default(now()) @db.Timestamptz(6)
   noteNotekey String     @db.VarChar(255)
+  autherId    String
+  auther      notesUsers @relation(fields: [autherId], references: [id], onDelete: Cascade)
+  note        Notes      @relation(fields: [noteNotekey], references: [key], onDelete: Cascade)
 }
 
 model session {
