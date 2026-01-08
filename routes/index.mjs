@@ -4,7 +4,7 @@ import { WsServer } from '../app.mjs';
 import { commentStore } from './notes.mjs';
 
 let cachedNotes;
-let changed = true;
+let  changed = true;
 
 export const router = express.Router();
 
@@ -24,6 +24,9 @@ export function wsHomeListners() {
       if (socket.readyState === socket.OPEN)
         socket.send(JSON.stringify({ type: 'notedestroyed', key: key }));
     })
+  })
+  notes.on("noteupdated", () => {
+    changed = true
   })
 
 }

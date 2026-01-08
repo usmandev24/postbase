@@ -2144,6 +2144,9 @@
   .max-h-\[30vh\] {
     max-height: 30vh;
   }
+  .min-h-40 {
+    min-height: calc(var(--spacing) * 40);
+  }
   .min-h-dvh {
     min-height: 100dvh;
   }
