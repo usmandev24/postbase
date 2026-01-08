@@ -2,6 +2,9 @@
 @source "../../../partials/*";
 @source "../../../views/*";
 @source "../../../public/*";
+@plugin "@tailwindcss/typography" {
+  
+}
 @plugin "daisyui" {
   themes: "greenp" --default , dark --prefersdark;
 }
