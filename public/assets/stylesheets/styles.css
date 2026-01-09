@@ -17,6 +17,7 @@
     --container-md: 28rem;
     --container-xl: 36rem;
     --container-3xl: 48rem;
+    --container-4xl: 56rem;
     --text-xs: 0.75rem;
     --text-xs--line-height: calc(1 / 0.75);
     --text-sm: 0.875rem;
@@ -2139,9 +2140,6 @@
   .max-h-\[30vh\] {
     max-height: 30vh;
   }
-  .min-h-80 {
-    min-height: calc(var(--spacing) * 80);
-  }
   .btn-wide {
     @layer daisyui.l1.l2 {
       width: 100%;
@@ -2191,6 +2189,12 @@
   }
   .max-w-3xl {
     max-width: var(--container-3xl);
+  }
+  .max-w-4xl {
+    max-width: var(--container-4xl);
+  }
+  .max-w-full {
+    max-width: 100%;
   }
   .max-w-md {
     max-width: var(--container-md);
@@ -2982,8 +2986,11 @@ trix-editor {
   border-color: var(--color-base-300);
   padding-inline: 0.6em;
   padding-block: 0.4em;
-  --tw-outline-style: none;
-  outline-style: none;
+  outline-color: var(--color-primary);
+  &:focus {
+    outline-style: var(--tw-outline-style);
+    outline-width: 1px;
+  }
 }
 trix-toolbar * {
   box-sizing: border-box;
@@ -3070,14 +3077,11 @@ trix-toolbar .trix-button:disabled {
   }
 }
 trix-toolbar .trix-button--icon {
-  height: 2em;
+  height: 1.6em;
   width: 2.6em;
   max-width: calc(0.8em + 3.5vw);
   text-indent: -9999px;
   color: inherit;
-  @media (width >= 48rem) {
-    height: 1.6em;
-  }
   @media (width >= 48rem) {
     max-width: calc(0.8em + 4vw);
   }
@@ -3656,6 +3660,11 @@ trix-toolbar .trix-dialog__link-fields .trix-button-group {
   syntax: "*";
   inherits: false;
 }
+@property --tw-outline-style {
+  syntax: "*";
+  inherits: false;
+  initial-value: solid;
+}
 @property --tw-tracking {
   syntax: "*";
   inherits: false;
@@ -3709,6 +3718,7 @@ trix-toolbar .trix-dialog__link-fields .trix-button-group {
       --tw-drop-shadow-size: initial;
       --tw-duration: initial;
       --tw-ease: initial;
+      --tw-outline-style: solid;
       --tw-tracking: initial;
       --tw-content: "";
     }
