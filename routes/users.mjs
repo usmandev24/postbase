@@ -135,6 +135,7 @@ router.get('/profile/:username', async (req, res, next) => {
   } else {
     const user = await notesUsersStore.getPublicData(req.params.username)
     res.render("profile", {
+      title: "About "+ req.params.username,
       user: req.user,
       publicUser: user,
       notelist: user.notes
