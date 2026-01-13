@@ -64,7 +64,7 @@
 <script>
   const notelist = document.getElementById('notelist');
   const emptyDiv = document.getElementById('emptydiv'); // Reference to hide this if a note comes in
-  const ws = new WebSocket("ws://localhost:3000")
+  const ws = new WebSocket("wss://opennotes.usman-ghani.dev")
   ws.addEventListener("message", (event) => {
     const data = JSON.parse(event.data);
     if (data.type === 'connection') {

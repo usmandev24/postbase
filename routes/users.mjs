@@ -4,9 +4,11 @@ import { default as passport } from "passport";
 import { default as passportLocal } from "passport-local";
 import { default as passportJwt } from "passport-jwt";
 import { default as passportGoogle } from "passport-google-oauth20";
+import { EventEmitter } from "node:events";
 import { TextEncoder } from "node:util";
 import debug from "debug";
 
+export const userRoutsEvents = new EventEmitter()
 import * as usersModel from "../models/user-superagent.mjs";
 import { PrismaNotesUsersStore } from "../models/users-prisma.mjs";
 import { sessionCookieName } from "../app.mjs";
@@ -153,6 +155,7 @@ router.get("/destroy", ensureAuthenticated, async (req, res, next) => {
   try {
     await notesUsersStore.destroy(req.user.id)
     const apiRes = await usersModel.destroy(req.user.username);
+    userRoutsEvents.emit("userdestroyed")
     req.logOut((err) => {
       if (err) console.error(err);
       req.session.destroy();

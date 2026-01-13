@@ -2,13 +2,15 @@ import * as express from 'express';
 import { NotesStore as notes } from '../models/notes-store.mjs';
 import { WsServer } from '../app.mjs';
 import { commentStore } from './notes.mjs';
+import { userRoutsEvents } from './users.mjs';
 
 let cachedNotes;
-let  changed = true;
+let changed = true;
 
 export const router = express.Router();
 
 export function wsHomeListners() {
+  userRoutsEvents.on("userdestroyed", () => {changed = true } )
   commentStore.on("commentcreated", () => { changed = true })
   commentStore.on("commentdestroyed", () => { changed = true })
   notes.on('notecreated', (note) => {

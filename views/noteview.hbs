@@ -165,7 +165,7 @@
   const commentText = document.getElementById("commentText");
   const liveComments = document.getElementById("liveComments");
   const noteBody = document.getElementById("noteBody")
-  const ws = new WebSocket("ws://localhost:3000")
+  const ws = new WebSocket("wss://opennotes.usman-ghani.dev")
   ws.addEventListener("message", event => {
     const data = JSON.parse(event.data);
     if (data.type === 'connection') {
