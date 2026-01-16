@@ -1,6 +1,7 @@
 <div class=" p-8 m-auto max-w-4xl bg-base-100">
   <div class="">
-    <img id="photo" class="m-auto bg-pink-300 dark:bg-black w-30 h-30 rounded-full" src="/assets/users/photo/{{user.username}}">
+    <img id="photo" class="m-auto bg-pink-300 dark:bg-black w-30 h-30 rounded-full"
+      src="/assets/users/photo/{{user.username}}">
     <span class=" relative -top-8 left-14 block m-auto btn btn-circle w-6 h-6 p-1 "
       onclick="modal_edit_photo.showModal()" data-feather="edit"></span>
     <h1 class="p-4 text-center text-2xl">Welcome {{user.fullName}}</h1>
@@ -25,17 +26,18 @@
     </div>
     <div class=" mt-4 p-4 rounded-lg">
       <h2 class=" text-xl p-1">Your Data</h2>
-      <p class="p-2 border-b dark:border-b-gray-600 border-b-gray-400  sm:grid grid-cols-2"> <span class="">Get Your Data (Notes, Comments)</span> <a
-          class=" underline " href="/users/request-data">Request Data</a></p>
+      <p class="p-2 border-b dark:border-b-gray-600 border-b-gray-400  sm:grid grid-cols-2"> <span class="">Get Your
+          Data (Notes, Comments)</span> <a class=" underline " href="/users/request-data">Request Data</a></p>
     </div>
     <div class=" p-4  flex flex-row justify-center-safe gap-2">
       <a class="btn btn-warning " href="/users/logout">Logout</a>
-      <button class="btn btn-error"  onclick="modal_delete.showModal()">Delete Account</button>
+      <button class="btn btn-error" onclick="modal_delete.showModal()">Delete Account</button>
     </div>
     <dialog id="modal_delete" class=" modal modal-middle">
       <div class=" modal-box bg-warning-content">
         <h2 class=" text-2xl lg:text-3xl p-4  font-bold">Permanant Account Delete?</h2>
-        <p class=" text-sm lg:text-lg p-2 pl-4">This will delete account and all your data including <strong>Notes</strong>  and <strong>Commments</strong> .</p>
+        <p class=" text-sm lg:text-lg p-2 pl-4">This will delete account and all your data including
+          <strong>Notes</strong> and <strong>Commments</strong> .</p>
         <p class=" text-sm lg:text-lg font-bold p-2 pl-4">Destructive action, cannot be undone.</p>
         <div class=" modal-action">
           <button onclick="modal_delete.close()" class=" btn">Cancel</button>
@@ -48,15 +50,15 @@
     </dialog>
     <dialog id="modal_edit_photo" class=" modal modal-middle">
       <div class=" modal-box ">
-        <span class="m-auto h-24 w-24 p-4 rounded-full bg-neutral" id="user_svg"  data-feather="user"></span>
+        <span class="m-auto h-24 w-24 p-4 rounded-full bg-neutral" id="user_svg" data-feather="user"></span>
         <img hidden class=" m-auto h-24 w-24  rounded-full" id="preview_photo" src="">
-        <p id="edit_info" class=" p-4 opacity-90 text-center text-sm ">* Image Size must be less than 2MB</p>
+        <p id="edit_info" class=" p-4 opacity-90 text-center text-sm ">* Image size must be less than 3MB</p>
         <label class="p-4 pt-2">
           <input id="photo_input" class="block m-auto file-input" type="file">
         </label>
         <div class=" modal-action ">
           <button class=" btn btn-ghost" onclick="modal_edit_photo.close()">Cancel</button>
-          <button id="btn_save_photo"  class=" btn btn-primary">Save </button>
+          <button id="btn_save_photo" class=" btn btn-primary">Save </button>
         </div>
       </div>
 
@@ -64,45 +66,91 @@
     </dialog>
     <script>
       const photoInput = document.getElementById("photo_input");
-      photoInput.addEventListener("change", (event) => {
+      photoInput.addEventListener("change", async (event) => {
         const preview = document.getElementById("preview_photo");
         const userSvg = document.getElementById("user_svg");
-        const saveBtn = document.getElementById("btn_save_photo")
-        const edit_info = document.getElementById("edit_info")
+        const saveBtn = document.getElementById("btn_save_photo");
+        const edit_info = document.getElementById("edit_info");
         const newPhoto = photoInput.files[0];
+        if (!newPhoto.type.startsWith("image")) {
+          edit_info.textContent = "❗Please select a image.";
+          saveBtn.disabled = true;
+          return
+        }
         
-        userSvg.style.display = "none"
+        const awater = await cropCenterResize(newPhoto);
+        userSvg.style.display = "none";
         preview.hidden = false;
-        const prePhotoURL = URL.createObjectURL(photoInput.files[0]);
-        console.log(newPhoto)
+        const prePhotoURL = URL.createObjectURL(awater);
         preview.src = prePhotoURL
         preview.addEventListener("load", (event) => {
           URL.revokeObjectURL(prePhotoURL)
         })
-        if (newPhoto.size/1000*1000 > 2 * 1000 * 1000) {
-          edit_info.textContent = "🗵 This Photo size is bigger than 2MB"
+        console.log(awater)
+        if (newPhoto.size / 1000 * 1000 > 3 * 1000 * 1000) {
+          edit_info.textContent = "❗This image size is bigger than 3MB"
           saveBtn.disabled = true
         } else {
-          edit_info.textContent = "🗹  You can Save this."
-          saveBtn.disabled =false
-        } 
+          edit_info.textContent = "✅ You can Save this."
+          saveBtn.disabled = false
+        }
         saveBtn.addEventListener("click", async (event) => {
-          console.log(newPhoto)
+          edit_info.textContent = "Uploading image..."
+          
           const req = await fetch("/users/update/photo/{{user.username}}", {
             method: "POST",
-            body: await newPhoto.arrayBuffer(),
-            headers: { "content-type": "application/octet-stream",
-            "phototype": newPhoto.type}
+            body: await awater.arrayBuffer(),
+            headers: {
+              "content-type": "application/octet-stream",
+              "phototype": awater.type
+            }
           })
           const res = await req.text();
           if (res === 'success') {
             console.log("ok")
             const reloadLink = document.createElement("a");
             reloadLink.href = "/users/profile/{{user.username}}"
-            reloadLink.click()
+            reloadLink.click();
           }
           modal_edit_photo.close()
         })
-      })
+      });
+      async function cropCenterResize(file) {
+          const img = await loadImage(file);
+
+          const size = Math.min(img.width, img.height);
+
+          // Center crop coordinates
+          const sx = Math.floor((img.width - size) / 2);
+          const sy = Math.floor((img.height - size) / 2);
+
+          const canvas = document.createElement("canvas");
+          canvas.width = 200;
+          canvas.height = 200;
+
+          const ctx = canvas.getContext("2d");
+
+          ctx.drawImage(img, sx, sy, size, size, 0, 0, 200, 200);
+
+          return new Promise((resolve) => {
+            canvas.toBlob(
+              resolve,
+              "image/jpeg",
+              0.9 // safe quality, still tiny
+            );
+          });
+        }
+
+        function loadImage(file) {
+          return new Promise((resolve, reject) => {
+            const img = new Image();
+            img.onload = () => {
+              URL.revokeObjectURL(img.src)
+              resolve(img);
+            } 
+            img.onerror = reject;
+            img.src = URL.createObjectURL(file);
+          });
+        }
     </script>
   </div>

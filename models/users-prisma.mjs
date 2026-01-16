@@ -31,8 +31,6 @@ export class PrismaNotesUsersStore {
         firstName,
         provider,
         email,
-        photo,
-        photoType
       },
     })
     return user
