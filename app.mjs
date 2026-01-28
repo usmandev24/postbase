@@ -13,9 +13,7 @@ import {
     normalizePort, onError, onListening, handle404, basicErrorHandler
 } from './appsupport.mjs';
 import { useModel as useNotesModel } from './models/notes-store.mjs';
-import session from 'express-session';
-import connectPgSimple from 'connect-pg-simple';
-import { default as pg } from 'pg';
+import passport from 'passport';
 import { router as indexRouter, wsHomeListners } from './routes/index.mjs';
 import { router as notesRouter, initSocket as initNotesSocket,  wsNotesListeners } from './routes/notes.mjs';
 import { initPassport, router as usersRouter, assetRouter as userAssestRouter } from './routes/users.mjs'
@@ -29,13 +27,6 @@ const dbgerror = DBG('notes:error')
 const _noteStore = await useNotesModel(process.env.NOTES_MODEL ? process.env.NOTES_MODEL :
     "memory"
 );
-
-const pgPool = new pg.Pool({
-    user: process.env.SETTION_STORE_USER,
-    password: process.env.SETTION_STORE_PASSWORD,
-    database: process.env.SETTION_STORE_DATABASE,
-    host: process.env.SETTION_STORE_HOST
-})
 
 
 export const sessionCookieName = "notesS!d"
@@ -59,13 +50,13 @@ app.use(logger(process.env.REQUEST_LOG_FORMAT || 'dev', {
 app.use(express.json());
 app.use(express.urlencoded());
 app.use(express.raw({type: "application/octet-stream", limit: "3mb"}))
-app.use(cookieParser());
+app.use(cookieParser(process.env.SESSION_COOKIE_SECRET));
 app.use(express.static(path.join(__dirname, 'public')));
 app.use('/assets/vendor/feather-icons', express.static(path.join(__dirname, 'node_modules', 'feather-icons', 'dist')));
 app.use('/assets/users', userAssestRouter)
 
 const mainRouter = express.Router()
-const connectPG = connectPgSimple(session)
+
 
 mainRouter.use((req, res , next) => {
     const cookie = req.cookies;
@@ -75,25 +66,14 @@ mainRouter.use((req, res , next) => {
     }                
     next()
 })
-mainRouter.use(session({
-    store: new connectPG({
-        pool: pgPool,
-        createTableIfMissing: true,
-    }),
-    name: sessionCookieName,
-    secret: process.env.SESSION_COOKIE_SECRET,
-    cookie: { httpOnly: true, path: "/", sameSite: 'lax', maxAge: 1000 * 60 * 60 * 24 * 30 },
-    saveUninitialized: false,
-    resave: false
-}))
+
 
 initPassport(mainRouter)
-/*
-For JWT ------------------------------------
+
 mainRouter.use((req, res, next) => {
     passport.authenticate('jwt', {session: false}, (err, user, info) => {
         if (user){
-            passport.authenticate('jwt', {session:false})(req, res, next)
+            passport.authenticate('jwt', {session:false,})(req, res, next)
         }
         else {
             next()
@@ -101,8 +81,7 @@ mainRouter.use((req, res, next) => {
     })(req, res, next)
     
 })
-    ------------------------------------------
-*/
+
 mainRouter.use('/', indexRouter);
 mainRouter.use('/notes', notesRouter);
 mainRouter.use('/users', usersRouter);

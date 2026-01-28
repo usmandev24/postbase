@@ -1,4 +1,3 @@
-
 import { Router } from "express";
 import { default as passport } from "passport";
 import { default as passportLocal } from "passport-local";
@@ -7,23 +6,23 @@ import { default as passportGoogle } from "passport-google-oauth20";
 import { EventEmitter } from "node:events";
 import { TextEncoder } from "node:util";
 import debug from "debug";
-
-export const userRoutsEvents = new EventEmitter()
+import jwt from 'jsonwebtoken';
 import * as usersModel from "../models/user-superagent.mjs";
 import { PrismaNotesUsersStore } from "../models/users-prisma.mjs";
 import { sessionCookieName } from "../app.mjs";
 
 const log = debug("notes:routes_users")
 const logError = debug("notes:routes_users_error")
-export const router = Router();
-export const assetRouter = Router();
 const LocalStrategy = passportLocal.Strategy;
 const JwtStrategy = passportJwt.Strategy;
 const googleStrategy = passportGoogle.Strategy;
 const notesUsersStore = new PrismaNotesUsersStore()
+
+export const userRoutsEvents = new EventEmitter()
+export const router = Router();
+export const assetRouter = Router();
 export function initPassport(app) {
   app.use(passport.initialize());
-  app.use(passport.session());
 }
 
 export function ensureAuthenticated(req, res, next) {
@@ -53,35 +52,52 @@ router.get(
     failureRedirect:
       "/users/login?level=error&massage=" +
       encodeURIComponent("Wrong password or username"),
+    session: false,
   }),
   (req, res, next) => {
-    req.session.save((err) => {
-      if (err) console.error(err);
+    const token = jwt.sign(req.user, process.env.SESSION_JWT_SECRET, {
+      algorithm: "HS256",
+      expiresIn: "15m",
+      subject: req.user.id,
     });
-    res.redirect("/");
+    res.cookie(sessionCookieName, token, {
+      httpOnly: true, sameSite: "lax",
+      maxAge: 1000 * 60 * 15,
+      secure: process.env.SESSION_COOKIE_SECRET,
+    })
+    res.redirect("/")
   }
 );
 
 router.post(
   "/login",
   passport.authenticate("local", {
-    successRedirect:
-      "/?level=success&massage=" + encodeURIComponent("Login Success"),
-    failureRedirect:
-      "/users/login?level=error&massage=" +
+    session: false,
+    failureRedirect: "/users/login?level=error&massage=" +
       encodeURIComponent("Wrong password or username"),
-  })
+  }),
+  (req, res, next) => {
+    const token = jwt.sign(req.user, process.env.SESSION_JWT_SECRET, {
+      algorithm: "HS256",
+      expiresIn: "15m",
+      subject: req.user.id,
+    });
+    console.log(token)
+    res.cookie(sessionCookieName, token, {
+      httpOnly: true, sameSite: "lax",
+      maxAge: 1000 * 60 * 15,
+    })
+    
+    res.redirect("/")
+  }
 );
 
 router.get("/logout", async (req, res, next) => {
-  req.logOut((err) => {
-    console.error(err);
-    req.session.destroy();
+  
     res.clearCookie(sessionCookieName);
     res.redirect(
       "/?level=warning&massage=" + encodeURIComponent("Logout Complete")
     );
-  });
 });
 router.get("/create", async (req, res, next) => {
   res.render("create-user", {
@@ -137,7 +153,7 @@ router.get('/profile/:username', async (req, res, next) => {
   } else {
     const user = await notesUsersStore.getPublicData(req.params.username)
     res.render("profile", {
-      title: "About "+ req.params.username,
+      title: "About " + req.params.username,
       user: req.user,
       publicUser: user,
       notelist: user.notes
@@ -149,7 +165,7 @@ router.get('/request-data', ensureAuthenticated, async (req, res, next) => {
   const user = await notesUsersStore.getAllData(req.user.username)
   res.type('applicaltion/json')
   res.send(user)
-    
+
 })
 router.get("/destroy", ensureAuthenticated, async (req, res, next) => {
   try {
@@ -175,6 +191,7 @@ passport.use(
       clientID: process.env.GOOGLE_CLIENT_ID,
       clientSecret: process.env.GOOGLE_CLIENT_SECRET,
       callbackURL: process.env.GOOGLE_AUTH_CALLBACKURL,
+      
     },
     async (accessToken, refreshToken, profile, done) => {
       try {
@@ -199,7 +216,16 @@ passport.use(
         });
         done(
           null,
-          user
+          {
+            id: user.id,
+            username: user.username,
+            provider: user.provider,
+            fullName: user.fullName,
+            displayName: user.displayName,
+            firstName: user.firstName,
+            lastName: user.lastName,
+            email: user.email,
+          }
         );
         const noteUser = await notesUsersStore.read(user.id);
         if (!noteUser)
@@ -237,6 +263,7 @@ assetRouter.get('/photo/:username', async (req, res, next) => {
     res.status(304).end()
     return
   }
+  
   log("Reading Database")
   const user = await notesUsersStore.getPhotoByUserName(req.params.username)
   res.type(user.photoType)
@@ -278,11 +305,11 @@ passport.use(
         return req.cookies[sessionCookieName];
       },
       passReqToCallback: true,
-      secretOrKey: "secret",
+      secretOrKey: process.env.SESSION_JWT_SECRET,
     },
     async (req, payload, done) => {
       try {
-        const user = await usersModel.findUserName(payload.username);
+        const user = payload
         if (user) {
           done(null, user);
         } else {
@@ -300,8 +327,10 @@ passport.use(
     {
       usernameField: "username",
       passwordField: "password",
+      session: false,
+      passReqToCallback: true
     },
-    async (username, password, done) => {
+    async (req, username, password, done) => {
       try {
         let check = await usersModel.passwordCheck(username, password);
         if (check.check) {
@@ -311,8 +340,16 @@ passport.use(
             const photo = Buffer.from(new Uint8Array(Object.values(user.photo)))
             await notesUsersStore.create(user.id, user.username, user.displayName, user.firstName, user.email, user.provider, photo, user.photoType);
           }
-
-          done(null, { username: check.username, id: check.id });
+          done(null, {
+            id: user.id,
+            username: user.username,
+            provider: user.provider,
+            fullName: user.fullName,
+            displayName: user.displayName,
+            firstName: user.firstName,
+            lastName: user.lastName,
+            email: user.email,
+          });
         } else {
           done(null, false, { message: check.message });
         }
@@ -322,25 +359,6 @@ passport.use(
     }
   )
 );
-
-passport.serializeUser((user, done) => {
-  try {
-    if (user) {
-      done(null, user.id);
-    }
-  } catch (error) {
-    done(error);
-  }
-});
-
-passport.deserializeUser(async (id, done) => {
-  try {
-    const user = await notesUsersStore.read(id);
-    done(null, user);
-  } catch (error) {
-    done(error);
-  }
-});
 
 function createLogo(firstName, lastName) {
   if (!lastName) lastName = ''
