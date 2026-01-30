@@ -215,7 +215,7 @@ passport.use(
         const jsonProfile = profile._json;
         const photo = await getPhoto(jsonProfile.picture)
         const genratedName = await genUserName(jsonProfile.given_name, 10, jsonProfile.email);
-        log(genratedName)
+        log("Generated Name "+ genratedName)
         const user = await usersModel.findOrCreate({
           username: genratedName,
           password: "",
@@ -231,6 +231,12 @@ passport.use(
           email: jsonProfile.email,
 
         });
+        const noteUser = await notesUsersStore.read(user.id);
+        if (!noteUser)
+          await notesUsersStore.create(user.id, user.username, user.displayName, user.firstName, user.email, user.provider, photo, user.photoType);
+        else {
+          await notesUsersStore.update(user.id, user.username, user.displayName, user.firstName, user.email, user.provider, photo, user.photoType)
+        }
         done(
           null,
           {
@@ -242,12 +248,6 @@ passport.use(
             email: user.email,
           }
         );
-        const noteUser = await notesUsersStore.read(user.id);
-        if (!noteUser)
-          await notesUsersStore.create(user.id, user.username, user.displayName, user.firstName, user.email, user.provider, photo, user.photoType);
-        else {
-          await notesUsersStore.update(user.id, user.username, user.displayName, user.firstName, user.email, user.provider, photo, user.photoType)
-        }
       } catch (err) {
         done(err);
       }
@@ -279,7 +279,7 @@ assetRouter.get('/photo/:username', async (req, res, next) => {
     return
   }
 
-  log("Reading Database")
+  log("Reading Database, Getting Photo of " + req.params.username)
   const user = await notesUsersStore.getPhotoByUserName(req.params.username)
   res.type(user.photoType)
   res.send(user.photo)
