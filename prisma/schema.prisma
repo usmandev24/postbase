@@ -19,6 +19,7 @@ model notesUsers {
   photo_updatedAt DateTime?  @updatedAt @db.Timestamptz(6)
   notes           Notes[]
   comments        comments[]
+  sessions        session[]
 }
 
 model Notes {
@@ -45,9 +46,10 @@ model comments {
 }
 
 model session {
-  sid    String   @id @db.VarChar
-  sess   Json     @db.Json
-  expire DateTime @db.Timestamp(6)
+  id     String     @id
+  user   notesUsers @relation(fields: [userid], references: [id], onDelete: Cascade)
+  userid String
+  expire DateTime   @db.Timestamp(6)
 
   @@index([expire], map: "IDX_session_expire")
 }

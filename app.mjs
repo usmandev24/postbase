@@ -20,6 +20,7 @@ import { initPassport, router as usersRouter, assetRouter as userAssestRouter } 
 import { default as DBG } from "debug";
 import * as ws from 'ws';
 import { wsSession } from './models/ws-session.mjs';
+import { restoreSession } from './models/prisma-session.mjs';
 
 const debug = DBG('notes:debug');
 const dbgerror = DBG('notes:error')
@@ -61,7 +62,7 @@ const mainRouter = express.Router()
 mainRouter.use((req, res , next) => {
     const cookie = req.cookies;
     if (!cookie.cacheControl) {
-        res.cookie("cacheControl", " ", {maxAge: 1000 * 60 * 5, httpOnly: true, path: '/', sameSite: 'lax'})
+        res.cookie("cacheControl", " ", {maxAge: 1000 * 60 * 30, httpOnly: true, path: '/', sameSite: 'lax'})
         res.cookie("cacheRefresh", " ", {maxAge: 1000 * 30 , httpOnly: true, path: '/', sameSite: 'lax' });
     }                
     next()
@@ -70,13 +71,13 @@ mainRouter.use((req, res , next) => {
 
 initPassport(mainRouter)
 
-mainRouter.use((req, res, next) => {
-    passport.authenticate('jwt', {session: false}, (err, user, info) => {
+mainRouter.use(async (req, res, next) => {
+    passport.authenticate('jwt', {session: false}, async (err, user, info) => {
         if (user){
             passport.authenticate('jwt', {session:false,})(req, res, next)
         }
         else {
-            next()
+            restoreSession(req, res, next)
         }
     })(req, res, next)
     

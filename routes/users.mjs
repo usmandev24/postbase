@@ -10,6 +10,7 @@ import jwt from 'jsonwebtoken';
 import * as usersModel from "../models/user-superagent.mjs";
 import { PrismaNotesUsersStore } from "../models/users-prisma.mjs";
 import { sessionCookieName } from "../app.mjs";
+import { genRefTokenHash, addSession } from "../models/prisma-session.mjs";
 
 const log = debug("notes:routes_users")
 const logError = debug("notes:routes_users_error")
@@ -54,16 +55,24 @@ router.get(
       encodeURIComponent("Wrong password or username"),
     session: false,
   }),
-  (req, res, next) => {
+  async (req, res, next) => {
     const token = jwt.sign(req.user, process.env.SESSION_JWT_SECRET, {
       algorithm: "HS256",
       expiresIn: "15m",
       subject: req.user.id,
     });
+    const [refTokenId, hashId] = genRefTokenHash();
+    await addSession( hashId, req.user.id);
+
+    res.cookie("sess_re_Tok", refTokenId, {
+      httpOnly: true,
+      sameSite: "lax", secure: true, maxAge: 1000 * 60 * 60 * 24 * 30
+    })
+
     res.cookie(sessionCookieName, token, {
       httpOnly: true, sameSite: "lax",
       maxAge: 1000 * 60 * 15,
-      secure: process.env.SESSION_COOKIE_SECRET,
+      secure: true,
     })
     res.redirect("/")
   }
@@ -76,28 +85,36 @@ router.post(
     failureRedirect: "/users/login?level=error&massage=" +
       encodeURIComponent("Wrong password or username"),
   }),
-  (req, res, next) => {
+  async (req, res, next) => {
     const token = jwt.sign(req.user, process.env.SESSION_JWT_SECRET, {
       algorithm: "HS256",
       expiresIn: "15m",
       subject: req.user.id,
     });
-    console.log(token)
+    const [refTokenId, hashId] = genRefTokenHash();
+    await addSession( hashId, req.user.id);
+
+    res.cookie("sess_re_Tok", refTokenId, {
+      httpOnly: true,
+      sameSite: "lax", secure: true, maxAge: 1000 * 60 * 60 * 24 * 30
+    })
+
     res.cookie(sessionCookieName, token, {
       httpOnly: true, sameSite: "lax",
-      maxAge: 1000 * 60 * 15,
+      maxAge: 1000 * 60 * 15, secure: true
     })
-    
+
     res.redirect("/")
   }
 );
 
 router.get("/logout", async (req, res, next) => {
-  
-    res.clearCookie(sessionCookieName);
-    res.redirect(
-      "/?level=warning&massage=" + encodeURIComponent("Logout Complete")
-    );
+
+  res.clearCookie(sessionCookieName);
+  res.clearCookie("sess_re_Tok")
+  res.redirect(
+    "/?level=warning&massage=" + encodeURIComponent("Logout Complete")
+  );
 });
 router.get("/create", async (req, res, next) => {
   res.render("create-user", {
@@ -191,7 +208,7 @@ passport.use(
       clientID: process.env.GOOGLE_CLIENT_ID,
       clientSecret: process.env.GOOGLE_CLIENT_SECRET,
       callbackURL: process.env.GOOGLE_AUTH_CALLBACKURL,
-      
+
     },
     async (accessToken, refreshToken, profile, done) => {
       try {
@@ -220,10 +237,8 @@ passport.use(
             id: user.id,
             username: user.username,
             provider: user.provider,
-            fullName: user.fullName,
             displayName: user.displayName,
             firstName: user.firstName,
-            lastName: user.lastName,
             email: user.email,
           }
         );
@@ -263,7 +278,7 @@ assetRouter.get('/photo/:username', async (req, res, next) => {
     res.status(304).end()
     return
   }
-  
+
   log("Reading Database")
   const user = await notesUsersStore.getPhotoByUserName(req.params.username)
   res.type(user.photoType)
@@ -344,10 +359,8 @@ passport.use(
             id: user.id,
             username: user.username,
             provider: user.provider,
-            fullName: user.fullName,
             displayName: user.displayName,
             firstName: user.firstName,
-            lastName: user.lastName,
             email: user.email,
           });
         } else {
