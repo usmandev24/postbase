@@ -4,7 +4,7 @@
       src="/assets/users/photo/{{user.username}}">
     <span class=" relative -top-8 left-14 block m-auto btn btn-circle w-6 h-6 p-1 "
       onclick="modal_edit_photo.showModal()" data-feather="edit"></span>
-    <h1 class="p-4 text-center text-2xl">Welcome {{user.fullName}}</h1>
+    <h1 class="p-4 text-center text-2xl">Welcome {{user.displayName}}</h1>
     <p class="text-lg text-center">View your info and manage account and take decision about your account</p>
     <div class="  mt-4 p-4 rounded-lg ">
       <h2 class=" text-xl p-1">Acount info</h2>
@@ -16,13 +16,48 @@
           class="text-lg block font-semibold">{{user.email}}</span></p>
     </div>
     <div class=" mt-4 p-4 rounded-lg ">
-      <h2 class=" text-xl p-1">Personal info</h2>
-      <p class="p-2 border-b dark:border-b-gray-600 border-b-gray-400  sm:grid grid-cols-2">Name <span
-          class="text-lg  block font-semibold  ">{{user.fullName}}</span></p>
-      <p class="p-2 border-b dark:border-b-gray-600 border-b-gray-400  sm:grid grid-cols-2">First Name <span
-          class="text-lg  block font-semibold  ">{{user.firstName}}</span></p>
-      <p class="p-2 border-b dark:border-b-gray-600 border-b-gray-400  sm:grid grid-cols-2">Last Name <span
-          class="text-lg  block font-semibold  ">{{user.lastName}}</span></p>
+      <div
+        class="p-1 mb-2 flex flex-row justify-items-start justify-start items-center-safe gap-4 sm:grid sm:grid-cols-2 sm:gap-0 ">
+        <h2 class=" text-xl" >Personal info</h2>
+        <button class="btn h-fit px-1 sm:-ml-34" id="btn_p_edit"> Edit<span
+            class="h-4" data-feather="edit"></span></button>
+      </div>
+      <div class="" id="personal_info">
+        <p class="p-2 border-b dark:border-b-gray-600 border-b-gray-400  sm:grid grid-cols-2">Display Name <span
+            id="display_name" class="text-lg  block font-semibold  ">{{user.displayName}}</span></p>
+        <p class="p-2 border-b dark:border-b-gray-600 border-b-gray-400  sm:grid grid-cols-2">First Name <span
+            id="first_name" class="text-lg  block font-semibold  ">{{user.firstName}}</span></p>
+        <p class="p-2 border-b dark:border-b-gray-600 border-b-gray-400  sm:grid grid-cols-2">Last Name <span
+            id="last_name" class="text-lg  block font-semibold  ">{{user.lastName}}</span></p>
+        <p class="p-2 border-b dark:border-b-gray-600 border-b-gray-400  sm:grid grid-cols-2">About You<span
+            class="text-lg  block font-semibold  " id="about">{{user.about}}</span></p>
+      </div>
+
+      <form hidden action="" class="pr-4" method="" id="form_personal">
+        <label class="p-1 mb-1 block sm:grid grid-cols-2">Display Name
+          <input class="input block w-full text-lg font-semibold" type="text" required id="input_display_name"
+            value="{{user.displayName}}">
+        </label>
+        <label class="p-1 mb-1 block sm:grid grid-cols-2">First Name
+          <input class="input block w-full  text-lg font-semibold" type="text" required id="input_first_name"
+            value="{{user.firstName}}">
+        </label>
+        <label class="p-1 mb-1 block sm:grid grid-cols-2">Last Name
+          <input class="input block w-full  text-lg font-semibold" type="text" required id="input_last_name"
+            value="{{user.lastName}}">
+        </label>
+        <label class="p-1 mb-1 block sm:grid grid-cols-2">About You
+          <textarea class="textarea w-full  block text-lg font-semibold" type="text" required
+            id="input_about">{{user.about}}</textarea>
+        </label>
+        <div class=" flex justify-end gap-2 px-2">
+          <button id="cancle_p_edit" class=" btn btn-ghost">Cancel</button>
+          <input class=" btn btn-primary" value="Save" type="submit" form="form_personal">
+        </div>
+      </form>
+    </div>
+    <div class=" mt-4 p-4 rounded-lg ">
+
     </div>
     <div class=" mt-4 p-4 rounded-lg">
       <h2 class=" text-xl p-1">Your Data</h2>
@@ -33,11 +68,27 @@
       <a class="btn btn-warning " href="/users/logout">Logout</a>
       <button class="btn btn-error" onclick="modal_delete.showModal()">Delete Account</button>
     </div>
-    <dialog id="modal_delete" class=" modal modal-middle">
-      <div class=" modal-box bg-warning-content">
+    
+    <dialog id="modal_about" class=" modal modal-middle">
+      <div class=" modal-box bg-base-100">
+        <h2 class=" text-2xl lg:text-3xl p-4  font-bold">Write About YourSelf</h2>
+        <div class="px-4">
+          <textarea placeholder=" Minimum 20 charcter required" id="modal_about_textarea"
+            class=" textarea textarea-primary textarea-md w-full "></textarea>
+        </div>
+        <div class=" modal-action px-4">
+          <button class=" btn btn-primary" disabled id="save_about" onclick="modal_about.close()">Save</button>
+        </div>
+      </div>
+      <form class=" modal-backdrop" method="dialog">
+      </form>
+    </dialog>
+    <dialog style="scrollbar-width: thin;" id="modal_delete" class=" modal modal-middle">
+      <div style="scrollbar-width: thin;" class=" modal-box bg-warning-content">
         <h2 class=" text-2xl lg:text-3xl p-4  font-bold">Permanant Account Delete?</h2>
         <p class=" text-sm lg:text-lg p-2 pl-4">This will delete account and all your data including
-          <strong>Notes</strong> and <strong>Commments</strong> .</p>
+          <strong>Notes</strong> and <strong>Commments</strong> .
+        </p>
         <p class=" text-sm lg:text-lg font-bold p-2 pl-4">Destructive action, cannot be undone.</p>
         <div class=" modal-action">
           <button onclick="modal_delete.close()" class=" btn">Cancel</button>
@@ -77,7 +128,7 @@
           saveBtn.disabled = true;
           return
         }
-        
+
         const awater = await cropCenterResize(newPhoto);
         userSvg.style.display = "none";
         preview.hidden = false;
@@ -96,7 +147,7 @@
         }
         saveBtn.addEventListener("click", async (event) => {
           edit_info.textContent = "Uploading image..."
-          
+
           const req = await fetch("/users/update/photo/{{user.username}}", {
             method: "POST",
             body: await awater.arrayBuffer(),
@@ -116,41 +167,112 @@
         })
       });
       async function cropCenterResize(file) {
-          const img = await loadImage(file);
+        const img = await loadImage(file);
 
-          const size = Math.min(img.width, img.height);
+        const size = Math.min(img.width, img.height);
 
-          // Center crop coordinates
-          const sx = Math.floor((img.width - size) / 2);
-          const sy = Math.floor((img.height - size) / 2);
+        // Center crop coordinates
+        const sx = Math.floor((img.width - size) / 2);
+        const sy = Math.floor((img.height - size) / 2);
 
-          const canvas = document.createElement("canvas");
-          canvas.width = 200;
-          canvas.height = 200;
+        const canvas = document.createElement("canvas");
+        canvas.width = 200;
+        canvas.height = 200;
 
-          const ctx = canvas.getContext("2d");
+        const ctx = canvas.getContext("2d");
 
-          ctx.drawImage(img, sx, sy, size, size, 0, 0, 200, 200);
+        ctx.drawImage(img, sx, sy, size, size, 0, 0, 200, 200);
 
-          return new Promise((resolve) => {
-            canvas.toBlob(
-              resolve,
-              "image/jpeg",
-              0.9 // safe quality, still tiny
-            );
-          });
+        return new Promise((resolve) => {
+          canvas.toBlob(
+            resolve,
+            "image/jpeg",
+            0.9 // safe quality, still tiny
+          );
+        });
+      }
+
+      function loadImage(file) {
+        return new Promise((resolve, reject) => {
+          const img = new Image();
+          img.onload = () => {
+            URL.revokeObjectURL(img.src)
+            resolve(img);
+          }
+          img.onerror = reject;
+          img.src = URL.createObjectURL(file);
+        });
+      }
+      const modal_about = document.getElementById("modal_about");
+      const save_about = document.getElementById("save_about");
+      const modal_about_textarea = document.getElementById("modal_about_textarea");
+
+      const personal_info = document.getElementById("personal_info")
+      const btn_p_edit = document.getElementById("btn_p_edit");
+      const form_personal = document.getElementById("form_personal");
+
+      btn_p_edit.onclick = () => {
+        form_personal.hidden = false;
+        personal_info.hidden = true;
+      }
+      const cancle_p_edit = document.getElementById("cancle_p_edit");
+      cancle_p_edit.onclick = () => {
+        form_personal.hidden =true;
+        personal_info.hidden = false
+      }
+
+      modal_about_textarea.onkeypress = () => {
+        const about = modal_about_textarea.value;
+        if (about.length < 20) {
+          save_about.disabled = true
+        } else save_about.disabled = false
+
+      }
+
+      form_personal.addEventListener("submit", async (event) => {
+        event.preventDefault();
+        const res = await fetch("/users/profile/update/personal", {
+          method: "POST",
+          body: JSON.stringify({
+            about: document.getElementById("input_about").value,
+            displayName: document.getElementById("input_display_name").value,
+            firstName: document.getElementById("input_first_name").value,
+            lastName: document.getElementById("input_last_name").value
+          }),
+          headers: {
+            "Content-type": "application/json"
+          }
+        });
+        console.log(res.status)
+        if (res.status === 200) {
+          const resText = await res.text();
+          const udpatedUser = JSON.parse(resText)
+          document.getElementById("display_name").textContent = udpatedUser.displayName
+          document.getElementById("first_name").textContent = udpatedUser.firstName
+          document.getElementById("last_name").textContent = udpatedUser.lastName
+          document.getElementById("about").textContent = udpatedUser.about
+          form_personal.hidden = true;
+          personal_info.hidden =false
         }
-
-        function loadImage(file) {
-          return new Promise((resolve, reject) => {
-            const img = new Image();
-            img.onload = () => {
-              URL.revokeObjectURL(img.src)
-              resolve(img);
-            } 
-            img.onerror = reject;
-            img.src = URL.createObjectURL(file);
+      });
+      save_about.onclick = async function () {
+        try {
+          const res = await fetch("/users/profile/update/about", {
+            method: "POST",
+            body: JSON.stringify({ about: modal_about_textarea.value }),
+            headers: {
+              "Content-type": "application/json"
+            }
           });
+          const resText = await res.text()
+          if (resText === modal_about_textarea.value) {
+            document.getElementById("about").textContent = resText
+          }
+          console.log(resText)
+          modal_about.close()
+        } catch (err) {
+
         }
+      };
     </script>
   </div>

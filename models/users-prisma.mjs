@@ -4,7 +4,7 @@ import { toRelativeTime } from "./timeage.js";
 import debug from "debug";
 const log = debug("notes:noteUsers-prisma")
 export class PrismaNotesUsersStore {
-  async create(userId, userName, displayName, firstName, email, provider, photo, photoType) {
+  async create(userId, userName, displayName, firstName, lastName, email, provider, photo, photoType) {
     await prisma.$connect();
     const user = await prisma.notesUsers.create(
       {
@@ -13,6 +13,7 @@ export class PrismaNotesUsersStore {
           username: userName,
           displayName: displayName,
           firstName,
+          lastName,
           email,
           provider: provider,
           photo: photo,
@@ -22,16 +23,28 @@ export class PrismaNotesUsersStore {
     )
     return user
   }
-  async update(userId, userName, displayName, firstName, email, provider, photo, photoType) {
+  async updateAbout(userId, about) {
+    await prisma.$connect();
+    const user = await prisma.notesUsers.update({
+      where: { id: userId },
+      data: {
+        about
+      },
+      omit: {photo: true}
+    })
+    return user
+  }
+  async updatePersonal(userId, displayName, firstName, lastName, about) {
     await prisma.$connect();
     const user = await prisma.notesUsers.update({
       where: { id: userId },
       data: {
         displayName,
         firstName,
-        provider,
-        email,
+        lastName,
+        about,
       },
+      omit: {photo: true, photoType: true, photo_updatedAt: true}
     })
     return user
   }

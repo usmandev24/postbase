@@ -13,7 +13,9 @@ model notesUsers {
   provider        String     @db.VarChar(255)
   displayName     String     @db.VarChar(255)
   firstName       String?    @db.VarChar(255)
+  lastName        String?    @db.VarChar(255)
   email           String?    @db.VarChar(255)
+  about           String?    @db.Text
   photo           Bytes?
   photoType       String?    @db.VarChar(255)
   photo_updatedAt DateTime?  @updatedAt @db.Timestamptz(6)

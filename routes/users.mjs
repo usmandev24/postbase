@@ -12,6 +12,7 @@ import { PrismaNotesUsersStore } from "../models/users-prisma.mjs";
 import { sessionCookieName } from "../app.mjs";
 import { genRefTokenHash, addSession } from "../models/prisma-session.mjs";
 
+
 const log = debug("notes:routes_users")
 const logError = debug("notes:routes_users_error")
 const LocalStrategy = passportLocal.Strategy;
@@ -62,7 +63,7 @@ router.get(
       subject: req.user.id,
     });
     const [refTokenId, hashId] = genRefTokenHash();
-    await addSession( hashId, req.user.id);
+    await addSession(hashId, req.user.id);
 
     res.cookie("sess_re_Tok", refTokenId, {
       httpOnly: true,
@@ -74,7 +75,7 @@ router.get(
       maxAge: 1000 * 60 * 15,
       secure: true,
     })
-    res.redirect("/")
+    res.redirect("/users/profile/" + req.user.username)
   }
 );
 
@@ -92,7 +93,7 @@ router.post(
       subject: req.user.id,
     });
     const [refTokenId, hashId] = genRefTokenHash();
-    await addSession( hashId, req.user.id);
+    await addSession(hashId, req.user.id);
 
     res.cookie("sess_re_Tok", refTokenId, {
       httpOnly: true,
@@ -104,7 +105,7 @@ router.post(
       maxAge: 1000 * 60 * 15, secure: true
     })
 
-    res.redirect("/")
+    res.redirect(`/users/profile/${req.user.username}`)
   }
 );
 
@@ -162,7 +163,15 @@ router.post("/create", async (req, res, next) => {
 
 router.get('/profile/:username', async (req, res, next) => {
   if (req.user && req.params.username === req.user.username) {
-    const user = await usersModel.findUserName(req.user.username);
+    const user = await notesUsersStore.readByUserName(req.user.username);
+    if (req.query.new) {
+      res.render("about-user", {
+        title: "About " + req.user.displayName,
+        user: user,
+        new: true,
+      });
+      return
+    }
     res.render("about-user", {
       title: "About " + req.user.displayName,
       user: user,
@@ -178,6 +187,22 @@ router.get('/profile/:username', async (req, res, next) => {
   }
 
 });
+router.post("/profile/update/about", ensureAuthenticated, async (req, res, next) => {
+  console.log(req.body)
+  const user =await  notesUsersStore.updateAbout(req.user.id, req.body.about);
+  res.end(user.about);
+})
+router.post("/profile/update/personal", ensureAuthenticated, async (req, res, next) => {
+  console.log(req.body)
+  const body = req.body;
+  const user =await  notesUsersStore.updatePersonal(req.user.id, body.displayName, body.firstName, body.lastName, body.about );
+  res.end(JSON.stringify({
+    firstName: user.firstName,
+    lastName: user.lastName,
+    displayName: user.displayName,
+    about: user.about
+  }));
+})
 router.get('/request-data', ensureAuthenticated, async (req, res, next) => {
   const user = await notesUsersStore.getAllData(req.user.username)
   res.type('applicaltion/json')
@@ -215,7 +240,7 @@ passport.use(
         const jsonProfile = profile._json;
         const photo = await getPhoto(jsonProfile.picture)
         const genratedName = await genUserName(jsonProfile.given_name, 10, jsonProfile.email);
-        log("Generated Name "+ genratedName)
+        log("Generated Name " + genratedName)
         const user = await usersModel.findOrCreate({
           username: genratedName,
           password: "",
@@ -233,9 +258,9 @@ passport.use(
         });
         const noteUser = await notesUsersStore.read(user.id);
         if (!noteUser)
-          await notesUsersStore.create(user.id, user.username, user.displayName, user.firstName, user.email, user.provider, photo, user.photoType);
+          await notesUsersStore.create(user.id, user.username, user.displayName, user.firstName, user.lastName, user.email, user.provider, photo, user.photoType);
         else {
-          await notesUsersStore.update(user.id, user.username, user.displayName, user.firstName, user.email, user.provider, photo, user.photoType)
+          // await notesUsersStore.update(user.id, user.username, user.displayName, user.firstName,user.lastName, user.email, user.provider, photo, user.photoType)
         }
         done(
           null,
@@ -353,7 +378,7 @@ passport.use(
           const noteUser = await notesUsersStore.read(user.id);
           if (!noteUser) {
             const photo = Buffer.from(new Uint8Array(Object.values(user.photo)))
-            await notesUsersStore.create(user.id, user.username, user.displayName, user.firstName, user.email, user.provider, photo, user.photoType);
+            await notesUsersStore.create(user.id, user.username, user.displayName, user.firstName, user.lastName, user.email, user.provider, photo, user.photoType);
           }
           done(null, {
             id: user.id,
