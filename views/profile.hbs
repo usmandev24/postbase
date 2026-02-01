@@ -1,13 +1,14 @@
 <div class=" p-8 m-auto max-w-4xl bg-base-100">
   <div class="">
     <img id="photo" class="m-auto bg-pink-300 dark:bg-black w-30 h-30 rounded-full" src="/assets/users/photo/{{publicUser.username}}">
-    <h1 class="p-4 text-center text-2xl"> {{publicUser.displayName}}</h1>
+    <h1 class="p-2 text-center text-2xl"> {{publicUser.displayName}}</h1>
+    <p class="p-2 text-center text-lg">{{publicUser.about}}</p>
     <div class="  mt-4 p-4 rounded-lg ">
       <h2 class=" text-xl p-1">Acount info</h2>
       <p class="p-2 border-b dark:border-b-gray-600 border-b-gray-400  sm:grid grid-cols-2">username <span
           class="text-lg  block font-semibold  ">{{publicUser.username}}</span></p>
-      <p class="p-2 border-b dark:border-b-gray-600 border-b-gray-400 sm:grid grid-cols-2">Provider <span
-          class="text-lg block font-semibold">{{publicUser.provider}}</span></p>
+      <p class="p-2 border-b dark:border-b-gray-600 border-b-gray-400 sm:grid grid-cols-2">Bio <span
+          class="text-lg block font-semibold">{{publicUser.about}}</span></p>
     
     </div>
   </div>

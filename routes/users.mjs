@@ -164,14 +164,6 @@ router.post("/create", async (req, res, next) => {
 router.get('/profile/:username', async (req, res, next) => {
   if (req.user && req.params.username === req.user.username) {
     const user = await notesUsersStore.readByUserName(req.user.username);
-    if (req.query.new) {
-      res.render("about-user", {
-        title: "About " + req.user.displayName,
-        user: user,
-        new: true,
-      });
-      return
-    }
     res.render("about-user", {
       title: "About " + req.user.displayName,
       user: user,
@@ -188,12 +180,10 @@ router.get('/profile/:username', async (req, res, next) => {
 
 });
 router.post("/profile/update/about", ensureAuthenticated, async (req, res, next) => {
-  console.log(req.body)
   const user =await  notesUsersStore.updateAbout(req.user.id, req.body.about);
   res.end(user.about);
 })
 router.post("/profile/update/personal", ensureAuthenticated, async (req, res, next) => {
-  console.log(req.body)
   const body = req.body;
   const user =await  notesUsersStore.updatePersonal(req.user.id, body.displayName, body.firstName, body.lastName, body.about );
   res.end(JSON.stringify({
