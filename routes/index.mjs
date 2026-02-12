@@ -38,6 +38,7 @@ router.get('/', async (req, res, next) => {
     if (!changed) {
       res.render('index', {
         title: 'PostBase', postlist: cachedposts,
+        homepage: true,
         user: req.user ? req.user : undefined,
         level: req.query.level,
         massage: req.query.massage,
@@ -59,6 +60,7 @@ router.get('/', async (req, res, next) => {
     }
     res.render('index', {
       title: 'PostBase', postlist: postlist,
+      homepage: true,
       user: req.user ? req.user : undefined,
       level: req.query.level,
       massage: req.query.massage
