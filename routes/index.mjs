@@ -86,7 +86,7 @@ router.get("/terms-of-services", (req, res, next) => {
 
 router.get("/about-postbase", (req, res, next) => {
   res.render('about-postbase', {
-    title: 'What is PostBase?', postlist: cachedposts,
+    title: 'About Postbase', postlist: cachedposts,
     user: req.user ? req.user : undefined,
   })
 })

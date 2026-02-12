@@ -3,7 +3,6 @@
 
   <!-- Page Header -->
   <header class="text-center space-y-2">
-    <h1 class="text-3xl font-bold">About Postbase</h1>
     <p class="text-base-content/70">
       A learning project and portfolio showcase built by me, focusing on clarity, speed, and hands-on backend/frontend experience.
     </p>
@@ -38,7 +37,11 @@
 
   <!-- Call to Action -->
   <section class="text-center space-y-2">
-    <a href="/users/login" class="btn btn-primary btn-md">Try Postbase</a>
+    {{#if user}}
+    <a href="/" class="btn btn-primary btn-md">Explore Postbase</a>
+    {{else}}
+    <a href="/users/login" class="btn btn-primary btn-md">Join Postbase</a>
+    {{/if}}
   </section>
 
 </div>
