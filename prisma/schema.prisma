@@ -19,9 +19,19 @@ model postUser {
   photo           Bytes?
   photoType       String?    @db.VarChar(255)
   photo_updatedAt DateTime?  @updatedAt @db.Timestamptz(6)
-  posts            posts[]
+  likes          like[]
+  posts           posts[]
   comments        comments[]
   sessions        session[]
+}
+
+model like {
+  @@id([postkey, userId])
+  post    posts    @relation(fields: [postkey], references: [key], onDelete: Cascade)
+  postkey String
+  likedby postUser @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId  String
+  @@index([userId])
 }
 
 model posts {
@@ -29,12 +39,14 @@ model posts {
   body      String?
   createdAt DateTime   @default(now()) @db.Timestamptz(6)
   updatedAt DateTime   @updatedAt @db.Timestamptz(6)
-  likes     Int?
+  likes     like[]
   public    Boolean    @default(true)
   autherId  String     @db.VarChar(255)
   key       String     @id @db.VarChar(255)
   auther    postUser   @relation(fields: [autherId], references: [id], onDelete: Cascade)
   comments  comments[]
+  @@index([autherId])
+  @@index([updatedAt(sort: Desc), key])
 }
 
 model comments {
@@ -44,7 +56,9 @@ model comments {
   postkey   String   @db.VarChar(255)
   autherId  String
   auther    postUser @relation(fields: [autherId], references: [id], onDelete: Cascade)
-  post      posts     @relation(fields: [postkey], references: [key], onDelete: Cascade)
+  post      posts    @relation(fields: [postkey], references: [key], onDelete: Cascade)
+  @@index([postkey, createdAt(sort: Desc)])
+  @@index([autherId])
 }
 
 model session {
