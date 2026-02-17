@@ -4,12 +4,17 @@ import { prisma } from "./prisma.mjs";
 import debug from "debug";
 import { cacheStore } from "./cache.mjs";
 import Keyv from "keyv";
+import PrismaPostsStore from "./posts-prisma.mjs";
+import { PrismaCommentsStore } from "./comments-prisma.mjs";
 
-export const userCache = new Keyv(cacheStore, { namespace: "userCache" });
+export const userCache = new Keyv(cacheStore, { namespace: "userCache", });
+const commentStore = new PrismaCommentsStore();
+const postStore = new PrismaPostsStore();
 const log = debug("posts:postUsers-prisma")
 
 
 export class PrismaPostsUsersStore {
+  static #inFlight  = new Map()
   async create(userId, userName, displayName, firstName, lastName, email, provider, photo, photoType) {
     await prisma.$connect();
     const user = await prisma.postUser.create(
@@ -104,40 +109,18 @@ export class PrismaPostsUsersStore {
   }
 
   async getAllData(userName) {
-     
-    const cachedUser = await userCache.get(userName)
-    log("DataBase read query: getAllData " + userName)
-
-    await prisma.$connect();
-    const user = await prisma.postUser.findUnique({
-      where: { username: userName },
-      omit: { photo: true, email: true, id: true },
-      include: {
-        posts: {
-          orderBy: { createdAt: "desc" },
-          include: { auther: { select: { username: true } } }
-        },
-        comments: {
-          include: { post: { select: { title: true } } }
-        }
-      }
-    })
+    
+    const user = await this.readByUserName(userName) 
+    user.posts = await postStore.getUserPosts(user.id, false)
+    user.comments = await commentStore.getAllByUser(user.id)
     return user
   }
+
   async getPublicData(userName) {
-    log("database read getPUblic data"+userName)
-    await prisma.$connect();
-    let user = await prisma.postUser.findUnique({
-      where: { username: userName },
-      omit: { photo: true, email: true, id: true },
-      include: {
-        posts: {
-          orderBy: { createdAt: "desc" },
-          where: { public: true },
-          include: { auther: { select: { username: true } } }
-        }
-      }
-    })
+
+    const user = await this.readByUserName(userName)
+    const posts = await postStore.getUserPosts(user.id, true)
+    user.posts = posts
     return user;
   }
   
@@ -157,5 +140,6 @@ export class PrismaPostsUsersStore {
     })
     await userCache.delete(userId);
     await userCache.delete(user.username);
+    await postStore.onUserDestroyed(userId);
   }
 }

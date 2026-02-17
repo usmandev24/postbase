@@ -46,6 +46,7 @@ model posts {
   auther    postUser   @relation(fields: [autherId], references: [id], onDelete: Cascade)
   comments  comments[]
   @@index([autherId])
+  @@index([autherId, public])
   @@index([updatedAt(sort: Desc), key])
 }
 

@@ -172,7 +172,9 @@ export default class PrismaPostsStore extends AbstractPostsStore {
     post.comments = comments
     return post
   }
-
+  async onUserDestroyed(userId) {
+    await postCache.deleteKeyList();
+  }
   async destroy(key) {
     const post = await this.readMin(key)
     await prisma.posts.delete({ where: { key: key } });
@@ -213,15 +215,27 @@ export default class PrismaPostsStore extends AbstractPostsStore {
     return fetchTask
   }
 
-  async getAllbyautherId(autherId) {
-    const posts = await prisma.posts.findMany({
-      where: { autherId: autherId },
-      orderBy: { updatedAt: "desc" },
+  async getUserPosts(autherId, pb) {
+    let postKeys;
+    if (pb) {
+      postKeys = await prisma.posts.findMany({
+        where: { autherId, public: pb },
+        select: { key: true },
+        orderBy: { updatedAt: "desc" },
+      });
+    } else {
+      postKeys = await prisma.posts.findMany({
+        where: { autherId},
+        select: { key: true },
+        orderBy: { updatedAt: "desc" },
+      });
+    }
+    const posts = postKeys.map((post) => {
+      return this.readMin(post.key)
     });
-    return posts.map((post) => {
-      return post;
-    });
+    return Promise.all(posts)
   }
+
   async count() {
     return await prisma.posts.count();
   }

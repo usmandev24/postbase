@@ -81,6 +81,7 @@ class CommentCache {
 }
 
 const commentCache = new CommentCache(cacheStore)
+
 export class PrismaCommentsStore {
   static #inFlight = new Map()
   static #events = new EventEmitter()
@@ -149,9 +150,15 @@ export class PrismaCommentsStore {
     await commentCache.deleteComment(postkey, id, collection)
     PrismaCommentsStore.#events.emit("commentdestroyed", postkey, id)
   }
-
+  async getAllByUser(autherId) {
+    const comments = prisma.comments.findMany({
+      where: {autherId},
+      include: {post: {select: {title: true}}}
+    })
+  }
   async clearCacheByPost(postkey, totalComments) {
     const collections = Math.ceil(totalComments/take) ;
     await commentCache.dltAllByPostKey(postkey, collections)
   }
+  
 }
