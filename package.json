@@ -6,14 +6,15 @@
   "scripts": {
     "start": "dotenvx run --env-file=.env.production -- cross-env DEBUG=posts:* tsx ./app.mjs",
     "dev": "dotenvx run --env-file=.env.development -- cross-env DEBUG=posts:* nodemon tsx ./app.mjs",
-    "watch": "tailwindcss -i ./public/assets/stylesheets/input.css -o ./public/assets/stylesheets/styles.css --watch"
+    "watch": "tailwindcss -i ./public/assets/stylesheets/input.css -o ./public/assets/stylesheets/styles.css --watch",
+    "prisma": "dotenvx run --env-file=.env.development -- prisma"
   },
   "author": "Usman Ghani",
   "license": "",
   "dependencies": {
     "@dotenvx/dotenvx": "^1.52.0",
-    "@prisma/adapter-pg": "^7.4.0",
-    "@prisma/client": "^7.4.0",
+    "@prisma/adapter-pg": "^7.4.1",
+    "@prisma/client": "^7.4.1",
     "bcryptjs": "^3.0.3",
     "connect-pg-simple": "^10.0.0",
     "cookie-parser": "^1.4.7",
@@ -40,16 +41,16 @@
     "ws": "^8.19.0"
   },
   "devDependencies": {
-    "@tailwindcss/cli": "^4.1.18",
+    "@tailwindcss/cli": "^4.2.0",
     "@tailwindcss/typography": "^0.5.19",
     "@types/node": "^24.10.13",
     "@types/pg": "^8.16.0",
     "daisyui": "^5.5.18",
-    "nodemon": "^3.1.11",
+    "nodemon": "^3.1.13",
     "prettier": "^3.8.1",
     "prettier-plugin-tailwindcss": "^0.6.14",
-    "prisma": "^7.4.0",
-    "tailwindcss": "^4.1.18",
+    "prisma": "^7.4.1",
+    "tailwindcss": "^4.2.0",
     "tsx": "^4.21.0"
   }
 }
