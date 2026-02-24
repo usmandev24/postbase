@@ -14,7 +14,7 @@ class PostCatgCache {
   attachEvents() {
     PrismaPostsStore.Events.on("catgcreated", (catgName, postkey) => {
       return this.lock(catgName, async () => {
-        const keylist = await this.get(catgName) 
+        const keylist = await this.get(catgName)
         if (!keylist) return;
         keylist.unshift(postkey);
         return this.set(catgName, keylist)
@@ -75,14 +75,29 @@ export class PrismaPostCatgStore {
     return fetchTask;
   }
 
-  
+
 
   async getPostKeysByCatg(catgName) {
     return this.setFlight(catgName, async () => {
       try {
-        if (catgName === "all") {
+        if (catgName === "All Posts") {
           const postkeys = await prisma.categoryToPosts
             .findMany({
+              orderBy: { createdAt: "desc" },
+            })
+            .then((v) => {
+              const keys = new Set();
+              v.forEach(c => keys.add(c.postkey));
+              return Array.from(keys.values())
+            });
+
+          postCatgCache.set(catgName, postkeys);
+
+          return postkeys;
+        } else {
+          const postkeys = await prisma.categoryToPosts
+            .findMany({
+              where: { catgName },
               orderBy: { createdAt: "desc" },
             })
             .then((v) => v.map((c) => c.postkey));
@@ -91,16 +106,7 @@ export class PrismaPostCatgStore {
 
           return postkeys;
         }
-        const postkeys = await prisma.categoryToPosts
-          .findMany({
-            where: { catgName },
-            orderBy: { createdAt: "desc" },
-          })
-          .then((v) => v.map((c) => c.postkey));
 
-        postCatgCache.set(catgName, postkeys);
-
-        return postkeys;
       } catch (error) {
         console.error(error);
       }
