@@ -1,16 +1,19 @@
 import { default as express } from "express";
-import { postsStore as posts, postsStore } from "../models/posts-store.mjs";
+import PrismaPostsStore from "../models/posts-prisma.mjs"
 import { default as DBG } from "debug";
 import { ensureAuthenticated } from "./users.mjs";
 import { WsServer } from "../app.mjs"
 import { PrismaCommentsStore } from "../models/comments-prisma.mjs";
 import { PrimsaLikesStore } from "../models/likes-prisma.mjs";
+import { PrismaPostCatgStore } from "../models/catg-prisma.mjs";
 import * as crpto from 'node:crypto';
 
 const debug = DBG('posts:routs_posts.mjs')
 const dbgerror = DBG('posts:error')
 export const commentStore = new PrismaCommentsStore()
 export const likeStore = new PrimsaLikesStore()
+export const catgsStore = new PrismaPostCatgStore();
+const posts = new PrismaPostsStore()
 export const router = express.Router();
 
 export function wsPostsListeners() {
@@ -28,7 +31,7 @@ export function wsPostsListeners() {
       }
     })
   })
-  posts.on("postupdated", post => {
+  PrismaPostsStore.Events.on("postupdated", post => {
     WsServer.clients.forEach(socket => {
       if (socket.readyState === socket.OPEN) {
         socket.send(JSON.stringify({ type: "postupdated", post }))
@@ -51,11 +54,15 @@ export async function initSocket(socket) {
 }
 
 //Add posts.
-router.get('/add', ensureAuthenticated, (req, res, next) => {
+router.get('/add', ensureAuthenticated, async (req, res, next) => {
+  const catgNameList = (await catgsStore.getCategoriesNames()).map(v => {
+    return {catgName: v}
+  })
   res.render('postedit', {
     title: "Add a post",
     docreate: true,
     postkey: '',
+    catgNameList,
     post: undefined,
     user: req.user ? req.user : undefined
   })
@@ -69,7 +76,7 @@ router.post('/save', ensureAuthenticated, async (req, res, next) => {
     debug(req.body.docreate);
     if (req.body.docreate === "create") {
       postkey = crpto.randomUUID();
-      post = await posts.create(postkey, req.body.title, req.body.body, req.user.id)
+      post = await posts.create(postkey, req.body.title, req.body.body, req.user.id, req.body.catg1, req.body.catg2, req.body.catg3)
     } else {
       postkey = req.body.postkey
       post = await posts.read(postkey)
@@ -175,7 +182,11 @@ router.get('/comment/destroy/:id', ensureAuthenticated, async (req, res, next) =
     next(error)
   }
 })
-
+router.get("/categories-names-list", ensureAuthenticated, async (req, res, next) => {
+  const catgsList = await catgsStore.getCategoriesNames()
+  res.type("application/json");
+  res.send(catgsList)
+})
 router.post('/likes/add', ensureAuthenticated, async (req, res, next) => {
   const postkey = req.body?.postkey;
   const userId = req.body?.userId

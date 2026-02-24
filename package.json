@@ -7,7 +7,8 @@
     "start": "dotenvx run --env-file=.env.production -- cross-env DEBUG=posts:* tsx ./app.mjs",
     "dev": "dotenvx run --env-file=.env.development -- cross-env DEBUG=posts:* nodemon tsx ./app.mjs",
     "watch": "tailwindcss -i ./public/assets/stylesheets/input.css -o ./public/assets/stylesheets/styles.css --watch",
-    "prisma": "dotenvx run --env-file=.env.development -- prisma"
+    "prisma": "dotenvx run --env-file=.env.development -- prisma",
+    "init-catg" : "dotenvx run --env-file=.env.development -- node ./models/init-categories.mjs"
   },
   "author": "Usman Ghani",
   "license": "",

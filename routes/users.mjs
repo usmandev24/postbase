@@ -326,7 +326,7 @@ async function genUserName(username, rounds, email) {
       const user = await usersModel.findEmail(email)
       if (user.email) return user.username;
     } catch (error) {
-      throw new error(error)
+      console.error(error)
     }
   }
   try {

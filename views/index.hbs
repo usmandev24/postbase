@@ -1,14 +1,100 @@
 <div class="max-w-4xl w-full mx-auto p-4 md:p-6">
+  {{#if homepage}} 
+  <section class="max-w-4xl mx-auto mt-10 mb-12 md:px-0">
+  <div class="bg-base-200 rounded-3xl p-8 md:p-12 shadow-sm border border-base-300 flex flex-col md:flex-row gap-10 md:gap-12 items-center">
+    
+    <div class="md:w-3/5 text-center md:text-left">
+      <h1 class="text-4xl md:text-5xl font-extrabold leading-tight mb-5 tracking-tight">
+        Simple Ideas, <br class="hidden md:block" />
+        <span class="text-success">Scalable Sharing.</span>
+      </h1>
+      <p class="text-lg opacity-80 leading-relaxed max-w-md mx-auto md:mx-0">
+        Postbase is a minimal content platform designed for clarity. Create, organize, and explore technical insights or personal thoughts.
+      </p>
+    </div>
 
+    <div class="md:w-2/5 flex flex-col items-center md:items-start w-full border-t md:border-t-0 md:border-l border-base-300/90 pt-8 md:pt-0 md:pl-10">
+      <h3 class="text-xs uppercase tracking-[0.2em] text-success/80 font-bold mb-6">The Developer</h3>
+      
+      <div class="flex items-center gap-4 mb-4">
+        <div class="avatar">
+          <div class="w-14 h-14 rounded-full ring-2 ring-success/20 ring-offset-base-200 ring-offset-2">
+            <img src="https://ui-avatars.com/api/?name=Usman+Ghani&background=#random" alt="Usman Ghani" />
+          </div>
+        </div>
+        <div class="text-left">
+          <h4 class="font-bold text-base ">Usman Ghani</h4>
+          <p class="text-xs opacity-80">Node.js & Express</p>
+        </div>
+      </div>
+      
+      <p class="text-sm opacity-80 mb-7 text-center md:text-left">
+        Built to demonstrate scalable backend integration and clean architecture.
+      </p>
+      
+      <div class="flex gap-3 w-full justify-center md:justify-start">
+        <a href="https://github.com/usmandev24" target="_blank" class="btn btn-sm btn-outline btn-success hover:text-base-100! rounded-full px-6">GitHub</a>
+        <a href="https://usman-ghani.dev" target="_blank" class="btn btn-sm btn-ghost bg-base-300/95 rounded-full px-6">Portfolio</a>
+      </div>
+    </div>
+
+  </div>
+</section>
+  {{else}} 
+  <div class="mb-8 pb-6 px-2 border-b border-base-300/50">
+  <div class="flex flex-col md:flex-row md:items-end justify-between gap-6">
+    
+    <div class="space-y-1">
+      <div class="flex items-center gap-2 text-xs uppercase tracking-wider text-success font-bold">
+        <span>Exploring</span>
+        <span class="opacity-30">/</span>
+        <span>Category</span>
+      </div>
+      <h1 class="text-2xl md:text-4xl font-extrabold tracking-tight">
+        {{catgName}}
+      </h1>
+    </div>
+    
+    <div class="flex flex-wrap items-center gap-3">
+      
+      <div class="dropdown dropdown-start sm:dropdown-end">
+        <div tabindex="0" role="button" class="btn btn-sm btn-ghost hover:bg-success/30 border border-success/20 rounded-full normal-case font-medium px-5">
+          Quick Select
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 opacity-80 ml-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+          </svg>
+        </div>
+        <ul tabindex="0" class="dropdown-content z-1 menu p-2 max-h-[70vh] overflow-auto flex-nowrap  shadow-2xl bg-base-200 rounded-2xl w-52 mt-2 border border-success/20 backdrop-blur-md">
+          <li class="menu-title text-[10px] uppercase tracking-widest">Categories</li>
+          {{#each catgNameList}}
+          <li><a class="rounded-xl py-2 hover:text-success" href="/explore/{{catgName}}">{{catgName}}</a></li>
+          {{/each}}
+          
+          <div class="divider my-1 opacity-30"></div>
+          <li><a class="rounded-xl py-2 opacity-90" href="/explore/All Posts">View All</a></li>
+        </ul>
+      </div>
+
+      <div class="flex items-center gap-2 px-5 py-1.5 bg-success/10 border border-success/20 rounded-full">
+        <span class="text-[10px] uppercase font-bold text-success ">Total</span>
+        <span class="text-sm font-black text-success">{{total}}</span>
+      </div>
+
+    </div>
+  </div>
+</div>
+  {{/if}}
   {{#if postlist}}
+  
+   <h2 class=" text-sm font-bold opacity-70 uppercase px-2 tracking-widest mb-5">{{#if homepage}}Recent Posts {{else}}Latest Posts {{/if}} </h2>
   <div id="postlist" class="flex flex-col gap-6">
     {{#each postlist}}
 
     <div id="{{key}}" class="card  shadow-xl border border-base-300 transition-all hover:shadow-2xl">
       <div class="card-body p-6">
 
-        <div class="flex items-center justify-between mb-2">
-          <div class="flex items-center gap-3">
+        <div class="flex  items-center justify-between mb-2">
+          <div class="flex flex-wrap items-center gap-3">
             <div class="avatar placeholder">
               <div class="">
                 <img class="bg-purple-300 rounded-full dark:bg-neutral w-10 h-10"
@@ -19,15 +105,20 @@
               <span class="font-bold text-base">{{auther.username}}</span>
               <span id="" class="updatedAt text-xs text-base-content/60">{{updatedAt}}</span>
             </div>
+            <div class=" inline-flex gap-1">
+            {{#each catgs}}
+            <a class=" text-[0.8rem] rounded-2xl p-0.5 px-2 bg-base-200 text-info/90 hover:bg-accent-content" href="/explore/{{catgName}}">{{catgName}}</a>
+            {{/each}}
+          </div>
           </div>
           <span id="{{key}}-info" class="badge badge-ghost badge-sm"></span>
         </div>
 
         <a id="{{key}}-link" href="/posts/view?key={{key}}" class=" group block space-y-2">
-          <h2 id="{{key}}-title" class="card-title text-2xl text-primary/80 transition-colors line-clamp-2">
+          <h2 id="{{key}}-title"  class="card-title text-2xl hover:text-primary/80 transition-colors line-clamp-2">
             {{title}}
           </h2>
-          <div id="{{key}}-body" class=" prose  line-clamp-3">
+          <div id="{{key}}-body" class=" prose-base  line-clamp-3">
             {{{body}}}
           </div>
         </a>
@@ -52,7 +143,7 @@
 
     {{/each}}
   </div>
-
+  
   {{else}}
   <div id="postlist" class="flex flex-col gap-6"></div>
   <div id="emptydiv" class="text-center py-20">
@@ -60,7 +151,12 @@
     <a class="btn btn-primary btn-wide" href="/posts/add">Create First post</a>
   </div>
   {{/if}}
-  {{> welcome}}
+  {{#if homepage}}
+<section class=" m-auto w-fit p-4">
+  <a class=" btn btn-primary " href="/explore/All%20Posts">Explore More</a>
+</section>
+  {{/if}}
+
 </div>
 
 

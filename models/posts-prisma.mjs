@@ -1,4 +1,5 @@
-import { AbstractPostsStore } from "./Posts.mjs";
+
+import EventEmitter from "events";
 import { default as DBG } from "debug";
 import { prisma } from "./prisma.mjs";
 import { PrismaCommentsStore } from "./comments-prisma.mjs";
@@ -59,6 +60,7 @@ class PostCache {
         }
       })
     })
+    
   }
   async lock(key, task) {
     const previous = this.#locks.get(key) || Promise.resolve()
@@ -88,9 +90,10 @@ class PostCache {
   async deletePost(postkey) {
     return this.#cache.delete(postkey)
   }
-  async deleteKeyList() {
+  async updateKeyList() {
     return this.#cache.delete("keyList")
   }
+  
   async get(key) {
     return this.#cache.get(key)
   }
@@ -106,29 +109,51 @@ export async function connectDB() {
 const commentStore = new PrismaCommentsStore();
 const postCache = new PostCache(cacheStore, commentStore);
 
-export default class PrismaPostsStore extends AbstractPostsStore {
+export default  class PrismaPostsStore  {
   static #inFlight = new Map()  // Map<String, Promice<void>> Post which are being fetched from db.
+  static Events = new EventEmitter()
 
+  emitCreated(post) { PrismaPostsStore.Events.emit('postcreated', post); }
+  emitUpdated(post) { PrismaPostsStore.Events.emit('postupdated', post); }
+  emitDestroyed(key) { PrismaPostsStore.Events.emit('postdestroyed', key); }
+  emitCatgCreated(catgName, postkey) { PrismaPostsStore.Events.emit("catgcreated", catgName, postkey) }
+  emitCatgDestroyed(catgName, postkey) { PrismaPostsStore.Events.emit("catgdestroyed", catgName, postkey) }
 
   async close() {
     await prisma.$disconnect();
   }
 
-  async create(key, title, body, autherId) {
+  async create(key, title, body, autherId, ...catgs) {
+    const catgsData = [];
+    catgs.forEach(catg => {
+      if (catg) {
+        catgsData.push({ catgName: catg })
+      }
+    })
     const post = await prisma.posts.create({
       data: {
         key: key,
         title: title,
         body: body,
         autherId: autherId,
+        catgs: { createMany: { data: catgsData } }
       },
+
       include: {
         auther: { select: { username: true, id: true, displayName: true } },
-        _count: { select: { comments: true, likes: true } }
+        _count: { select: { comments: true, likes: true } },
+        catgs: true
       },
     });
+    if (post.catgs) {
+      post.catgs.forEach(c => {
+        this.emitCatgCreated(c.catgName, c.postkey)
+      })
+      this.emitCatgCreated("All", key)
+    }
     await postCache.setPost(key, post)
-    await postCache.deleteKeyList()
+    await postCache.updateKeyList(key, "created");
+    this.emitCreated(post)
     return post;
   }
 
@@ -143,7 +168,8 @@ export default class PrismaPostsStore extends AbstractPostsStore {
         data: { key, title, body, autherId },
         include: {
           auther: { select: { username: true, id: true, displayName: true } },
-          _count: { select: { comments: true, likes: true } }
+          _count: { select: { comments: true, likes: true } },
+          catgs: true
         },
       });
       await postCache.setPost(key, post)
@@ -168,7 +194,8 @@ export default class PrismaPostsStore extends AbstractPostsStore {
           where: { key },
           include: {
             auther: { select: { username: true, id: true, displayName: true } },
-            _count: { select: { comments: true, likes: true } }
+            _count: { select: { comments: true, likes: true } },
+            catgs: true
           },
         });
         if (!post) return null;
@@ -201,8 +228,14 @@ export default class PrismaPostsStore extends AbstractPostsStore {
     const post = await this.readMin(key)
     await prisma.posts.delete({ where: { key: key } });
     await postCache.deletePost(key);
-    await postCache.deleteKeyList();
+    await postCache.updateKeyList(key, "destroyed")
     await commentStore.clearCacheByPost(key, post._count.comments)
+    if (post.catgs) {
+      post.catgs.forEach(c => {
+        this.emitCatgDestroyed(c.catgName, c.postkey)
+      })
+      this.emitCatgDestroyed("All", key)
+    }
     this.emitDestroyed(key);
   }
 
@@ -247,7 +280,7 @@ export default class PrismaPostsStore extends AbstractPostsStore {
       });
     } else {
       postKeys = await prisma.posts.findMany({
-        where: { autherId},
+        where: { autherId },
         select: { key: true },
         orderBy: { updatedAt: "desc" },
       });
@@ -257,7 +290,7 @@ export default class PrismaPostsStore extends AbstractPostsStore {
     });
     return Promise.all(posts)
   }
-  
+
   async count() {
     return await prisma.posts.count();
   }

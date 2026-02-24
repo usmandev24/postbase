@@ -41,7 +41,7 @@ export async function getNewToken(refreshToken) {
     })
     return [newToken, user]
   }
-  return null
+  return [null, null]
 }
 export async function restoreSession(req, res, next) {
   if (req.cookies["sess_re_Tok"]) {

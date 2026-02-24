@@ -37,18 +37,19 @@ model like {
 
 model categories {
   id   Int    @id @default(autoincrement())
-  name String @db.VarChar(255)
+  name String @db.VarChar(255) @unique
 
   categoryToPosts categoryToPosts[]
 }
 
 model categoryToPosts {
   postkey  String
-  catgId   Int
+  catgName String
   post     posts      @relation(fields: [postkey], references: [key], onDelete: Cascade)
-  category categories @relation(fields: [catgId], references: [id], onDelete: Cascade)
-
-  @@id([catgId, postkey])
+  category categories @relation(fields: [catgName], references: [name], onDelete: Cascade)
+  createdAt DateTime  @db.Timestamptz(6) @default(now())
+  
+  @@id([catgName, postkey])
   @@index([postkey])
 }
 
@@ -63,7 +64,7 @@ model posts {
   key       String            @id @db.VarChar(255)
   auther    postUser          @relation(fields: [autherId], references: [id], onDelete: Cascade)
   comments  comments[]
-  cataories categoryToPosts[]
+  catgs categoryToPosts[]
 
   @@index([autherId])
   @@index([autherId, public])

@@ -12,7 +12,7 @@ const __dirname = approotdir;
 import {
     normalizePort, onError, onListening, handle404, basicErrorHandler
 } from './appsupport.mjs';
-import { useModel as usePostsModel } from './models/posts-store.mjs';
+
 import passport from 'passport';
 import { router as indexRouter, wsHomeListners } from './routes/index.mjs';
 import { router as postsRouter, initSocket as initPostsSocket,  wsPostsListeners } from './routes/posts.mjs';
@@ -24,11 +24,6 @@ import { restoreSession } from './models/prisma-session.mjs';
 
 const debug = DBG('posts:debug');
 const dbgerror = DBG('posts:error')
-
-const _postStore = await usePostsModel(process.env.POSTS_MODEL ? process.env.POSTS_MODEL :
-    "memory"
-);
-
 
 export const sessionCookieName = "postsS!d"
 export const app = express();
