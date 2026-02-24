@@ -54,11 +54,15 @@ export async function initSocket(socket) {
 }
 
 //Add posts.
-router.get('/add', ensureAuthenticated, (req, res, next) => {
+router.get('/add', ensureAuthenticated, async (req, res, next) => {
+  const catgNameList = (await catgsStore.getCategoriesNames()).map(v => {
+    return {catgName: v}
+  })
   res.render('postedit', {
     title: "Add a post",
     docreate: true,
     postkey: '',
+    catgNameList,
     post: undefined,
     user: req.user ? req.user : undefined
   })

@@ -20,7 +20,14 @@
       <div class="w-full">
         <h3 class=" font-semibold text-secondary">Add Categories (Atlest One)</h3>
         <div id="catgDiv" class=" grid  grid-cols-1 sm:grid-cols-3 ">
-
+          <label class="  flex items-baseline gap-2 py-1">First
+            <select name="catg1" id="catg1" required="" class=" select w-36 px-8 select-primary">
+              <option value="" selected disabled="">pick one</option>
+            {{#each catgNameList}}
+              <option>{{catgName}}</option>
+            {{/each}}
+            </select>
+          </label> 
         </div>
       </div>
       <div class=" w-full">
@@ -73,7 +80,6 @@
     constructor(catgsList) {
       this.parent = document.getElementById("catgDiv")
       this.catgsList = catgsList
-      this.createSelector("First", "catg1");
       this.addEvents()
     }
     createSelector(lableText, name) {
