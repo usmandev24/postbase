@@ -149,7 +149,7 @@ export default  class PrismaPostsStore  {
       post.catgs.forEach(c => {
         this.emitCatgCreated(c.catgName, c.postkey)
       })
-      this.emitCatgCreated("All", key)
+      this.emitCatgCreated("All Posts", key)
     }
     await postCache.setPost(key, post)
     await postCache.updateKeyList(key, "created");
@@ -234,7 +234,7 @@ export default  class PrismaPostsStore  {
       post.catgs.forEach(c => {
         this.emitCatgDestroyed(c.catgName, c.postkey)
       })
-      this.emitCatgDestroyed("All", key)
+      this.emitCatgDestroyed("All Posts", key)
     }
     this.emitDestroyed(key);
   }
