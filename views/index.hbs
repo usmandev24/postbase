@@ -20,23 +20,23 @@
             Talent.</span>
         </h1>
 
-        <p class="text-lg opacity-70 leading-relaxed mb-12 max-w-md font-medium">
-          A premium content platform engineered by <span
-            class="text-base-content font-bold underline decoration-success/30">Usman Ghani</span> to demonstrate
+        <p class="text-lg opacity-80 leading-relaxed mb-12 max-w-md font-medium">
+          A premium content platform engineered by <a
+            class="text-base-content font-bold underline decoration-success/30" href="https://usman-ghani.dev" target="_blank">Usman Ghani</a> to demonstrate
           excellence in full-stack architecture, real-time interactions, and modern UI design.
         </p>
 
-        <div class="w-full max-w-sm flex flex-col gap-5">
+        <div class=" w-full max-w-sm flex flex-col gap-5">
           {{#if user}}
-          <div class="flex flex-col gap-3">
+          <div class="flex flex-col items-center md:items-start gap-3">
             <a href="/your-feed"
-              class="btn btn-success h-14 w-full rounded-full dark:text-black text-lg shadow-lg shadow-success/20 transition-all hover:scale-[1.02] active:scale-95 flex items-center justify-center gap-2">
+              class="btn btn-success text-[1rem] h-14 btn-wide rounded-full dark:text-black md:text-lg shadow-lg shadow-success/20 transition-all hover:scale-[1.02] active:scale-95 flex items-center justify-center gap-2">
               <span data-feather="layout" class="h-5 w-5"></span>
               Enter My Feed
             </a>
 
             <a href="/posts/add"
-              class="btn btn-primary btn-outline border-primary  hover:bg-primary h-14 w-full rounded-full font-bold text-lg transition-all flex items-center justify-center gap-2">
+              class="btn btn-primary text-[1rem] btn-outline border-primary  hover:bg-primary h-14 btn-wide rounded-full font-bold md:text-lg transition-all flex items-center justify-center gap-2">
               <span data-feather="plus-circle" class="h-5 w-5"></span>
               Create New Post
             </a>
@@ -271,8 +271,9 @@
   <div id="postlist" class="flex flex-col gap-6">
     {{#each postlist}}
 
-    <div id="{{key}}" class="card  shadow-xl border border-base-300 transition-all hover:shadow-2xl">
+    <div id="{{key}}" class="card  shadow-xl border border-base-300 transition-all hover:shadow-md  active:shadow-md hover:shadow-success/50 active:border-success/50 hover:border-success/50 active:shadow-success/50">
       <div class="card-body p-6">
+        
 
         <div class="flex  items-center justify-between mb-2">
           <div class="flex flex-wrap items-center gap-3">
@@ -497,7 +498,7 @@
     new Times().main()
   })
 
-  { { #if user } }
+  {{#if user }}
   class LikesControl {
     constructor() {
       this.likeButtons = document.querySelectorAll(".like-btn")
@@ -600,5 +601,5 @@
   window.addEventListener("load", () => {
     new LikesControl().init()
   })
-  { {/if } }
+  {{/if }}
 </script>

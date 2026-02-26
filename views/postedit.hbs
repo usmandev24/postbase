@@ -1,15 +1,17 @@
-<div class="max-w-4xl mx-auto  p-4 md:p-8">
-
-  <div class="card bg-base-100 shadow-xl border border-base-300">
-
-    <div class=" px-4 sm:px-8 pt-8 pb-2">
-      <h2 class="text-3xl font-bold text-base-content">
-        {{#if docreate}}Create New Post{{else}}Edit Post{{/if}}
-      </h2>
-      <p class="text-base-content/60 mt-1">Fill out the details below to save your post.</p>
+<div class="max-w-4xl mx-auto p-4 md:p-8">
+  <div class="mb-10 text-center lg:text-left">
+    <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-success/10 border border-success/20 text-xs font-bold text-success uppercase tracking-widest mb-4">
+      <span data-feather="edit-3" class="h-3 w-3"></span>
+      Publisher Tools
     </div>
+    <h1 class="text-4xl md:text-5xl font-black tracking-tight text-base-content">
+      {{#if docreate}}Create New <span class="text-transparent bg-clip-text bg-gradient-to-r from-green-500 to-purple-600">Post</span>{{else}}Edit <span class="text-transparent bg-clip-text bg-gradient-to-r from-green-500 to-purple-600">Post</span>{{/if}}
+    </h1>
+    <p class="text-base-content/60 mt-3 text-lg">Organize your thoughts and share them with the PostBase community.</p>
+  </div>
 
-    <form id="postForm" class="card-body gap-4 p-4 sm:p-8" method='POST' action='/posts/save'>
+  <div class="bg-base-100 rounded-[2.5rem] md:border border-base-300 shadow-2xl shadow-base-content/5 overflow-hidden">
+    <form id="postForm" class="p-2 md:p-12 space-y-10" method='POST' action='/posts/save'>
 
       {{#if docreate}}
       <input type='hidden' name='docreate' value="create">
@@ -17,53 +19,74 @@
       <input type='hidden' name='docreate' value="update">
       <input type='hidden' name='postkey' value='{{#if post }}{{postkey}}{{/if}}' />
       {{/if}}
-      <div class="w-full">
-        <h3 class=" font-semibold text-secondary">Add Categories (Atlest One)</h3>
-        <div id="catgDiv" class=" grid  grid-cols-1 sm:grid-cols-3 ">
-          <label class="  flex items-baseline gap-2 py-1">First
-            <select name="catg1" id="catg1" required="" class=" select w-36 px-8 select-primary">
-              <option value="" selected disabled="">pick one</option>
-            {{#each catgNameList}}
+      {{#if docreate}}
+      <section class="space-y-4">
+        <div class="flex items-center gap-2">
+          <span class="p-2 bg-secondary/10 rounded-lg text-secondary">
+             <span data-feather="grid" class="h-4 w-4"></span>
+          </span>
+          <h3 class="font-bold text-lg tracking-tight">Taxonomy</h3>
+        </div>
+        
+        <div id="catgDiv" class="grid grid-cols-1 md:grid-cols-3 gap-6 bg-base-200/50 p-6 rounded-3xl border border-base-300/50">
+          <label class="flex flex-col gap-2">
+            <span class="text-xs font-black uppercase opacity-50 ml-1">Primary Category</span>
+            <select name="catg1" id="catg1" required="" class="select select-bordered rounded-2xl bg-base-100 focus:border-success">
+              <option value="" selected disabled="">Select Category</option>
+              {{#each catgNameList}}
               <option>{{catgName}}</option>
-            {{/each}}
+              {{/each}}
             </select>
           </label> 
+          </div>
+        <p class="text-xs opacity-50 ml-2">Select at least one category so readers can find your post.</p>
+      </section>
+      {{/if}}
+
+      <section class="space-y-4">
+        <div class="flex items-center gap-2">
+           <span class="p-2 bg-success/10 rounded-lg text-success">
+             <span data-feather="type" class="h-4 w-4"></span>
+          </span>
+          <h3 class="font-bold text-lg tracking-tight">Title</h3>
         </div>
-      </div>
-      <div class=" w-full">
-        <label class="label" for="title">
-          <span class=" font-semibold text-secondary">Title</span>
-        </label>
         <input required id="title" type='text' name='title' value='{{#if post }}{{post.title}}{{/if}}'
-          class="input input-bordered w-full text-lg font-bold focus:input-primary transition-all"
-          placeholder="Enter a descriptive title" />
-      </div>
+          class="input input-ghost w-full text-xl md:text-4xl font-black placeholder:opacity-20 focus:bg-transparent focus:outline-none border-b-2 border-base-200 focus:border-success rounded-xl px-2 py-8 transition-all"
+          placeholder="Enter a descriptive title..." />
+      </section>
 
-      <div class=" w-full">
-        <label class=" label" for="body">
-          <span class=" font-semibold text-secondary">Content</span>
-        </label>
-        <input required id="x" type="hidden" name="body">
-        <trix-toolbar class=" md:mr-4  mb-1 mt-2" id="my_toolbar"></trix-toolbar>
-        <trix-editor toolbar="my_toolbar" input="x" class=" prose max-w-full ">{{#if post
-          }}{{{post.body}}}{{/if}}</trix-editor>
-      </div>
+      <section class="space-y-4">
+        <div class="flex items-center gap-2">
+           <span class="p-2 bg-purple-500/10 rounded-lg text-purple-500">
+             <span data-feather="align-left" class="h-4 w-4"></span>
+          </span>
+          <h3 class="font-bold text-lg tracking-tight">Content</h3>
+        </div>
+        
+        <div class="prose-container bg-base-100 border border-base-300 rounded-xl overflow-hidden focus-within:border-success/50 transition-all">
+          <input required id="x" type="hidden" name="body">
+          <trix-toolbar class="border-b border-base-200 bg-base-200/30 p-2" id="my_toolbar"></trix-toolbar>
+          <trix-editor toolbar="my_toolbar" input="x" class="prose max-w-full p-6 md:p-8 min-h-[400px] focus:outline-none">{{#if post}}{{{post.body}}}{{/if}}</trix-editor>
+        </div>
+      </section>
 
-      <div class="card-actions justify-end mt-4 flex items-center gap-4">
-        <a href="/" class="btn btn-ghost">Cancel</a>
+      <div class="flex flex-col sm:flex-row justify-end items-center gap-4 pt-6 border-t border-base-200">
+        <a href="/" class="btn btn-ghost rounded-full px-8 order-2 sm:order-1">Discard Draft</a>
 
-        <button id="submit" type='submit' class="btn btn-primary px-8 gap-2">
-          <span>{{#if docreate}}Publish Post{{else}}Save Changes{{/if}}</span>
-          <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
-          </svg>
+        <button id="submit" type='submit' class="btn btn-success btn-wide rounded-full gap-2 shadow-lg shadow-success/20 order-1 sm:order-2">
+          <span class="font-bold">{{#if docreate}}Publish Post{{else}}Update Post{{/if}}</span>
+          <span data-feather="send" class="h-4 w-4"></span>
         </button>
       </div>
 
     </form>
   </div>
 </div>
+
+
+
 <script>
+  // Hide file tools as per requirements
   const observer = new MutationObserver((mutations, obs) => {
     const fileToolbar = document.querySelector(".trix-button-group--file-tools")
     if (fileToolbar) {
@@ -71,77 +94,78 @@
       obs.disconnect()
     }
   })
-  observer.observe(document.body, {
-    childList: true,
-    subtree: true
-  })
-  class Categoreis {
+  observer.observe(document.body, { childList: true, subtree: true })
 
+  class Categoreis {
     constructor(catgsList) {
       this.parent = document.getElementById("catgDiv")
       this.catgsList = catgsList
       this.addEvents()
     }
+    
     createSelector(lableText, name) {
-      const label = document.createElement("label");
-      label.className = "  flex items-baseline gap-2 py-1"
+      const wrapper = document.createElement("label");
+      wrapper.className = "flex flex-col gap-2 transition-all animate-in fade-in slide-in-from-top-2";
+      
+      const span = document.createElement("span");
+      span.className = "text-xs font-black uppercase opacity-50 ml-1";
+      span.textContent = lableText + " Category";
+      
       const select = document.createElement("select");
-      label.appendChild(document.createTextNode(lableText));
-      label.appendChild(select)
-      this.parent.appendChild(label)
-
       select.name = name;
       select.id = name;
-      if (name === "catg1") select.required = true;
-      select.className = " select w-36 px-8 select-primary"
-      /** @type {String[]} */
-      const catgsList = this.catgsList;
+      select.className = "select select-bordered rounded-2xl bg-base-100 focus:border-success";
+      
+      wrapper.appendChild(span);
+      wrapper.appendChild(select);
+      this.parent.appendChild(wrapper);
 
-      catgsList.map((c, i) => {
-
-        const option = document.createElement("option")
-        option.textContent = c
+      this.catgsList.forEach((c, i) => {
+        const option = document.createElement("option");
+        option.textContent = c;
         if (i === 0) {
-          option.selected = true
-          option.value = ""
-          option.disabled = true
+          option.selected = true;
+          option.value = "";
+          option.disabled = true;
         }
-        select.appendChild(option)
-      })
+        select.appendChild(option);
+      });
+      
+      return select;
     }
-    async fetchCatgsNames() {
-      const res = await fetch("/posts/categories-names-list")
-      return res.json();
-    }
+
     addEvents() {
-      const select1 = document.getElementById("catg1")
+      const select1 = document.getElementById("catg1");
 
-
-      const listner1 = async (e) => {
-        await this.createSelector("2nd", "catg2")
+      const listner1 = (e) => {
+        const select2 = this.createSelector("Secondary", "catg2");
         select1.removeEventListener("change", listner1);
 
-        const listner2 = async (e) => {
-          await this.createSelector("3rd", "catg3")
-          select2.removeEventListener("change", listner2)
+        const listner2 = (e) => {
+          this.createSelector("Tertiary", "catg3");
+          select2.removeEventListener("change", listner2);
         }
-
-        const select2 = document.getElementById("catg2");
-        select2.addEventListener("change", listner2)
-
-
-
+        select2.addEventListener("change", listner2);
       }
-      select1.addEventListener("change", listner1)
+      select1.addEventListener("change", listner1);
     }
   }
+
   const submit = document.getElementById("submit");
-  submit.disabled = true
+  submit.disabled = true;
+
   window.onload = async () => {
-    const catgsList = await fetch("/posts/categories-names-list").then(res => res.json());
-{{#if docreate}}
-    new Categoreis(["pick one", ...catgsList])
-{{/if}}
-    submit.disabled = false
+    try {
+      const catgsList = await fetch("/posts/categories-names-list").then(res => res.json());
+      {{#if docreate}}
+      new Categoreis(["Select Category", ...catgsList]);
+      {{/if}}
+      submit.disabled = false;
+      // Refresh icons
+      if (typeof feather !== 'undefined') feather.replace();
+    } catch (e) {
+      console.error("Failed to load categories", e);
+      submit.disabled = false;
+    }
   }
 </script>
