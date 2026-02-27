@@ -22,7 +22,8 @@
 
         <p class="text-lg opacity-80 leading-relaxed mb-12 max-w-md font-medium">
           A premium content platform engineered by <a
-            class="text-base-content font-bold underline decoration-success/30" href="https://usman-ghani.dev" target="_blank">Usman Ghani</a> to demonstrate
+            class="text-base-content font-bold underline decoration-success/30" href="https://usman-ghani.dev"
+            target="_blank">Usman Ghani</a> to demonstrate
           excellence in full-stack architecture, real-time interactions, and modern UI design.
         </p>
 
@@ -266,65 +267,108 @@
   {{/if}}
 
   {{#if postlist}}
+  <style>
+    
+    .post-card-premium {
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      -webkit-tap-highlight-color: transparent;
+      
+    }
+
+    .post-card-active {
+      border-color: rgba(34, 197, 94, 0.4) !important;
+      box-shadow: 0 0 25px rgba(34, 197, 94, 0.15), 0 10px 15px -3px rgba(0, 0, 0, 0.1) !important;
+      transform: scale(1.02);
+      
+    }
+.post-card-active h2 {
+  
+  color: var(--color-success) !important; 
+  
+  
+  transform: scale(1.01);
+}
+  
+.post-card-active .read {
+  color: var(--color-success) !important; 
+  opacity: 1 !important
+}
+
+.read {
+  transition: all 0.4s ease;
+}  
+    .post-card-active .read {
+      color: var(--p);
+    }
+  </style>
   <h2 class=" text-sm font-bold opacity-70 uppercase px-2 tracking-widest mb-5">{{#if homepage}}Recent Posts
     {{else}}Latest Posts {{/if}} </h2>
   <div id="postlist" class="flex flex-col gap-6">
     {{#each postlist}}
+    <div id="{{key}}"
+      class="post-card-premium group card bg-base-100 border border-base-300 shadow-sm mb-6 overflow-hidden cursor-pointer">
+      <div class="card-body p-5 md:p-7">
 
-    <div id="{{key}}" class="card  shadow-xl border border-base-300 transition-all hover:shadow-md  active:shadow-md hover:shadow-success/50 active:border-success/50 hover:border-success/50 active:shadow-success/50">
-      <div class="card-body p-6">
-        
-
-        <div class="flex  items-center justify-between mb-2">
-          <div class="flex flex-wrap items-center gap-3">
-            <div class="avatar placeholder">
-              <div class="">
-                <img class="bg-purple-300 rounded-full dark:bg-neutral w-10 h-10"
-                  src="/assets/users/photo/{{auther.username}}">
+        <div class="flex items-start justify-between mb-4">
+          <div class="flex items-center gap-3">
+            <div class="avatar">
+              <div class="w-10 h-10 rounded-full ring-2 ring-base-200">
+                <img src="/assets/users/photo/{{auther.username}}" alt="{{auther.username}}">
               </div>
             </div>
             <div class="flex flex-col">
-              <span class="font-bold text-base">{{auther.username}}</span>
-              <span id="" data-time="{{updatedAt}}" class="updatedAt text-sm text-base-content/60"></span>
-            </div>
-            <div class=" inline-flex gap-1">
-              {{#each catgs}}
-              <a class=" text-[0.8rem] rounded-2xl p-0.5 px-2 bg-base-200 border opacity-90 border-base-300 hover:bg-accent-content"
-                href="/explore/{{catgName}}">{{catgName}}</a>
-              {{/each}}
+              <span class="font-black text-sm tracking-tight leading-none">{{auther.username}}</span>
+              <span data-time="{{updatedAt}}"
+                class="updatedAt text-[10px] font-bold uppercase tracking-widest opacity-40 mt-1"></span>
             </div>
           </div>
-          <span id="{{key}}-info" class="badge badge-ghost badge-sm"></span>
+
+          <div id="{{key}}-info-container" class="flex flex-col items-end gap-1">
+            <span id="{{key}}-info"
+              class="badge badge-success badge-outline border-2 text-[10px] font-black uppercase px-2 py-3 rounded-lg hidden">
+
+            </span>
+          </div>
         </div>
 
-        <a id="{{key}}-link" href="/posts/view?key={{key}}" class=" group block space-y-2">
-          <h2 id="{{key}}-title" class="card-title text-2xl hover:text-primary/80 transition-colors line-clamp-2">
+        <div class="flex flex-wrap gap-2 mb-4">
+          {{#each catgs}}
+          <a href="/explore/{{catgName}}"
+            class=" btn btn-sm  hover:btn-success p-0  px-2 rounded-full ">
+            #{{catgName}}
+          </a>
+          {{/each}}
+        </div>
+
+        <a id="{{key}}-link" href="/posts/view?key={{key}}" class="block ">
+          <h2 id="{{key}}-title"
+            class="title text-2xl md:text-3xl font-black tracking-tight leading-[1.1] mb-3 group-hover:text-success transition-colors line-clamp-2">
             {{title}}
           </h2>
-          <div id="{{key}}-body" class=" prose-base  line-clamp-3">
+          <div id="{{key}}-body" class="text-base-content/90 text-sm md:text-base line-clamp-3 leading-relaxed">
             {{{body}}}
           </div>
         </a>
 
-        <div class="card-actions justify-between items-center mt-4 pt-4 border-t border-base-200">
-          <div class="flex gap-4">
-            <button data-postkey="{{key}}" class="like-btn btn btn-ghost btn-sm gap-2 text-success">
-
-              <span id="{{key}}-likes">{{_count.likes}}</span>
-              <span id="{{key}}-likeLogo" data-feather="thumbs-up"
-                class=" transition-colors duration-200 h-4 w-4"></span>
-              <span hidden class=" btn-active fill-primary"></span>
+        <div class="card-actions justify-between items-center mt-6 pt-5 border-t border-base-200/60">
+          <div class="flex items-center gap-1">
+            <button data-postkey="{{key}}" class="like-btn btn btn-ghost btn-sm rounded-xl gap-2 text-success ">
+              <span id="{{key}}-likeLogo" data-feather="thumbs-up" class="h-4 w-4"></span>
+              <span id="{{key}}-likes" class="font-black text-xs">{{_count.likes}}</span>
             </button>
-            <button disabled class="comment-btn btn btn-ghost btn-sm gap-2 text-info">
-              <span id="{{key}}-comments">{{_count.comments}}</span>
-              <span data-feather="message-circle" class=" h-4 w-4"></span>
 
-            </button>
+            <div class="btn btn-ghost btn-sm rounded-xl gap-2 text-info pointer-events-none opacity-80">
+              <span data-feather="message-circle" class="h-4 w-4"></span>
+              <span id="{{key}}-comments" class="font-black text-xs">{{_count.comments}}</span>
+            </div>
+          </div>
+
+          <div class="btn read btn-sm sm:btn-md btn-ghost p-0 px-2 text-base-content group-hover:text-success transition-colors">
+           Read <span data-feather="arrow-right" class="h-5 w-9"></span>
           </div>
         </div>
       </div>
     </div>
-
     {{/each}}
   </div>
 
@@ -366,7 +410,28 @@
 </div>
 {{/if}}
 </div>
+<script>
+  const observerOptions = {
+    root: null, // use the viewport
+    rootMargin: '-40% 0% -40% 0%', // Only trigger when card is in the middle 20% of screen
+    threshold: 0.1
+  };
 
+  const scrollObserver = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('post-card-active');
+      } else {
+        entry.target.classList.remove('post-card-active');
+      }
+    });
+  }, observerOptions);
+
+  // Start watching all premium post cards
+  document.querySelectorAll('.post-card-premium').forEach(card => {
+    scrollObserver.observe(card);
+  });
+</script>
 <script>
   const postlist = document.getElementById('postlist');
   const emptyDiv = document.getElementById('emptydiv'); // Reference to hide this if a post comes in
