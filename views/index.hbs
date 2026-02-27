@@ -148,7 +148,7 @@
     <div class="flex flex-col md:flex-row md:items-end justify-between gap-6">
       {{#if feedPage}}
       <div
-        class=" flex flex-col gap-4 sm:flex-row sm:items-center-safe   justify-between w-full  bg-base-100 border-base-300 rounded-2xl p-4 pb-0 px-0 shadow-sm">
+        class=" flex flex-col gap-4 sm:flex-row sm:items-center-safe   justify-between w-full  bg-base-100 border-base-300 rounded-2xl p-4 pb-0 px-0">
         <div>
           <h2 class="text-lg font-bold  uppercase tracking-widest mb-1">Your Feed</h2>
           <p class="text-sm opacity-80">Personalize topics for your reading experience.</p>
@@ -267,46 +267,13 @@
   {{/if}}
 
   {{#if postlist}}
-  <style>
-    
-    .post-card-premium {
-      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-      -webkit-tap-highlight-color: transparent;
-      
-    }
-
-    .post-card-active {
-      border-color: rgba(34, 197, 94, 0.4) !important;
-      box-shadow: 0 0 25px rgba(34, 197, 94, 0.15), 0 10px 15px -3px rgba(0, 0, 0, 0.1) !important;
-      transform: scale(1.02);
-      
-    }
-.post-card-active h2 {
   
-  color: var(--color-success) !important; 
-  
-  
-  transform: scale(1.01);
-}
-  
-.post-card-active .read {
-  color: var(--color-success) !important; 
-  opacity: 1 !important
-}
-
-.read {
-  transition: all 0.4s ease;
-}  
-    .post-card-active .read {
-      color: var(--p);
-    }
-  </style>
   <h2 class=" text-sm font-bold opacity-70 uppercase px-2 tracking-widest mb-5">{{#if homepage}}Recent Posts
     {{else}}Latest Posts {{/if}} </h2>
-  <div id="postlist" class="flex flex-col gap-6">
+  <div id="postlist" class="flex flex-col gap-4">
     {{#each postlist}}
     <div id="{{key}}"
-      class="post-card-premium group card bg-base-100 border border-base-300 shadow-sm mb-6 overflow-hidden cursor-pointer">
+      class=" group card bg-base-100 border transition-colors border-base-300 shadow-sm sm:shadow-none hover:shadow-md shadow-success/50  mb-4 overflow-hidden cursor-pointer">
       <div class="card-body p-5 md:p-7">
 
         <div class="flex items-start justify-between mb-4">
@@ -334,7 +301,7 @@
         <div class="flex flex-wrap gap-2 mb-4">
           {{#each catgs}}
           <a href="/explore/{{catgName}}"
-            class=" btn btn-sm  hover:btn-success p-0  px-2 rounded-full ">
+            class=" btn sm:btn-sm  btn-xs hover:btn-success p-0  px-2 sm:px-4 rounded-full ">
             #{{catgName}}
           </a>
           {{/each}}
@@ -342,7 +309,7 @@
 
         <a id="{{key}}-link" href="/posts/view?key={{key}}" class="block ">
           <h2 id="{{key}}-title"
-            class="title text-2xl md:text-3xl font-black tracking-tight leading-[1.1] mb-3 group-hover:text-success transition-colors line-clamp-2">
+            class="title text-success sm:text-base-content text-2xl md:text-3xl font-black tracking-tight leading-[1.1] mb-3 group-hover:text-success transition-colors line-clamp-2">
             {{title}}
           </h2>
           <div id="{{key}}-body" class="text-base-content/90 text-sm md:text-base line-clamp-3 leading-relaxed">
@@ -363,9 +330,9 @@
             </div>
           </div>
 
-          <div class="btn read btn-sm sm:btn-md btn-ghost p-0 px-2 text-base-content group-hover:text-success transition-colors">
+          <a href="/posts/view?key={{key}}" class="btn  btn-sm sm:btn-md btn-ghost p-0 px-2 text-base-content group-hover:text-success ">
            Read <span data-feather="arrow-right" class="h-5 w-9"></span>
-          </div>
+          </a>
         </div>
       </div>
     </div>
@@ -410,28 +377,7 @@
 </div>
 {{/if}}
 </div>
-<script>
-  const observerOptions = {
-    root: null, // use the viewport
-    rootMargin: '-40% 0% -40% 0%', // Only trigger when card is in the middle 20% of screen
-    threshold: 0.1
-  };
 
-  const scrollObserver = new IntersectionObserver((entries) => {
-    entries.forEach(entry => {
-      if (entry.isIntersecting) {
-        entry.target.classList.add('post-card-active');
-      } else {
-        entry.target.classList.remove('post-card-active');
-      }
-    });
-  }, observerOptions);
-
-  // Start watching all premium post cards
-  document.querySelectorAll('.post-card-premium').forEach(card => {
-    scrollObserver.observe(card);
-  });
-</script>
 <script>
   const postlist = document.getElementById('postlist');
   const emptyDiv = document.getElementById('emptydiv'); // Reference to hide this if a post comes in
