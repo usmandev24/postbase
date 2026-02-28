@@ -29,13 +29,27 @@
     </header>
 
     <div role="tablist"
-      class="tabs tabs-box bg-base-200/95 sticky top-18 z-10  transition-all text-success  p-1 mb-8 rounded-2xl max-w-md mx-auto md:mx-0">
-      <a role="tab" class="tab   font-black uppercase text-[11px]   tracking-widest"
-        onclick="switchTab(event, 'settings')"> Settings</a>
-      <a role="tab" class="tab tab-active  font-black uppercase text-[11px] tracking-widest"
-        onclick="switchTab(event, 'my-posts')">My Posts</a>
-      <a role="tab" class="tab  font-black uppercase text-[11px] tracking-widest"
-        onclick="switchTab(event, 'liked-posts')">Liked</a>
+      class="tabs tabs-box bg-base-300 dark:bg-base-200 border border-base-300 sticky top-18 z-10 transition-all text-success mb-8 rounded-2xl max-w-md mx-auto md:mx-0">
+
+      <a role="tab" class="tab font-black uppercase text-[11px] tracking-widest inline-flex items-center gap-1"
+        onclick="switchTab(event, 'settings')">
+        <span data-feather="settings" class="w-4 h-4 mb-1"></span>
+        Settings
+      </a>
+
+      <a role="tab"
+        class="tab tab-active font-black uppercase text-[11px] tracking-widest inline-flex items-center gap-1"
+        onclick="switchTab(event, 'my-posts')">
+        <span data-feather="grid" class="w-4 h-4 mb-1"></span>
+        My Posts
+      </a>
+
+      <a role="tab" class="tab font-black uppercase text-[11px] tracking-widest inline-flex items-center gap-1"
+        onclick="switchTab(event, 'liked-posts')">
+        <span data-feather="thumbs-up" class="w-4 h-4 mb-1"></span>
+        Liked
+      </a>
+
     </div>
 
     <div id="settings" class=" tab-content space-y-6">
@@ -206,7 +220,7 @@
 
               <div class="card-actions justify-between items-center mt-6 pt-5 border-t border-base-200/60">
                 <div class="flex items-center gap-1">
-                  <button data-postkey="{{key}}" class="like-btn btn btn-ghost btn-sm rounded-xl gap-2 text-success ">
+                  <button  data-postkey="{{key}}" class="like-btn btn btn-ghost btn-sm rounded-xl gap-2 text-success ">
                     <span id="{{key}}-likeLogo" data-feather="thumbs-up" class="h-4 w-4"></span>
                     <span id="{{key}}-likes" class="font-black text-xs">{{_count.likes}}</span>
                   </button>
@@ -296,7 +310,7 @@
 
               <div class="card-actions justify-between items-center mt-6 pt-5 border-t border-base-200/60">
                 <div class="flex items-center gap-1">
-                  <button data-postkey="{{key}}" class="like-btn btn btn-ghost btn-sm rounded-xl gap-2 text-success ">
+                  <button  data-postkey="{{key}}" class="like-btn btn btn-ghost btn-sm rounded-xl gap-2 text-success ">
                     <span id="{{key}}-likeLogo" data-feather="thumbs-up" class="h-4 w-4"></span>
                     <span id="{{key}}-likes" class="font-black text-xs">{{_count.likes}}</span>
                   </button>
@@ -329,52 +343,46 @@
   </div>
 
   <dialog id="modal_about" class="modal modal-bottom sm:modal-middle">
-  <div class="modal-box bg-base-100 p-0 overflow-hidden border border-base-200 shadow-2xl">
-    
-    <div class="bg-primary/5 p-6 border-b border-base-200">
-      <div class="flex items-center gap-4">
-        <div class="bg-primary/10 text-primary p-3 rounded-2xl">
-          <span data-feather="user" class="w-6 h-6"></span>
+    <div class="modal-box bg-base-100 p-0 overflow-hidden border border-base-200 shadow-2xl">
+
+      <div class="bg-primary/5 p-6 border-b border-base-200">
+        <div class="flex items-center gap-4">
+          <div class="bg-primary/10 text-primary p-3 rounded-2xl">
+            <span data-feather="user" class="w-6 h-6"></span>
+          </div>
+          <div>
+            <h2 class="text-xl font-black tracking-tight">Personal Bio</h2>
+            <p class="text-xs font-bold opacity-50 uppercase tracking-widest">Tell the community who you are</p>
+          </div>
         </div>
-        <div>
-          <h2 class="text-xl font-black tracking-tight">Personal Bio</h2>
-          <p class="text-xs font-bold opacity-50 uppercase tracking-widest">Tell the community who you are</p>
+      </div>
+
+      <div class="p-6 space-y-4">
+        <div class="relative">
+          <textarea placeholder="I am a student ..." id="modal_about_textarea"
+            class="textarea textarea-bordered w-full h-40 rounded-2xl font-medium leading-relaxed focus:border-primary transition-all text-base p-4"></textarea>
+
+          <div class="flex justify-between mt-2 px-1">
+
+            <span id="char_count" class="text-[10px] font-black opacity-30 uppercase tracking-widest">
+              Minimum 10 characters required
+            </span>
+          </div>
         </div>
+      </div>
+
+      <div class="modal-action bg-base-200/30 p-4 border-t border-base-200 flex justify-end gap-3">
+        <button class="btn btn-ghost rounded-xl font-bold" onclick="modal_about.close()">Cancel</button>
+        <button class="btn btn-primary rounded-xl px-8 font-black shadow-lg shadow-primary/20" disabled id="save_about">
+          Save Profile
+        </button>
       </div>
     </div>
 
-    <div class="p-6 space-y-4">
-      <div class="relative">
-        <textarea 
-          placeholder="I am a student ..." 
-          id="modal_about_textarea"
-          class="textarea textarea-bordered w-full h-40 rounded-2xl font-medium leading-relaxed focus:border-primary transition-all text-base p-4"
-        ></textarea>
-        
-        <div class="flex justify-between mt-2 px-1">
-          
-          <span id="char_count" class="text-[10px] font-black opacity-30 uppercase tracking-widest">
-            Minimum 10 characters required
-          </span>
-        </div>
-      </div>
-    </div>
-
-    <div class="modal-action bg-base-200/30 p-4 border-t border-base-200 flex justify-end gap-3">
-      <button class="btn btn-ghost rounded-xl font-bold" onclick="modal_about.close()">Cancel</button>
-      <button 
-        class="btn btn-primary rounded-xl px-8 font-black shadow-lg shadow-primary/20" 
-        disabled 
-        id="save_about">
-        Save Profile
-      </button>
-    </div>
-  </div>
-
-  <form class="modal-backdrop backdrop-blur-sm bg-base-100/30" method="dialog">
-    <button>close</button>
-  </form>
-</dialog>
+    <form class="modal-backdrop backdrop-blur-sm bg-base-100/30" method="dialog">
+      <button>close</button>
+    </form>
+  </dialog>
 
   <dialog id="modal_delete" class="modal modal-bottom sm:modal-middle">
     <div class="modal-box bg-base-100 border border-error/30 p-0 overflow-hidden">
@@ -404,7 +412,7 @@
   </dialog>
 
   <dialog id="modal_logout" class="modal modal-middle">
-    <div class="modal-box text-center p-10">
+    <div class="modal-box text-center p-10 shadow-2xl">
       <div class="w-16 h-16 bg-warning/10 text-warning rounded-full flex items-center justify-center mx-auto mb-6">
         <span data-feather="log-out" class="w-8 h-8"></span>
       </div>
@@ -434,57 +442,58 @@
   </dialog>
 
   <dialog id="modal_edit_photo" class="modal modal-bottom sm:modal-middle">
-  <div class="modal-box p-0 bg-base-100 border border-base-200 shadow-2xl">
-    
-    <div class="bg-primary/5 p-6 border-b border-base-200">
-      <div class="flex items-center gap-4">
-        <div class="bg-primary/10 text-primary p-3 rounded-2xl">
-          <span data-feather="camera" class="w-6 h-6"></span>
-        </div>
-        <div>
-          <h2 class="text-xl font-black tracking-tight">Update Photo</h2>
-          <p class="text-xs font-bold opacity-50 uppercase tracking-widest">Personalize your profile</p>
-        </div>
-      </div>
-    </div>
+    <div class="modal-box p-0 bg-base-100 border border-base-200 shadow-2xl">
 
-    <div class="p-8 flex flex-col items-center">
-      <div class="relative group mb-6">
-        <div class="w-32 h-32 md:w-40 md:h-40 rounded-[2.5rem] bg-base-200 flex items-center justify-center border-4 border-base-100 shadow-inner overflow-hidden">
-          <span id="user_svg" data-feather="user" class="w-16 h-16 opacity-10"></span>
-          <img hidden id="preview_photo" class="w-full h-full object-cover">
+      <div class="bg-primary/5 p-6 border-b border-base-200">
+        <div class="flex items-center gap-4">
+          <div class="bg-primary/10 text-primary p-3 rounded-2xl">
+            <span data-feather="camera" class="w-6 h-6"></span>
+          </div>
+          <div>
+            <h2 class="text-xl font-black tracking-tight">Update Photo</h2>
+            <p class="text-xs font-bold opacity-50 uppercase tracking-widest">Personalize your profile</p>
+          </div>
         </div>
       </div>
 
-      <div id="edit_info" class="text-[10px] font-black uppercase tracking-[0.15em] text-center mb-8 px-6 py-2 bg-base-200/50 rounded-lg opacity-90">
-        * Image size must be less than 3MB
+      <div class="p-8 flex flex-col items-center">
+        <div class="relative group mb-6">
+          <div
+            class="w-32 h-32 md:w-40 md:h-40 rounded-[2.5rem] bg-base-200 flex items-center justify-center border-4 border-base-100 shadow-inner overflow-hidden">
+            <span id="user_svg" data-feather="user" class="w-16 h-16 opacity-10"></span>
+            <img hidden id="preview_photo" class="w-full h-full object-cover">
+          </div>
+        </div>
+
+        <div id="edit_info"
+          class="text-[10px] font-black uppercase tracking-[0.15em] text-center mb-8 px-6 py-2 bg-base-200/50 rounded-lg opacity-90">
+          * Image size must be less than 3MB
+        </div>
+
+        <div class="form-control w-full max-w-xs">
+          <input type="file" id="photo_input"
+            class="file-input file-input-bordered file-input-primary w-full rounded-xl font-bold" accept="image/*" />
+        </div>
       </div>
 
-      <div class="form-control w-full max-w-xs">
-        <input 
-          type="file" 
-          id="photo_input" 
-          class="file-input file-input-bordered file-input-primary w-full rounded-xl font-bold" 
-          accept="image/*"
-        />
+      <div class="modal-action bg-base-200/30 p-4 border-t border-base-200 flex justify-end gap-3">
+        <button class="btn btn-ghost rounded-xl font-bold" onclick="modal_edit_photo.close()">Cancel</button>
+        <button id="btn_save_photo" class="btn btn-primary rounded-xl px-10 font-black shadow-lg shadow-primary/20"
+          disabled>
+          Save Photo
+        </button>
       </div>
     </div>
 
-    <div class="modal-action bg-base-200/30 p-4 border-t border-base-200 flex justify-end gap-3">
-      <button class="btn btn-ghost rounded-xl font-bold" onclick="modal_edit_photo.close()">Cancel</button>
-      <button 
-        id="btn_save_photo" 
-        class="btn btn-primary rounded-xl px-10 font-black shadow-lg shadow-primary/20" 
-        disabled>
-        Save Photo
-      </button>
-    </div>
-  </div>
+    <form class="modal-backdrop bg-base-200/30" method="dialog">
+      <button>close</button>
+    </form>
+  </dialog>
+  <script src="/assets/javascripts/relative-time.js"></script>
 
-  <form class="modal-backdrop backdrop-blur-sm bg-base-100/10" method="dialog">
-    <button>close</button>
-  </form>
-</dialog>
+  {{#if user }}
+  <script src="/assets/javascripts/like-control.js"></script>
+  {{/if }}
   <script>
     function switchTab(event, tabId) {
       // 1. Remove active state from all tabs

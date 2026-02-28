@@ -13,31 +13,6 @@
   <link rel='stylesheet' href='/assets/stylesheets/styles.css' />
   <script type="text/javascript" src="/assets/vendor/trix-editor/trix.umd.min.js"></script>
 </head>
-<script>
-  const rtf = new Intl.RelativeTimeFormat("en", { numeric: "always", style: "long" });
-  function toRelativeTime(date) {
-    const diffMs = date - new Date();
-    const units = [
-      { limit: 60, name: "minute" },
-      { limit: 60 * 60, name: "hour" },
-      { limit: 60 * 60 * 24, name: "day" },
-      { limit: 60 * 60 * 24 * 7, name: "week" },
-      { limit: 60 * 60 * 24 * 30, name: "month" },
-      { limit: 60 * 60 * 24 * 365, name: "year" }
-    ];
-
-    const seconds = Math.round(diffMs / 1000);
-    for (let i = units.length - 1; i >= 0; i--) {
-      const unitSeconds = units[i].limit;
-      const value = Math.round(seconds / unitSeconds);
-      if (Math.abs(value) >= 1) {
-        return rtf.format(value, units[i].name);
-      }
-    }
-    return rtf.format(seconds, "second");
-  }
-
-</script>
 
 <body class="flex flex-col justify-between  m-auto min-h-screen  ">
   {{> header }}
@@ -49,31 +24,6 @@
   {{/if}}
   <div style="display: none;" class="alert-error alert-success alert-warning"></div>
   {{{body}}}
-
-  <div class="sm:hidden fixed bottom-0 z-100 w-full">
-    <div
-      class="bg-base-100/80 backdrop-blur-xl border-y border-base-300 shadow-2xl px-2 py-2 flex items-center justify-around">
-
-      <a href="{{#if user}}/your-feed{{else}}/{{/if}}"
-        class=" btn btn-ghost rounded-full transition-colors {{#if feedPage}}text-primary{{else}}opacity-50{{/if}}">
-        <span data-feather="home" class="h-5"></span><span class=" mt-1  hidden xs:inline">My Feed</span>
-      </a>
-
-      
-
-      <a href="/posts/add"
-        class="btn btn-success rounded-full active:scale-90 transition-transform">
-        <span data-feather="plus" class="h-4 w-4"></span><span class=" hidden xs:inline">Add Post</span>
-      </a>
-
-      <a href="/explore/All%20Posts"
-        class="btn btn-ghost  rounded-full transition-colors {{#if explorePage}}text-primary{{else}}opacity-50{{/if}}">
-        <span data-feather="compass" class="h-5 w-5"></span><span class=" mt-1 hidden xs:inline">Explore</span>
-      </a>
-
-      
-    </div>
-  </div>
   {{> footer }}
   <script src="/assets/vendor/feather-icons/feather.js"></script>
   <script>

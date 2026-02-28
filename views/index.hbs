@@ -153,7 +153,7 @@
           <h2 class="text-lg font-bold  uppercase tracking-widest mb-1">Your Feed</h2>
           <p class="text-sm opacity-80">Personalize topics for your reading experience.</p>
         </div>
-        <div class=" flex flex-wrap gap-1">
+        <div class=" flex flex-wrap gap-2">
           <div class="dropdown dropdown-start sm:dropdown-end">
             <div tabindex="0" role="button"
               class="btn btn-sm  btn-ghost hover:bg-success/30 border border-success/50 rounded-full normal-case font-medium px-5">
@@ -185,7 +185,7 @@
       <dialog id="feed_modal" class="modal modal-bottom sm:modal-middle">
         <div class="modal-box p-0 shadow-2xl sm:max-w-xl">
 
-          <div class="p-6 pb-4 border-b border-base-200">
+          <div class="p-6 pb-4 bg-success/20 border-b border-base-200">
 
             {{#if postlist}}
             <h3 class="font-bold text-xl tracking-tight">Customize Your Feed</h3>
@@ -196,19 +196,19 @@
           </div>
 
           <form method="post" action="/users/profile/update/feed">
-            <div class="max-h-[50vh] overflow-y-auto p-6 flex flex-wrap gap-2.5 bg-base-200/30 inset-shadow-sm">
+            <div class="max-h-[50vh] overflow-y-auto p-6 flex flex-wrap gap-2 md:gap-2.5 bg-base-200/50 inset-shadow-sm">
               {{#each catgNameList}}
-              <input class="btn rounded-2xl " {{#if checked}} checked {{/if}} type="checkbox" name="{{catgName}}"
+              <input class="btn btn-sm sm:btn-md rounded-2xl " {{#if checked}} checked {{/if}} type="checkbox" name="{{catgName}}"
                 aria-label="{{catgName}}" />
               {{/each}}
 
 
             </div>
 
-            <div class="p-4 border-t border-base-200 flex justify-end gap-3 bg-base-100 rounded-b-2xl">
-              <button type="button" class="btn btn-ghost rounded-full" onclick="feed_modal.close()">Cancel</button>
-              <input class="btn rounded-full" type="reset" value="Reset" />
-              <button type="submit" class="btn btn-success rounded-full shadow-sm">Save Preferences</button>
+            <div class="p-4 border-t border-base-200 flex justify-end gap-2 sm:gap-2.5 bg-base-100 rounded-b-2xl">
+              <button type="button" class="btn btn-sm sm:btn-md btn-ghost rounded-full" onclick="feed_modal.close()">Cancel</button>
+              <input class="btn btn-sm sm:btn-md rounded-full" type="reset" value="Reset" />
+              <button type="submit" class="btn btn-sm sm:btn-md btn-success rounded-full shadow-sm">Save Preferences</button>
             </div>
 
           </form>
@@ -312,14 +312,14 @@
             class="title text-success sm:text-base-content text-2xl md:text-3xl font-black tracking-tight leading-[1.1] mb-3 group-hover:text-success transition-colors line-clamp-2">
             {{title}}
           </h2>
-          <div id="{{key}}-body" class="text-base-content/90 text-sm md:text-base line-clamp-3 leading-relaxed">
+          <div id="{{key}}-body" class="text-base-content text-sm md:text-base line-clamp-3 leading-relaxed">
             {{{body}}}
           </div>
         </a>
 
         <div class="card-actions justify-between items-center mt-6 pt-5 border-t border-base-200/60">
           <div class="flex items-center gap-1">
-            <button data-postkey="{{key}}" class="like-btn btn btn-ghost btn-sm rounded-xl gap-2 text-success ">
+            <button  data-postkey="{{key}}" class="like-btn btn btn-ghost btn-sm rounded-xl gap-2 text-success ">
               <span id="{{key}}-likeLogo" data-feather="thumbs-up" class="h-4 w-4"></span>
               <span id="{{key}}-likes" class="font-black text-xs">{{_count.likes}}</span>
             </button>
@@ -330,7 +330,7 @@
             </div>
           </div>
 
-          <a href="/posts/view?key={{key}}" class="btn  btn-sm sm:btn-md btn-ghost p-0 px-2 text-base-content group-hover:text-success ">
+          <a href="/posts/view?key={{key}}" class="btn  btn-sm sm:btn-md btn-ghost p-0 px-2 text-base-content/90 group-hover:text-success ">
            Read <span data-feather="arrow-right" class="h-5 w-9"></span>
           </a>
         </div>
@@ -478,139 +478,10 @@
       infoSpan.textContent = "Updated"
     }
   });
-
-  class Times {
-    constructor() {
-      this.timesElements = Array.from(document.querySelectorAll(".updatedAt").values());
-      this.dataTimesList = [];
-    }
-    main() {
-
-      this.setRelativeTimes();
-      const updateTimeInterval = setInterval(() => {
-        this.setRelativeTimes(true)
-      }, 1000 * 29)
-
-      window.addEventListener("beforeunload", e => {
-        clearInterval(updateTimeInterval)
-      })
-    }
-
-    setRelativeTimes(interval) {
-      this.timesElements.forEach(ele => {
-        const dataTime = ele.getAttribute("data-time")
-        if (!interval)
-          this.dataTimesList.push(dataTime);
-        ele.textContent = toRelativeTime(new Date(dataTime))
-      })
-    }
-  }
-  window.addEventListener("load", e => {
-    new Times().main()
-  })
-
-  {{#if user }}
-  class LikesControl {
-    constructor() {
-      this.likeButtons = document.querySelectorAll(".like-btn")
-      console.log(this.likeButtons)
-    }
-    async init() {
-      await this.setLikes()
-      this.attachEvents()
-    }
-    async setLikes() {
-      const res = await fetch('/users/likes/keys').then(async res => await res.text())
-      if (!res) return
-      const likeKeys = JSON.parse(res);
-      Array.from(this.likeButtons).forEach(btn => {
-        const postkey = btn.getAttribute("data-postkey")
-        if (likeKeys.includes(postkey)) {
-          btn.className = "like-btn btn btn-ghost btn-sm gap-2 text-primary";
-          btn.setAttribute("data-isliked", "true");
-          document.getElementById(postkey + "-likeLogo").setAttribute("class", "fill-primary h-4 w-4 ")
-        }
-      })
-
-    }
-    attachEvents() {
-      Array.from(this.likeButtons).forEach((btn, i) => {
-        btn.addEventListener("click", async (event) => {
-          const postkey = btn.getAttribute("data-postkey")
-          const userId = "{{user.id}}";
-
-          if (btn.getAttribute("data-isliked") === "true") {
-            const postkey = btn.getAttribute("data-postkey")
-            const userId = "{{user.id}}";
-
-            btn.disabled = true;
-            btn.classList.replace("btn-ghost", "btn-active")
-            try {
-              const res = await this.fetchApi("/posts/likes/destroy", "POST", JSON.stringify({
-                postkey: postkey,
-                userId: userId
-              }))
-              if (res === "Ok") {
-                this.toUnLiked(btn, postkey)
-              }
-            } catch (err) {
-              console.error(err)
-            } finally {
-              setTimeout(() => {
-                btn.disabled = false
-              }, 500)
-            }
-          } else {
-            const postkey = btn.getAttribute("data-postkey")
-            const userId = "{{user.id}}";
-
-            btn.classList.replace("btn-ghost", "btn-active")
-            btn.disabled = true;
-            try {
-              const res = await this.fetchApi("/posts/likes/add", "POST", JSON.stringify({
-                postkey: postkey,
-                userId: userId
-              }))
-              if (res === "Ok") {
-                this.toLiked(btn, postkey)
-              }
-            } catch (err) {
-              console.error(err)
-            } finally {
-              setTimeout(() => {
-                btn.disabled = false
-              }, 500)
-            }
-          }
-        })
-      })
-    }
-    async fetchApi(url, method, body) {
-      const res = await fetch(url, {
-        body,
-        method,
-        headers: { "content-type": "application/json" }
-      })
-      return await res.text()
-    }
-    toLiked(btn, postkey) {
-      btn.setAttribute("data-isliked", "true")
-      btn.className = "like-btn btn btn-ghost btn-sm gap-2 text-primary";
-      let totalLikes = document.getElementById(postkey + "-likes").textContent
-      document.getElementById(postkey + "-likes").textContent = Number(totalLikes) + 1;
-      document.getElementById(postkey + "-likeLogo").setAttribute("class", "h-4 w-4 fill-primary")
-    }
-    toUnLiked(btn, postkey) {
-      btn.setAttribute("data-isliked", "false")
-      btn.className = "like-btn btn btn-ghost btn-sm gap-2 text-success";
-      document.getElementById(postkey + "-likes").textContent -= 1;
-      document.getElementById(postkey + "-likeLogo").setAttribute("class", "h-4 w-4")
-
-    }
-
-  }
-  window.addEventListener("load", () => {
-    new LikesControl().init()
-  })
-  {{/if }}
 </script>
+<script src="/assets/javascripts/relative-time.js"></script>
+
+{{#if user }}
+
+<script src="/assets/javascripts/like-control.js"></script>
+{{/if }}

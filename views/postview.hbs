@@ -17,7 +17,7 @@
               <a href="/users/profile/{{post.auther.username}}"
                 class="link link-hover text-base-content">{{post.auther.username}}</a>
             </p>
-            <p class="text-xs text-base-content/60 mt-1"> <span class="updatedAt font-mono">{{post.updatedAt}}</span></p>
+            <p class="text-xs text-base-content/60 mt-1"> <span data-time="{{post.updatedAt}}" class="updatedAt font-mono"></span></p>
           </div>
           <div class="sm:inline-flex hidden shrink gap-1">
           {{#each post.catgs}}
@@ -54,7 +54,7 @@
  
       <div class="flex justify-between items-center">
         <div class=" flex gap-2  sm:gap-4 text-sm  ">
-          <button data-postkey="{{post.key}}" class="like-btn btn btn-ghost btn-sm gap-2 text-success">
+          <button  data-postkey="{{post.key}}" class="like-btn btn btn-ghost btn-sm gap-2 text-success">
 
               <span id="{{post.key}}-likes">{{post._count.likes}}</span>
               <span id="{{post.key}}-likeLogo" data-feather="thumbs-up" class=" transition-colors duration-200 h-4 w-4"></span>
@@ -90,7 +90,7 @@
           <img class=" rounded-full bg-black w-6 h-6" src="/assets/users/photo/{{auther.username}}">
           <p class=" flex flex-col justify-center items-start">
             <span class=" text-sm">{{auther.username}}</span>
-            <span class="updatedAt opacity-70 text-sm">{{createdAt}}</span>
+            <span data-time="{{createdAt}}" class="updatedAt opacity-70 text-sm"></span>
           </p>
         </div>
         <div>
@@ -237,123 +237,10 @@
       }))
     }
   })
-  const timeDivs = document.querySelectorAll(".updatedAt");
-  const defaultTimes = [];
-  timeDivs.forEach(div => {
-    defaultTimes.push(div.textContent)
-    div.textContent = toRelativeTime(new Date(div.textContent))
-  })
-  const updateTime = setInterval(() => {
-    const timeDivs = document.querySelectorAll(".updatedAt");
-    Array.from(timeDivs).forEach((div, i) => {
-      div.textContent = toRelativeTime(new Date(defaultTimes[i]))
-    })
-  }, 1000 * 30)
-  window.addEventListener("beforeunload", () => {
-    clearInterval(updateTime)
-  })
-  {{#if user }}
-  class LikesControl {
-    constructor() {
-      this.likeButtons = document.querySelectorAll(".like-btn")
-      console.log(this.likeButtons)
-    }
-    async init() {
-      await this.setLikes()
-      this.attachEvents()
-    }
-    async setLikes() {
-      const res = await fetch('/users/likes/keys').then(async res => await res.text())
-      if (!res) return
-      const likeKeys = JSON.parse(res);
-      Array.from(this.likeButtons).forEach(btn => {
-        const postkey = btn.getAttribute("data-postkey")
-        if (likeKeys.includes(postkey)) {
-          btn.className = "like-btn btn btn-ghost btn-sm gap-2 text-primary";
-          btn.setAttribute("data-isliked", "true");
-          document.getElementById(postkey + "-likeLogo").setAttribute("class", "fill-primary h-4 w-4 ")
-        }
-      })
 
-    }
-    attachEvents() {
-      Array.from(this.likeButtons).forEach((btn, i) => {
-        btn.addEventListener("click", async (event) => {
-          const postkey = btn.getAttribute("data-postkey")
-          const userId = "{{user.id}}";
-
-          if (btn.getAttribute("data-isliked") === "true") {
-            const postkey = btn.getAttribute("data-postkey")
-            const userId = "{{user.id}}";
-            
-            btn.disabled = true;
-            btn.classList.replace("btn-ghost","btn-active")
-            try {
-              const res = await this.fetchApi("/posts/likes/destroy", "POST", JSON.stringify({
-                postkey: postkey,
-                userId: userId
-              }))
-              if (res === "Ok") {
-                this.toUnLiked(btn, postkey)
-              }
-            } catch (err) {
-              console.error(err)
-            } finally {
-              setTimeout(() => {
-              btn.disabled = false
-            }, 500)
-            }
-          } else {
-            const postkey = btn.getAttribute("data-postkey")
-            const userId = "{{user.id}}";
-
-            btn.classList.replace("btn-ghost","btn-active")
-            btn.disabled = true;
-            try {
-              const res = await this.fetchApi("/posts/likes/add", "POST", JSON.stringify({
-                postkey: postkey,
-                userId: userId
-              }))
-              if (res === "Ok") {
-                this.toLiked(btn, postkey)
-              }
-            } catch (err) {
-              console.error(err)
-            } finally {
-              setTimeout(() => {
-              btn.disabled = false
-            }, 500)
-            }
-          }
-        })
-      })
-    }
-    async fetchApi(url, method, body) {
-      const res = await fetch(url, {
-        body,
-        method,
-        headers: { "content-type": "application/json" }
-      })
-      return await res.text()
-    }
-    toLiked(btn, postkey) {
-      btn.setAttribute("data-isliked", "true")
-      btn.className = "like-btn btn btn-ghost btn-sm gap-2 text-primary";
-      let totalLikes = document.getElementById(postkey + "-likes").textContent
-      document.getElementById(postkey + "-likes").textContent = Number(totalLikes) + 1;
-      document.getElementById(postkey + "-likeLogo").setAttribute("class", "h-4 w-4 fill-primary")
-    }
-    toUnLiked(btn, postkey) {
-      btn.setAttribute("data-isliked", "false")
-      btn.className = "like-btn btn btn-ghost btn-sm gap-2 text-success";
-      document.getElementById(postkey + "-likes").textContent -= 1;
-      document.getElementById(postkey + "-likeLogo").setAttribute("class", "h-4 w-4")
-
-    }
-
-  }
-  window.addEventListener("load", () => {
-    new LikesControl().init()
-  })
-{{/if}}
 </script>
+<script src="/assets/javascripts/relative-time.js"></script>
+
+{{#if user }}
+<script src="/assets/javascripts/like-control.js"></script>
+{{/if }}

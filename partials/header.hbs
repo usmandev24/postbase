@@ -32,26 +32,19 @@
     <div class="navbar-end gap-3">
       
       {{#if user}}
+        <span id="userid" class=" hidden" data-userid="{{user.id}}"></span>
         <div class="hidden  lg:flex items-center gap-3">
           <a href="/posts/add" class="btn btn-success btn-sm rounded-full gap-2 px-5 shadow-sm shadow-success/20">
             <span class="h-4 w-4" data-feather="plus"></span>
             Create Post
           </a>
           
-          <div class="dropdown dropdown-end">
-            <label tabindex="0" class="btn btn-ghost btn-circle avatar border border-base-300">
+            <a href="/users/profile/{{user.username}}" class="btn btn-ghost btn-circle avatar border border-base-300">
               <div class="w-9 rounded-full">
                 <img src="/assets/users/photo/{{user.username}}" alt="{{user.username}}" />
               </div>
-            </label>
-            <ul tabindex="0" class="mt-3 z-1 p-2 shadow-2xl menu menu-sm dropdown-content bg-base-100 rounded-2xl w-52 border border-base-300">
-              <li class="menu-title opacity-50 text-[10px] uppercase tracking-widest px-4 py-2">Account</li>
-              <li><a href="/users/profile/{{user.username}}" class="py-3 rounded-xl font-bold">My Profile</a></li>
-              <li><a href="/your-feed" class="py-3 rounded-xl">Personal Feed</a></li>
-              <div class="divider my-1 opacity-20"></div>
-              <li><a href="/users/logout" class="py-3 rounded-xl text-error font-bold">Logout</a></li>
-            </ul>
-          </div>
+            </a>
+            
         </div>
 
       {{else}}
@@ -67,19 +60,17 @@
         </button>
         <ul tabindex="0" class="menu dropdown-content mt-4 z-10 p-4 shadow-2xl  bg-base-100 rounded-3xl w-54 border border-base-300  gap-2">
           {{#if user}}
-            <div class="flex items-center gap-3 px-2 mb-3">
+            <a  href="/users/profile/{{user.username}}" class="flex items-center gap-3 px-2 mb-3">
               <img class="rounded-full w-10 h-10 border border-base-300" src="/assets/users/photo/{{user.username}}">
               <div class="flex flex-col">
                 <span class="font-bold leading-none text-sm">{{user.username}}</span>
                 <span class="text-[10px] opacity-50 uppercase mt-1 tracking-wider">Active Contributor</span>
               </div>
-            </div>
+            </a>
             <li><a href="/posts/add" class="btn btn-success rounded-2xl text-success-content h-12 mb-2 flex items-center justify-center">Create Post</a></li>
             <li><a href="/explore/All%20Posts" class="py-3 font-bold">Explore Content</a></li>
             <li><a href="/your-feed" class="py-3">My Personal Feed</a></li>
-            <li><a href="/users/profile/{{user.username}}" class="py-3">View Profile</a></li>
-            <div class="divider my-1 opacity-20"></div>
-            <li><a href="/users/logout" class="text-error font-bold">Logout</a></li>
+            
           {{else}}
             <li><a href="/users/login" class="btn btn-outline border-base-300 rounded-2xl h-12 mb-2">Login</a></li>
             <li><a href="/users/oauth/google" class="btn btn-primary rounded-2xl h-12">Sign up</a></li>
@@ -91,4 +82,28 @@
     </div>
   </div>
 </nav>
+<div class="sm:hidden fixed bottom-0 z-100 w-full">
+    <div
+      class="bg-base-100/80 backdrop-blur-xl border-y border-base-300 shadow-2xl px-2 py-2 flex items-center justify-around">
+
+      <a href="{{#if user}}/your-feed{{else}}/{{/if}}"
+        class=" btn btn-ghost rounded-full transition-colors {{#if feedPage}}text-primary{{else}}opacity-50{{/if}}">
+        <span data-feather="home" class="h-5"></span><span class=" mt-1  hidden xs:inline">My Feed</span>
+      </a>
+
+      
+
+      <a href="/posts/add"
+        class="btn btn-success rounded-full active:scale-90 transition-transform">
+        <span data-feather="plus" class="h-4 w-4"></span><span class=" hidden xs:inline">Add Post</span>
+      </a>
+
+      <a href="/explore/All%20Posts"
+        class="btn btn-ghost  rounded-full transition-colors {{#if explorePage}}text-primary{{else}}opacity-50{{/if}}">
+        <span data-feather="compass" class="h-5 w-5"></span><span class=" mt-1 hidden xs:inline">Explore</span>
+      </a>
+
+      
+    </div>
+  </div>
 
