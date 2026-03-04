@@ -1,4 +1,4 @@
-import { prisma } from "./prisma.mjs";
+import { prisma } from "./prisma.js";
 import EventEmitter from "node:events";
 import PrismaPostsStore from "./posts-prisma.mjs";
 import Keyv from "keyv";

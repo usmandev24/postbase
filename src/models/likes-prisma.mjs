@@ -1,5 +1,5 @@
 import { EventEmitter } from "node:events"
-import { prisma} from "./prisma.mjs"
+import { prisma} from "./prisma.js"
 
 export class PrimsaLikesStore {
   static events = new EventEmitter();

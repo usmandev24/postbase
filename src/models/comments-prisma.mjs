@@ -1,5 +1,5 @@
 import EventEmitter from "events";
-import { prisma } from "./prisma.mjs";
+import { prisma } from "./prisma.js";
 import { cacheStore } from "./cache.mjs";
 import Keyv from "keyv";
 

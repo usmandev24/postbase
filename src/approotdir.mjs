@@ -4,4 +4,5 @@ import * as url from 'url';
 
 const __filename = url.fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
+console.log(__dirname.replace(/\/src|\/dist/ig, ""))
 export const approotdir = __dirname;

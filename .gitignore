@@ -1,5 +1,7 @@
 node_modules
 log.txt
 .env.keys
-/prisma/generated/prisma
-pnpm-lock.yaml
+src/prisma/generated/prisma
+
+dist
+

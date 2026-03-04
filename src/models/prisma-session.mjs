@@ -1,4 +1,4 @@
-import { prisma } from "./prisma.mjs";
+import { prisma } from "./prisma.js";
 import * as crypto from "node:crypto"
 import jwt from "jsonwebtoken";
 import { sessionCookieName } from "../app.mjs";

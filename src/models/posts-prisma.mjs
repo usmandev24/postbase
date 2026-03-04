@@ -1,7 +1,7 @@
 
 import EventEmitter from "events";
 import { default as DBG } from "debug";
-import { prisma } from "./prisma.mjs";
+import { prisma } from "./prisma.js";
 import { PrismaCommentsStore } from "./comments-prisma.mjs";
 import { PrimsaLikesStore } from "./likes-prisma.mjs";
 import Keyv from "keyv";

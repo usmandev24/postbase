@@ -1,5 +1,5 @@
 
-import { prisma } from "./prisma.mjs";
+import { prisma } from "./prisma.js";
 
 import debug from "debug";
 import { cacheStore } from "./cache.mjs";

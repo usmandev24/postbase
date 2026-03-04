@@ -4,11 +4,16 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "start": "dotenvx run --env-file=.env.production -- cross-env DEBUG=posts:* tsx ./app.mjs",
-    "dev": "dotenvx run --env-file=.env.development -- cross-env DEBUG=posts:* nodemon tsx ./app.mjs",
+    "start": "dotenvx run --env-file=.env.production -- cross-env DEBUG=posts:* node ./dist/app.mjs",
+    "dev": "dotenvx run --env-file=.env.development -- cross-env DEBUG=posts:* tsx ./src/app.mjs",
     "watch": "tailwindcss -i ./public/assets/stylesheets/input.css -o ./public/assets/stylesheets/styles.css --watch",
     "prisma": "dotenvx run --env-file=.env.development -- prisma",
-    "init-catg" : "dotenvx run --env-file=.env.development -- node ./models/init-categories.mjs"
+    "init-catg": "dotenvx run --env-file=.env.development -- node ./models/init-categories.mjs",
+    "build": "pnpm run pris-dbpull-pro; pnpm run pris-gen-pro; pnpm run copy-assets; tsc; pnpm run init-catg-pro",
+    "copy-assets": "cp -r src/public/assets dist/public; cp -r src/views dist/; cp -r src/partials dist/",
+    "pris-dbpull-pro": "dotenvx run --env-file=.env.production -- prisma db push --config=./src/prisma.config.ts",
+    "pris-gen-pro": "dotenvx run --env-file=.env.production -- prisma db push --config=./src/prisma.config.ts",
+    "init-catg-pro": "dotenvx run --env-file=.env.production -- node ./dist/models/init-categories.mjs "
   },
   "author": "Usman Ghani",
   "license": "",
@@ -52,6 +57,7 @@
     "prettier-plugin-tailwindcss": "^0.6.14",
     "prisma": "^7.4.1",
     "tailwindcss": "^4.2.0",
-    "tsx": "^4.21.0"
+    "tsx": "^4.21.0",
+    "typescript": "^5.9.3"
   }
 }

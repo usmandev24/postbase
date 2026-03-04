@@ -48,8 +48,8 @@ app.use(express.urlencoded());
 app.use(express.raw({type: "application/octet-stream", limit: "3mb"}))
 app.use(cookieParser(process.env.SESSION_COOKIE_SECRET));
 app.use(express.static(path.join(__dirname, 'public')));
-app.use('/assets/vendor/feather-icons', express.static(path.join(__dirname, 'node_modules', 'feather-icons', 'dist')));
-app.use('/assets/vendor/trix-editor', express.static(path.join(__dirname, 'node_modules', 'trix', 'dist')))
+app.use('/assets/vendor/feather-icons', express.static(path.join(__dirname.replace(/\/src|\/dist/ig, ""), 'node_modules', 'feather-icons', 'dist')));
+app.use('/assets/vendor/trix-editor', express.static(path.join(__dirname.replace(/\/src|\/dist/ig, ""), 'node_modules', 'trix', 'dist')))
 app.use('/assets/users', userAssestRouter)
 
 const mainRouter = express.Router()
