@@ -19,6 +19,7 @@ model postUser {
   photo           Bytes?
   photoType       String?    @db.VarChar(255)
   photo_updatedAt DateTime?  @updatedAt @db.Timestamptz(6)
+  photoURL        String?
   feedCatgs       String?
   likes           like[]
   posts           posts[]
@@ -38,34 +39,35 @@ model like {
 
 model categories {
   id   Int    @id @default(autoincrement())
-  name String @db.VarChar(255) @unique
+  name String @unique @db.VarChar(255)
 
   categoryToPosts categoryToPosts[]
 }
 
 model categoryToPosts {
-  postkey  String
-  catgName String
-  post     posts      @relation(fields: [postkey], references: [key], onDelete: Cascade)
-  category categories @relation(fields: [catgName], references: [name], onDelete: Cascade)
-  createdAt DateTime  @db.Timestamptz(6) @default(now())
-  
+  postkey   String
+  catgName  String
+  post      posts      @relation(fields: [postkey], references: [key], onDelete: Cascade)
+  category  categories @relation(fields: [catgName], references: [name], onDelete: Cascade)
+  createdAt DateTime   @default(now()) @db.Timestamptz(6)
+
   @@id([catgName, postkey])
   @@index([postkey])
 }
 
 model posts {
-  title     String?           @db.VarChar(255)
-  body      String?
-  createdAt DateTime          @default(now()) @db.Timestamptz(6)
-  updatedAt DateTime          @updatedAt @db.Timestamptz(6)
-  likes     like[]
-  public    Boolean           @default(true)
-  autherId  String            @db.VarChar(255)
-  key       String            @id @db.VarChar(255)
-  auther    postUser          @relation(fields: [autherId], references: [id], onDelete: Cascade)
-  comments  comments[]
-  catgs categoryToPosts[]
+  title      String?           @db.VarChar(255)
+  body       String?
+  coverImage String?
+  createdAt  DateTime          @default(now()) @db.Timestamptz(6)
+  updatedAt  DateTime          @updatedAt @db.Timestamptz(6)
+  likes      like[]
+  public     Boolean           @default(true)
+  autherId   String            @db.VarChar(255)
+  key        String            @id @db.VarChar(255)
+  auther     postUser          @relation(fields: [autherId], references: [id], onDelete: Cascade)
+  comments   comments[]
+  catgs      categoryToPosts[]
 
   @@index([autherId])
   @@index([autherId, public])
@@ -83,6 +85,15 @@ model comments {
 
   @@index([postkey, createdAt(sort: Desc)])
   @@index([autherId])
+}
+
+model images {
+  id        Int      @id @default(autoincrement())
+  blob      Bytes
+  url       String   @unique
+  createdAt DateTime @default(now()) @db.Timestamptz(6)
+  
+  @@index([url])
 }
 
 model session {
