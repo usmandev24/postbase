@@ -41,7 +41,7 @@
           
             <a href="/users/profile/{{user.username}}" class="btn btn-ghost btn-circle avatar border border-base-300">
               <div class="w-9 rounded-full">
-                <img src="/assets/users/photo/{{user.username}}" alt="{{user.username}}" />
+                <img src="{{user.photoURL}}" alt="{{user.username}}" />
               </div>
             </a>
             
@@ -61,7 +61,7 @@
         <ul tabindex="0" class="menu dropdown-content mt-4 z-10 p-4 shadow-2xl  bg-base-100 rounded-3xl w-54 border border-base-300  gap-2">
           {{#if user}}
             <a  href="/users/profile/{{user.username}}" class="flex items-center gap-3 px-2 mb-3">
-              <img class="rounded-full w-10 h-10 border border-base-300" src="/assets/users/photo/{{user.username}}">
+              <img class="rounded-full w-10 h-10 border border-base-300" src="{{user.photoURL}}">
               <div class="flex flex-col">
                 <span class="font-bold leading-none text-sm">{{user.username}}</span>
                 <span class="text-[10px] opacity-50 uppercase mt-1 tracking-wider">Active Contributor</span>

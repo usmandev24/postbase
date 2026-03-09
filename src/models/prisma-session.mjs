@@ -21,7 +21,6 @@ export async function addSession(hash, userId) {
 
 export async function getSession(id) {
   const hashId = crypto.createHash("sha256").update(id).digest("hex");
-  await prisma.$connect();
   const sess = await prisma.session.findUnique({
     where: { id: hashId },
     include: { user: { omit: { photo: true, photoType: true, photo_updatedAt: true } } }

@@ -22,13 +22,13 @@ function reqURL(path) {
 
 export async function create(username, password,
   provider, pid, displayName, fullName, firstName, lastName,
-  email, photoURL, photo, photoType) {
+  email, photoURL, photoType) {
   let password_hash = await genHash(password)
   const res = await request.post(reqURL('/create-user'))
     .send({
       username, password_hash,
       provider, pid, displayName, fullName, firstName, lastName,
-      email, photoURL, photo, photoType
+      email, photoURL,  photoType
     })
     .set("Content-type", "application/json")
     .set("Accept", "application/json")
@@ -38,13 +38,13 @@ export async function create(username, password,
 
 export async function update(username, password,
   provider, pid, displayName, fullName, firstName, lastName,
-  email, photoURL, photo, photoType) {
+  email, photoURL, photoType) {
     let password_hash = await genHash(password)
   const res = await request.post(reqURL(`/update-user/${username}`))
     .send({
       username, password_hash,
       provider, pid, displayName, fullName, firstName, lastName,
-      email, photoURL, photo, photoType
+      email, photoURL, photoType
     })
     .set("Content-type", "application/json")
     .set("Accept", "application/json")
@@ -63,7 +63,6 @@ export async function findOrCreate(profile) {
       firstName: profile.firstName,
       lastName: profile.lastName,
       email: profile.email, photoURL: profile.photoURL,
-      photo: profile.photo,
       photoType: profile.photoType
     }).set('Content-Type', 'application/json')
     .set('Acccept', 'application/json')
@@ -107,12 +106,12 @@ export async function findEmail(email) {
     .auth(authid, authcode);
   return res.body;
 }
-export async function updatePhoto(id, photo, photoType) {
+export async function updatePhoto(id, photoURL, photoType) {
   const res= await request.post(reqURL(`/update-user/photo/${id}`))
     .set("Content-type", "application/json")
     .set("Accept", "application/json")
     .auth(authid, authcode)
-    .send({photo, photoType});
+    .send({photoURL, photoType});
   return res.body;
 }
 export async function list() {

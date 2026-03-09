@@ -96,7 +96,7 @@ export class PrismaCommentsStore {
         body: body
       },
       include: {
-        auther: { select: { username: true, displayName: true } }
+        auther: { select: { username: true, displayName: true , photoURL: true} }
       }
     });
     
@@ -128,7 +128,7 @@ export class PrismaCommentsStore {
           skip: collection * take,
           take: take,
           include: {
-            auther: { select: { username: true, displayName: true } }
+            auther: { select: { username: true, displayName: true, photoURL : true } }
           }
         })
         await commentCache.addByPostKey(postkey, comments, collection)

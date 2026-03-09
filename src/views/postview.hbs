@@ -6,7 +6,7 @@
       <div class="flex items-center gap-4 ">
         <div class="avatar ">
           <div class="w-14 h-14 rounded-full ring-4 ring-primary/5 shadow-xl">
-            <img src="/assets/users/photo/{{post.auther.username}}" alt="{{post.auther.username}}" />
+            <img src="{{post.auther.photoURL}}" alt="{{post.auther.username}}" />
           </div>
         </div>
         <div>
@@ -89,7 +89,7 @@
         class="group p-4 rounded-4xl bg-base-200/40 border border-transparent hover:border-base-300 transition-all">
         <div class="flex justify-between items-start mb-4">
           <div class="flex items-center gap-3">
-            <img class="rounded-full bg-neutral w-8 h-8 shadow-sm" src="/assets/users/photo/{{auther.username}}">
+            <img class="rounded-full bg-neutral w-8 h-8 shadow-sm" src="{{auther.photoURL}}">
             <div>
               <p class="font-black text-sm tracking-tight leading-none">{{auther.username}}</p>
               <span data-time="{{createdAt}}"
@@ -218,7 +218,7 @@
       commentdiv.innerHTML = `
         <div class="flex justify-between items-start mb-4">
           <div class="flex items-center gap-3">
-            <img class="rounded-xl bg-neutral w-8 h-8 shadow-sm" src="/assets/users/photo/${comment.auther.username}">
+            <img class="rounded-xl bg-neutral w-8 h-8 shadow-sm" src="${comment.auther.photoURL}">
             <div>
               <p class="font-black text-sm tracking-tight leading-none">${comment.auther.username}</p>
               <span class="text-[9px] font-bold opacity-40 uppercase tracking-widest mt-1 inline-block">Just now</span>

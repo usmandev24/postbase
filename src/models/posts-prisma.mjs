@@ -144,7 +144,7 @@ export default class PrismaPostsStore {
       },
 
       include: {
-        auther: { select: { username: true, id: true, displayName: true } },
+        auther: { select: { username: true, id: true, displayName: true, photoURL: true } },
         _count: { select: { comments: true, likes: true } },
         catgs: true
       },
@@ -171,7 +171,7 @@ export default class PrismaPostsStore {
         where: { key },
         data: { key, title, body, autherId },
         include: {
-          auther: { select: { username: true, id: true, displayName: true } },
+          auther: { select: { username: true, id: true, displayName: true , photoURL: true} },
           _count: { select: { comments: true, likes: true } },
           catgs: true
         },
@@ -197,7 +197,7 @@ export default class PrismaPostsStore {
         const post = await prisma.posts.findUnique({
           where: { key },
           include: {
-            auther: { select: { username: true, id: true, displayName: true } },
+            auther: { select: { username: true, id: true, displayName: true, photoURL: true } },
             _count: { select: { comments: true, likes: true } },
             catgs: true
           },

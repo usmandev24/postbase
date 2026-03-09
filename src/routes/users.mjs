@@ -11,6 +11,7 @@ import * as usersModel from "../models/user-superagent.mjs";
 import { PrismaPostsUsersStore } from "../models/users-prisma.mjs";
 import { sessionCookieName } from "../app.mjs";
 import { genRefTokenHash, addSession } from "../models/prisma-session.mjs";
+import { PrismaPictureStore } from "../models/picture-prisma.mjs";
 
 
 const log = debug("posts:routes_users")
@@ -19,6 +20,7 @@ const LocalStrategy = passportLocal.Strategy;
 const JwtStrategy = passportJwt.Strategy;
 const googleStrategy = passportGoogle.Strategy;
 export const postsUsersStore = new PrismaPostsUsersStore()
+export const picStore = new PrismaPictureStore()
 
 export const userRoutsEvents = new EventEmitter()
 export const router = Router();
@@ -137,7 +139,6 @@ router.post("/create", async (req, res, next) => {
     }
   } catch (error) { }
 
-  const photo = createLogo(req.body.firstName, req.body.lastName)
   const user = await usersModel.create(
     req.body.username,
     req.body.password,
@@ -149,7 +150,6 @@ router.post("/create", async (req, res, next) => {
     req.body.lastName,
     req.body.email,
     null,
-    photo.toString('base64'),
     "svg"
   );
   if (user) {
@@ -164,7 +164,7 @@ router.post("/create", async (req, res, next) => {
 router.get('/profile/:username', async (req, res, next) => {
   if (req.user && req.params.username === req.user.username) {
     const user = await postsUsersStore.readByUserName(req.user.username);
-    const postlist = await postsUsersStore.getUserPosts(req.params.username,false)
+    const postlist = await postsUsersStore.getUserPosts(req.params.username, false)
     const likedPostList = await postsUsersStore.getLikedPosts(req.params.username, false)
     res.render("about-user", {
       title: "About " + req.user.displayName,
@@ -172,7 +172,7 @@ router.get('/profile/:username', async (req, res, next) => {
       postlist: postlist,
       likedPostList: likedPostList,
       likedPostLength: likedPostList.length,
-      postLength : postlist.length,
+      postLength: postlist.length,
     });
   } else {
     const user = await postsUsersStore.getPublicData(req.params.username);
@@ -189,24 +189,24 @@ router.get('/profile/:username', async (req, res, next) => {
   }
 
 });
-router.get("/likes/keys/", ensureAuthenticated, async (req, res , next) => {
+router.get("/likes/keys/", ensureAuthenticated, async (req, res, next) => {
   const likeKeys = await postsUsersStore.getLikedPosts(req.user.username, true)
   console.log(likeKeys)
   res.type('application/json')
   res.send(likeKeys)
 })
 router.post("/profile/update/feed", ensureAuthenticated, async (req, res, next) => {
-    await postsUsersStore.updateFeed(req.user.id, JSON.stringify(Object.keys(req.body)));
-    res.redirect("/your-feed")
+  await postsUsersStore.updateFeed(req.user.id, JSON.stringify(Object.keys(req.body)));
+  res.redirect("/your-feed")
 
 })
 router.post("/profile/update/about", ensureAuthenticated, async (req, res, next) => {
-  const user =await  postsUsersStore.updateAbout(req.user.id, req.body.about);
+  const user = await postsUsersStore.updateAbout(req.user.id, req.body.about);
   res.end(user.about);
 })
 router.post("/profile/update/personal", ensureAuthenticated, async (req, res, next) => {
   const body = req.body;
-  const user =await  postsUsersStore.updatePersonal(req.user.id, body.displayName, body.firstName, body.lastName, body.about );
+  const user = await postsUsersStore.updatePersonal(req.user.id, body.displayName, body.firstName, body.lastName, body.about);
   res.end(JSON.stringify({
     firstName: user.firstName,
     lastName: user.lastName,
@@ -216,12 +216,12 @@ router.post("/profile/update/personal", ensureAuthenticated, async (req, res, ne
 })
 router.get('/request-data', ensureAuthenticated, async (req, res, next) => {
   const user = await postsUsersStore.getAllData(req.user.username)
-  res.render("user-data", {user, title: user.username, layout: false}, (err, html) => {
+  res.render("user-data", { user, title: user.username, layout: false }, (err, html) => {
     if (err) {
       console.error(err)
     }
     res.type("text/html");
-    const headers = new Map(Object.entries({"content-disposition": "attachment", "filename": `${user.username}_data.html` }))
+    const headers = new Map(Object.entries({ "content-disposition": "attachment", "filename": `${user.username}_data.html` }))
     res.setHeaders(headers)
     res.end(html)
     return
@@ -234,12 +234,12 @@ router.get("/destroy", ensureAuthenticated, async (req, res, next) => {
     await postsUsersStore.destroy(req.user.id)
     const apiRes = await usersModel.destroy(req.user.username);
     userRoutsEvents.emit("userdestroyed")
-      res.clearCookie(sessionCookieName);
-      res.clearCookie("sess_re_Tok")
-      res.redirect(
-        "/?level=warning&massage=" +
-        encodeURIComponent("! User Account Deleted")
-      );
+    res.clearCookie(sessionCookieName);
+    res.clearCookie("sess_re_Tok")
+    res.redirect(
+      "/?level=warning&massage=" +
+      encodeURIComponent("! User Account Deleted")
+    );
   } catch (error) {
     next(error);
   }
@@ -268,16 +268,17 @@ passport.use(
           fullName: jsonProfile.name,
           displayName: jsonProfile.name,
           photoURL: jsonProfile.picture,
-          photo: Buffer.from(photo).toString('base64'),
-          photoType: 'png',
+          photoType: 'jpeg',
           email: jsonProfile.email,
-
         });
-        const postUser = await postsUsersStore.read(user.id);
-        if (!postUser)
-          await postsUsersStore.create(user.id, user.username, user.displayName, user.firstName, user.lastName, user.email, user.provider, photo, user.photoType);
+
+        let postUser = await postsUsersStore.read(user.id);
+        if (!postUser) {
+          const pic = await picStore.add(photo, "/assets/users/pictures/", user.photoType)
+          postUser = await postsUsersStore.create(user.id, user.username, user.displayName, user.firstName, user.lastName, user.email, user.provider, user.photoType, pic.url);
+        }
         else {
-          // await postsUsersStore.update(user.id, user.username, user.displayName, user.firstName,user.lastName, user.email, user.provider, photo, user.photoType)
+
         }
         done(
           null,
@@ -288,6 +289,7 @@ passport.use(
             displayName: user.displayName,
             firstName: user.firstName,
             email: user.email,
+            photoURL: postUser.photoURL
           }
         );
       } catch (err) {
@@ -298,34 +300,23 @@ passport.use(
 );
 
 router.post('/update/photo/:username', ensureAuthenticated, async (req, res, next) => {
-
-  try {
-    const postUser = await postsUsersStore.read(req.user.id);
-    if (postUser.username === req.params.username) {
-      const type = req.headers.phototype;
-      await usersModel.updatePhoto(req.user.id, Buffer.from(req.body).toString("base64"), type)
-      await postsUsersStore.updatePhoto(req.user.id, req.body, type);
-    }
-    res.clearCookie("cacheControl")
-    res.status(200)
-    res.end("success")
-  } catch (error) {
-    next(error)
-  }
-
+  const type = req.headers.phototype;
+  const pic = await picStore.add(req.body, "/assets/users/pictures/", type);
+  
+  await usersModel.updatePhoto(req.user.id, pic.url, type)
+  await postsUsersStore.updatePhoto(req.user.id, pic.url, type);
+  await picStore.remove(req.user.photoURL)
+  res.clearCookie(sessionCookieName)
+  res.end("success")
 })
 
-assetRouter.get('/photo/:username', async (req, res, next) => {
-  if (!req.cookies.cacheRefresh && req.headers["if-none-match"]) {
-    res.status(304).end()
-    return
-  }
-
-  log("Reading Database, Getting Photo of " + req.params.username)
-  const user = await postsUsersStore.getPhotoByUserName(req.params.username)
-  res.type(user.photoType)
-  res.send(user.photo)
+assetRouter.get('/users/pictures/:id', async (req, res, next) => {
+  const pic = await picStore.get(req.params.id)
+  res.type(req.params.id.substring(req.params.id.lastIndexOf(".") + 1))
+  res.setHeader("cache-control", "public, max-age=31536000")
+  res.send(pic.blob)
 })
+
 async function getPhoto(url) {
   const res = await fetch(url);
   const bytes = await res.bytes()
@@ -392,10 +383,11 @@ passport.use(
         let check = await usersModel.passwordCheck(username, password);
         if (check.check) {
           const user = await usersModel.find(check.id);
-          const postUser = await postsUsersStore.read(user.id);
+          let postUser = await postsUsersStore.read(user.id);
           if (!postUser) {
-            const photo = Buffer.from(new Uint8Array(Object.values(user.photo)))
-            await postsUsersStore.create(user.id, user.username, user.displayName, user.firstName, user.lastName, user.email, user.provider, photo, user.photoType);
+            const photo = createLogo(user.firstName, user.lastName)
+            const pic = await picStore.add(photo, "/assets/users/pictures/", "svg")
+            postUser = await postsUsersStore.create(user.id, user.username, user.displayName, user.firstName, user.lastName, user.email, user.provider, user.photoType, pic.url);
           }
           done(null, {
             id: user.id,
@@ -404,6 +396,7 @@ passport.use(
             displayName: user.displayName,
             firstName: user.firstName,
             email: user.email,
+            photoURL: postUser.photoURL
           });
         } else {
           done(null, false, { message: check.message });
@@ -415,7 +408,7 @@ passport.use(
   )
 );
 
-function createLogo(firstName, lastName) {
+function createLogo(firstName = '', lastName) {
   if (!lastName) lastName = ''
   let text = firstName.charAt(0) + lastName.charAt(0)
   const encoder = new TextEncoder()
@@ -433,6 +426,6 @@ function createLogo(firstName, lastName) {
   </text>
 </svg>
 `);
-  const buffer = Buffer.from(svg)
+  const buffer = new Uint8Array(Buffer.from(svg))
   return buffer
 }

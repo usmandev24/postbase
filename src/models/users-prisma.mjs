@@ -81,8 +81,7 @@ export const userCache = new UserCache(cacheStore)
 
 export class PrismaPostsUsersStore {
   static #inFlight = new Map()
-  async create(userId, userName, displayName, firstName, lastName, email, provider, photo, photoType) {
-    ;
+  async create(userId, userName, displayName, firstName, lastName, email, provider, photoType, photoURL) {
     const user = await prisma.postUser.create(
       {
         data: {
@@ -93,31 +92,27 @@ export class PrismaPostsUsersStore {
           lastName,
           email,
           provider: provider,
-          photo: photo,
-          photoType: photoType
-        },
-        omit: { photo: true }
+          photoType: photoType,
+          photoURL: photoURL
+        }
       }
     )
     await userCache.setUser(user.id, user, user.username)
     return user
   }
+
   async updateAbout(userId, about) {
-    ;
     const user = await prisma.postUser.update({
       where: { id: userId },
       data: {
         about
-      },
-      omit: { photo: true }
+      }
     })
     await userCache.setUser(user.id, user, user.username)
-
     return user
   }
 
   async updatePersonal(userId, displayName, firstName, lastName, about) {
-    ;
     const user = await prisma.postUser.update({
       where: { id: userId },
       data: {
@@ -125,45 +120,47 @@ export class PrismaPostsUsersStore {
         firstName,
         lastName,
         about,
-      },
-      omit: { photo: true }
+      }
     })
     await userCache.setUser(user.id, user, user.username)
     return user
   }
+
   /** @param {String} feedCatg  */
+  
   async updateFeed(userId, feedCatg) {
     const user = await prisma.postUser.update({
       where: {id: userId},
       data: {feedCatgs: feedCatg},
-      omit: {photo: true}
+      
     })
     await userCache.setUser(user.id, user, user.username)
     return user
   }
+
   async read(userId) {
     const cachedUser = await userCache.get(userId)
     if (cachedUser) return cachedUser
 
-    ;
     log("DataBase read query: userId ")
     const user = await prisma.postUser.findUnique({
       where: { id: userId },
-      omit: { photo: true }
+      
     })
     if (!user) return null
     await userCache.setUser(user.id, user, user.username)
     return user;
   }
 
-  async updatePhoto(userId, photo, photoType) {
-    
+  async updatePhoto(userId, photoURL, photoType) {
     const user = await prisma.postUser.update({
       where: { id: userId },
-      data: { photo, photoType },
-      omit: { photo: true }
+      data: { photoURL, photoType },
     })
+    await userCache.setUser(user.id, user, user.username)
+    cacheStore.clear();
     return user
+    
   }
 
   async readByUserName(userName) {
@@ -171,10 +168,9 @@ export class PrismaPostsUsersStore {
     if (cachedUser) return cachedUser;
 
     log("DataBase read query username: " + userName)
-    ;
+
     const user = await prisma.postUser.findUnique({
-      where: { username: userName },
-      omit: { photo: true }
+      where: { username: userName }
     })
     if (!user) return null
     await userCache.setUser(user.id, user, user.username)
@@ -182,7 +178,6 @@ export class PrismaPostsUsersStore {
   }
 
   async getAllData(userName) {
-
     const user = await this.readByUserName(userName)
     if (!user) return null;
     user.posts = await postStore.getUserPosts(user.id, false)
@@ -191,18 +186,19 @@ export class PrismaPostsUsersStore {
   }
 
   async getPublicData(userName) {
-
     const user = await this.readByUserName(userName)
     if (!user) return null;
     const posts = await postStore.getUserPosts(user.id, true)
     user.posts = posts
     return user;
   }
+
   async getUserPosts(username, onlyKeys) {
     const user = await this.readByUserName(username)
     if (!user) return null;
     return postStore.getUserPosts(user.id, false)
   }
+
   async getLikedPosts(username, onlyKeys) {
     const user = await this.readByUserName(username)
     if (!user) return null;
@@ -226,13 +222,6 @@ export class PrismaPostsUsersStore {
     return await Promise.all(likedPosts)
   }
   
-  async getPhotoByUserName(userName) {
-    ;
-    const user = await prisma.postUser.findUnique({
-      where: { username: userName },
-    })
-    return user;
-  }
 
   async destroy(userId) {
     

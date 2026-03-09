@@ -50,20 +50,9 @@ app.use(cookieParser(process.env.SESSION_COOKIE_SECRET));
 app.use(express.static(path.join(__dirname, 'public')));
 app.use('/assets/vendor/feather-icons', express.static(path.join(__dirname.replace(/\/src|\/dist/ig, ""), 'node_modules', 'feather-icons', 'dist')));
 app.use('/assets/vendor/trix-editor', express.static(path.join(__dirname.replace(/\/src|\/dist/ig, ""), 'node_modules', 'trix', 'dist')))
-app.use('/assets/users', userAssestRouter)
+app.use('/assets', userAssestRouter)
 
 const mainRouter = express.Router()
-
-
-mainRouter.use((req, res , next) => {
-    const cookie = req.cookies;
-    if (!cookie.cacheControl) {
-        res.cookie("cacheControl", " ", {maxAge: 1000 * 60 * 90, httpOnly: true, path: '/', sameSite: 'lax'})
-        res.cookie("cacheRefresh", " ", {maxAge: 1000 * 30 , httpOnly: true, path: '/', sameSite: 'lax' });
-    }                
-    next()
-})
-
 
 initPassport(mainRouter)
 

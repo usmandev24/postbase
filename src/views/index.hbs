@@ -45,7 +45,7 @@
 
           <div class="flex flex-col items-center lg:items-start lg:pl-2">
             <p class="text-sm font-bold opacity-80 flex items-center gap-2">
-              <img class="w-6 h-6 rounded-full" src="/assets/users/photo/{{user.username}}" alt="">
+              <img class="w-6 h-6 rounded-full" src="{{user.photoURL}}" alt="">
               Welcome back, <span class="text-base-content">{{user.username}}</span>
             </p>
           </div>
@@ -280,7 +280,7 @@
           <div class="flex items-center gap-3">
             <div class="avatar">
               <div class="w-10 h-10 rounded-full ring-2 ring-base-200">
-                <img src="/assets/users/photo/{{auther.username}}" alt="{{auther.username}}">
+                <img src="{{auther.photoURL}}" alt="{{auther.username}}">
               </div>
             </div>
             <div class="flex flex-col">

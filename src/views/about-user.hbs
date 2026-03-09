@@ -5,7 +5,7 @@
       <div class="relative group">
         <img id="photo"
           class="w-32 h-32 md:w-40 md:h-40 rounded-[2.5rem] object-cover ring-4 ring-base-200 shadow-2xl transition-transform group-hover:scale-105"
-          src="/assets/users/photo/{{user.username}}">
+          src="{{user.photoURL}}">
         <button onclick="modal_edit_photo.showModal()"
           class="absolute -bottom-2 -right-2 btn btn-primary btn-circle btn-sm shadow-lg">
           <span data-feather="camera" class="w-4 h-4"></span>
@@ -181,7 +181,7 @@
                 <div class="flex items-center gap-3">
                   <div class="avatar">
                     <div class="w-10 h-10 rounded-full ring-2 ring-base-200">
-                      <img src="/assets/users/photo/{{auther.username}}" alt="{{auther.username}}">
+                      <img src="{{auther.photoURL}}" alt="{{auther.username}}">
                     </div>
                   </div>
                   <div class="flex flex-col">
@@ -271,7 +271,7 @@
                 <div class="flex items-center gap-3">
                   <div class="avatar">
                     <div class="w-10 h-10 rounded-full ring-2 ring-base-200">
-                      <img src="/assets/users/photo/{{auther.username}}" alt="{{auther.username}}">
+                      <img src="{{auther.photoURL}}" alt="{{auther.username}}">
                     </div>
                   </div>
                   <div class="flex flex-col">
@@ -558,7 +558,7 @@
           body: await awater.arrayBuffer(),
           headers: {
             "content-type": "application/octet-stream",
-            "phototype": awater.type
+            "phototype": awater.type.replace("image/", "")
           }
         })
         const res = await req.text();
