@@ -288,7 +288,7 @@ export default class PrismaPostsStore {
       postKeys = await prisma.posts.findMany({
         where: { autherId },
         select: { key: true },
-        orderBy: { updatedAt: "desc" },
+        orderBy: { createdAt: "desc" },
       });
     }
     const posts = postKeys.map((post) => {

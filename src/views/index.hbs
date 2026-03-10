@@ -273,7 +273,7 @@
   {{#if postlist}}
 
   <h2 class="text-sm font-bold opacity-70 uppercase px-2 tracking-widest mb-5">
-    {{#if homepage}}Recent Updates{{else}} <span class=" opacity-45">Sort by:</span> Latest Posts{{/if}}
+    {{#if homepage}}Recent Posts{{else}} <span class=" opacity-45">Sort by:</span> Latest Posts{{/if}}
   </h2>
 
   <div id="postlist" class="flex flex-col gap-6">
@@ -296,7 +296,7 @@
                 {{auther.username}}
               </a>
               <div class="flex items-center gap-2 mt-0.5">
-                <span data-time={{#if @root.updates}}"{{updatedAt}}"{{else}}"{{createdAt}}"{{/if}}
+                <span data-time="{{createdAt}}"
                   class="updatedAt text-[11px] font-bold opacity-70 uppercase tracking-widest"></span>
                 <span class="w-1 h-1 rounded-full bg-base-300"></span>
                 <div class=" hidden sm:flex gap-2 flex-wrap">

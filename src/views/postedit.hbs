@@ -59,17 +59,17 @@
 
         <div class="bg-base-200/50 p-4  md-p-6 rounded-4xl border border-base-300/50 space-y-6">
           <div class="tabs tabs-boxed bg-base-300/30 w-fit join join-horizontal rounded-xl">
-            <button type="button" id="tab-url" class="tab  btn btn-ghost join-item tab-active transition-all">Image URL</button>
-            <button type="button" id="tab-upload" class="tab btn  btn-ghost join-item  transition-all">Upload File</button>
+            <button type="button" id="tab-upload" class="tab btn  btn-ghost join-item tab-active transition-all">Upload File</button>
+            <button type="button" id="tab-url" class="tab  btn btn-ghost join-item  transition-all">Image URL</button>
           </div>
 
-          <div id="urlInputArea" class="space-y-4">
+          <div id="urlInputArea" class="space-y-4 hidden">
             <input id="imageURL" type='url' name='imageURL' value='{{#if post.coverPic }}{{post.coverPic}}{{/if}}'
               class="input w-full rounded-2xl bg-base-100"
               placeholder="Paste image URL..." />
           </div>
 
-          <div id="uploadInputArea" class="hidden space-y-4">
+          <div id="uploadInputArea" class=" space-y-4">
             <div class="flex items-center justify-center w-full">
               <label
                 class="flex flex-col items-center justify-center w-full h-18 border-2 border-dashed border-base-300 rounded-2xl cursor-pointer bg-base-100 hover:bg-base-200/50 transition-all">
