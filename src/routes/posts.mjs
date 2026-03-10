@@ -8,6 +8,7 @@ import { PrimsaLikesStore } from "../models/likes-prisma.mjs";
 import { PrismaPostCatgStore } from "../models/catg-prisma.mjs";
 import * as crpto from 'node:crypto';
 import sanitizeHtml from 'sanitize-html';
+import multer from "multer"
 
 const debug = DBG('posts:routs_posts.mjs')
 const dbgerror = DBG('posts:error')
@@ -15,6 +16,7 @@ export const commentStore = new PrismaCommentsStore()
 export const likeStore = new PrimsaLikesStore()
 export const catgsStore = new PrismaPostCatgStore();
 const posts = new PrismaPostsStore()
+import { picStore } from "./users.mjs";
 export const router = express.Router();
 
 export function wsPostsListeners() {
@@ -70,10 +72,14 @@ router.get('/add', ensureAuthenticated, async (req, res, next) => {
 });
 
 //save post (update)
-router.post('/save', ensureAuthenticated, async (req, res, next) => {
+const upload = multer({
+  storage: multer.memoryStorage()
+})
+router.post('/save', ensureAuthenticated, upload.single("imageFile"), async (req, res, next) => {
   try {
     let post;
     let postkey;
+
     const cleanHtml = sanitizeHtml(req.body.body, {
       allowedTags: [
         'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'p', 'span', 'strong', 'b', 'em', 'i', 'small',
@@ -89,17 +95,43 @@ router.post('/save', ensureAuthenticated, async (req, res, next) => {
       allowedSchemes: ['http', 'https', 'mailto', 'tel'],
     })
     debug(req.body.docreate);
+
     if (req.body.docreate === "create") {
       postkey = crpto.randomUUID();
-      post = await posts.create(postkey, req.body.title,cleanHtml, req.user.id, req.body.catg1, req.body.catg2, req.body.catg3)
+      let imageURL;
+
+      if (req.file) {
+        const fileBuffer = new Uint8Array(req.file.buffer)
+        const pic = await picStore.add(fileBuffer, "/assets/posts/pictures/", req.file.mimetype.replace("image/", ""))
+        imageURL = pic.url;
+      } else if (req.body.imageURL) {
+        imageURL = req.body.imageURL
+      }
+
+      post = await posts.create(postkey, req.body.title, cleanHtml, req.user.id, imageURL, req.body.catg1, req.body.catg2, req.body.catg3)
     } else {
+
       postkey = req.body.postkey
       post = await posts.read(postkey)
+
       if (post.autherId !== req.user.id) {
         res.redirect("/")
         return
       }
-      post = await posts.update(postkey, req.body.title, cleanHtml, req.user.id)
+      let imageURL;
+
+      if (req.file) {
+        const fileBuffer = new Uint8Array(req.file.buffer)
+        const pic = await picStore.add(fileBuffer, "/assets/posts/pictures/", req.file.mimetype.replace("image/", ""))
+        imageURL = pic.url;
+        await picStore.remove(post.coverPic)
+      } else if (req.body.imageURL != post.coverPic) {
+        imageURL = req.body.imageURL
+        await picStore.remove(post.coverPic)
+      } else {
+        imageURL = post.coverPic
+      }
+      post = await posts.update(postkey, req.body.title, cleanHtml, req.user.id, imageURL)
     }
     res.redirect('/posts/view?key=' + postkey)
   } catch (err) {

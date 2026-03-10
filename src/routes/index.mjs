@@ -95,7 +95,7 @@ router.get('/', async (req, res, next) => {
     if (postlist.length === 0) {
       postlist = false;
     }
-    console.log(req.user)
+    
     res.render('index', {
       title: 'PostBase', postlist: postlist,
       homepage: true,

@@ -123,7 +123,7 @@ export default class PrismaPostsStore {
     await prisma.$disconnect();
   }
 
-  async create(key, title, body, autherId, ...catgs) {
+  async create(key, title, body, autherId, imageURL, ...catgs) {
     const catgsData = [];
     const uniqeCatgs = new Set()
     catgs.forEach(catg => {
@@ -140,6 +140,7 @@ export default class PrismaPostsStore {
         title: title,
         body: body,
         autherId: autherId,
+        coverPic: imageURL,
         catgs: { createMany: { data: catgsData } }
       },
 
@@ -161,7 +162,7 @@ export default class PrismaPostsStore {
     return post;
   }
 
-  async update(key, title, body, autherId) {
+  async update(key, title, body, autherId, imageURL) {
 
     const post = await prisma.posts.findUnique({ where: { key }, select: { key: true } });
     if (!post) {
@@ -169,7 +170,7 @@ export default class PrismaPostsStore {
     } else {
       const post = await prisma.posts.update({
         where: { key },
-        data: { key, title, body, autherId },
+        data: { key, title, body, autherId, coverPic: imageURL },
         include: {
           auther: { select: { username: true, id: true, displayName: true , photoURL: true} },
           _count: { select: { comments: true, likes: true } },

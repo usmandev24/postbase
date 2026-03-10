@@ -1,53 +1,66 @@
 <div class="max-w-4xl w-full mx-auto p-4 md:p-12 pb-24">
   {{#if post}}
-  <article class="bg-base-100">
+  <article class="bg-base-100 max-w-4xl mx-auto">
     <header
-      class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-8 pb-6 border-b border-base-200">
-      <div class="flex items-center gap-4 ">
-        <div class="avatar ">
-          <div class="w-14 h-14 rounded-full ring-4 ring-primary/5 shadow-xl">
+      class="flex flex-col md:flex-row justify-between items-start md:items-center gap-6 mb-8 pb-6 border-b border-base-200/60">
+      <div class="flex items-center gap-4">
+        <div class="avatar">
+          <div class="w-14 h-14 rounded-2xl bg-base-200 shadow-sm overflow-hidden">
             <img src="{{post.auther.photoURL}}" alt="{{post.auther.username}}" />
           </div>
         </div>
         <div>
           <a href="/users/profile/{{post.auther.username}}"
-            class="text-lg font-black tracking-tight hover:text-primary transition-colors">
+            class="text-xl font-black tracking-tighter hover:text-primary transition-colors">
             {{post.auther.username}}
           </a>
-          <div class="flex items-center gap-2 mt-0.5 flex-wrap">
+          <div class="flex items-center gap-3 mt-1 flex-wrap">
             <span data-time="{{post.updatedAt}}"
-              class="updatedAt text-[10px] font-bold opacity-60 uppercase tracking-widest"></span>
-            <span class="w-1 h-1 rounded-full bg-base-300"></span>
-            <div class="flex gap-2 md:gap-3 flex-wrap">
+              class="updatedAt text-[10px] font-bold opacity-50 uppercase tracking-widest"></span>
+            <div class="hidden sm:flex gap-2  flex-wrap">
               {{#each post.catgs}}
               <a href="/explore/{{catgName}}"
-                class=" text-xs md:text-sm uppercase tracking-wide font-semibold  text-primary/80  hover:underline">#{{catgName}}</a>
+                class="text-[11px] uppercase tracking-widest font-black text-primary/90 hover:text-primary">#{{catgName}}</a>
               {{/each}}
             </div>
           </div>
         </div>
       </div>
-
+      <div class="flex sm:hidden gap-2  flex-wrap">
+              {{#each post.catgs}}
+              <a href="/explore/{{catgName}}"
+                class="text-[10px] uppercase tracking-widest font-black text-primary/70 hover:text-primary">#{{catgName}}</a>
+              {{/each}}
+            </div>
       {{#if postkey}}
-      <div class="flex gap-2">
+      <div class="flex gap-2 w-auto">
         <a {{#if owner}}{{else}} hidden{{/if}} href="/posts/edit?key={{postkey}}"
-          class="btn btn-sm btn-ghost rounded-xl gap-2 font-black uppercase ">
-          <span data-feather="edit-3" class="w-4 h-4"></span> Edit
+          class="flex-1 md:flex-none btn btn-sm btn-ghost border border-base-300 rounded-xl gap-2 font-black uppercase text-[10px] tracking-widest">
+          <span data-feather="edit-3" class="w-3.5 h-3.5"></span> Edit
         </a>
         <button {{#if owner}}{{else}} hidden{{/if}}
-          class="btn btn-sm btn-ghost text-error rounded-xl gap-2 font-black uppercase "
+          class="flex-1 md:flex-none btn btn-sm btn-ghost text-error border border-base-300 rounded-xl gap-2 font-black uppercase text-[10px] tracking-widest"
           onclick="confirm_delete_modal.showModal()">
-          <span data-feather="trash-2" class="w-4 h-4"></span> Delete
+          <span data-feather="trash-2" class="w-3.5 h-3.5"></span> Delete
         </button>
       </div>
       {{/if}}
+
     </header>
 
+    {{#if post.coverPic}}
+    <figure class="mb-10 rounded-2xl overflow-hidden border border-base-200 bg-base-200/30 shadow-inner">
+      <img src="{{post.coverPic}}" alt="{{post.title}}" class="w-full max-h-120 object-cover" />
+    </figure>
+    {{/if}}
+
     <section class="max-w-none mb-12">
-      <h1 id="postTitle" class="text-4xl md:text-4xl font-black tracking-tighter mb-8 leading-[1.1]">
+      <h1 id="postTitle" class="text-4xl md:text-5xl font-black tracking-tighter mb-8 leading-[1.05] text-base-content">
         {{post.title}}
       </h1>
-      <div id="postBody" class="prose prose-base md:prose-lg max-w-none text-base-content leading-relaxed">
+
+      <div id="postBody" class="prose prose-neutral md:prose-lg max-w-none text-base-content/90 leading-relaxed 
+      prose-headings:font-black prose-headings:tracking-tighter prose-a:text-primary prose-strong:text-base-content">
         {{{post.body}}}
       </div>
     </section>
@@ -73,7 +86,6 @@
       </button>
     </footer>
   </article>
-
   <div class="space-y-6">
     <div class="flex items-center gap-4">
       <h3 class="text-xs font-black uppercase tracking-[0.3em] opacity-60">Community Discussion</h3>
@@ -89,11 +101,11 @@
         class="group p-4 rounded-4xl bg-base-200/40 border border-transparent hover:border-base-300 transition-all">
         <div class="flex justify-between items-start mb-4">
           <div class="flex items-center gap-3">
-            <img class="rounded-full bg-neutral w-8 h-8 shadow-sm" src="{{auther.photoURL}}">
+            <img class="rounded-xl bg-neutral w-8 h-8 shadow-sm" src="{{auther.photoURL}}">
             <div>
               <p class="font-black text-sm tracking-tight leading-none">{{auther.username}}</p>
               <span data-time="{{createdAt}}"
-                class="updatedAt text-[10px] md:text-xs  font-bold opacity-70 uppercase tracking-wide mt-1 inline-block"></span>
+                class="updatedAt text-[10px] md:text-xs  font-bold opacity-60 uppercase tracking-wide mt-1 inline-block"></span>
             </div>
           </div>
           <div class="dropdown dropdown-end  transition-opacity">

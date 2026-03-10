@@ -73,7 +73,8 @@
           <div class="flex flex-col items-center lg:items-start lg:pl-2">
             <p class="text-xs opacity-50 font-semibold tracking-wide uppercase">New here? Sign up is automatic.</p>
             <p class="text-[12px] opacity-70 mt-2">
-              Review the <a class="link link-hover underline" href="/terms-of-services">Terms of Service</a> & <a class="link link-hover underline" href="/privacy-policy">Privacy Policy</a>.
+              Review the <a class="link link-hover underline" href="/terms-of-services">Terms of Service</a> & <a
+                class="link link-hover underline" href="/privacy-policy">Privacy Policy</a>.
             </p>
           </div>
           {{/if}}
@@ -196,19 +197,22 @@
           </div>
 
           <form method="post" action="/users/profile/update/feed">
-            <div class="max-h-[50vh] overflow-y-auto p-6 flex flex-wrap gap-2 md:gap-2.5 bg-base-200/50 inset-shadow-sm">
+            <div
+              class="max-h-[50vh] overflow-y-auto p-6 flex flex-wrap gap-2 md:gap-2.5 bg-base-200/50 inset-shadow-sm">
               {{#each catgNameList}}
-              <input class="btn btn-sm sm:btn-md rounded-2xl " {{#if checked}} checked {{/if}} type="checkbox" name="{{catgName}}"
-                aria-label="{{catgName}}" />
+              <input class="btn btn-sm sm:btn-md rounded-2xl " {{#if checked}} checked {{/if}} type="checkbox"
+                name="{{catgName}}" aria-label="{{catgName}}" />
               {{/each}}
 
 
             </div>
 
             <div class="p-4 border-t border-base-200 flex justify-end gap-2 sm:gap-2.5 bg-base-100 rounded-b-2xl">
-              <button type="button" class="btn btn-sm sm:btn-md btn-ghost rounded-full" onclick="feed_modal.close()">Cancel</button>
+              <button type="button" class="btn btn-sm sm:btn-md btn-ghost rounded-full"
+                onclick="feed_modal.close()">Cancel</button>
               <input class="btn btn-sm sm:btn-md rounded-full" type="reset" value="Reset" />
-              <button type="submit" class="btn btn-sm sm:btn-md btn-success rounded-full shadow-sm">Save Preferences</button>
+              <button type="submit" class="btn btn-sm sm:btn-md btn-success rounded-full shadow-sm">Save
+                Preferences</button>
             </div>
 
           </form>
@@ -267,73 +271,98 @@
   {{/if}}
 
   {{#if postlist}}
-  
-  <h2 class=" text-sm font-bold opacity-70 uppercase px-2 tracking-widest mb-5">{{#if homepage}}Recent Posts
-    {{else}}Latest Posts {{/if}} </h2>
-  <div id="postlist" class="flex flex-col gap-4">
+
+  <h2 class="text-sm font-bold opacity-70 uppercase px-2 tracking-widest mb-5">
+    {{#if homepage}}Recent Posts{{else}}Latest Posts{{/if}}
+  </h2>
+
+  <div id="postlist" class="flex flex-col gap-6">
     {{#each postlist}}
     <div id="{{key}}"
-      class=" group card bg-base-100 border transition-colors border-base-300 shadow-sm sm:shadow-none hover:shadow-md shadow-success/50  mb-4 overflow-hidden cursor-pointer">
-      <div class="card-body p-5 md:p-7">
+      class="card bg-base-200/60 dark:bg-base-200/50 border border-base-200 shadow-sm hover:border-base-300 transition-colors mb-2">
 
-        <div class="flex items-start justify-between mb-4">
+      <div class="card-body  p-4 sm:p-7">
+
+        <div class="flex items-start justify-between mb-3">
           <div class="flex items-center gap-3">
             <div class="avatar">
-              <div class="w-10 h-10 rounded-full ring-2 ring-base-200">
+              <div class="w-11 h-11 rounded-xl bg-base-200">
                 <img src="{{auther.photoURL}}" alt="{{auther.username}}">
               </div>
             </div>
             <div class="flex flex-col">
-              <span class="font-black text-sm tracking-tight leading-none">{{auther.username}}</span>
-              <span data-time="{{updatedAt}}"
-                class="updatedAt text-[10px] font-bold uppercase tracking-widest opacity-40 mt-1"></span>
+              <a href="/users/profile/{{auther.username}}"
+                class="font-black text-base tracking-tight hover:underline transition-all">
+                {{auther.username}}
+              </a>
+              <div class="flex items-center gap-2 mt-0.5">
+                <span data-time="{{updatedAt}}"
+                  class="updatedAt text-[11px] font-bold opacity-70 uppercase tracking-widest"></span>
+                <span class="w-1 h-1 rounded-full bg-base-300"></span>
+                <div class=" hidden sm:flex gap-2 flex-wrap">
+                  {{#each catgs}}
+                  <a href="/explore/{{catgName}}"
+                    class="text-[10px] font-black uppercase text-primary/90 tracking-wide hover:underline">
+                    #{{catgName}}
+                  </a>
+                  {{/each}}
+                </div>
+              </div>
             </div>
           </div>
 
-          <div id="{{key}}-info-container" class="flex flex-col items-end gap-1">
+          <div id="{{key}}-info-container" class="flex flex-col items-end">
             <span id="{{key}}-info"
-              class="badge badge-success badge-outline border-2 text-[10px] font-black uppercase px-2 py-3 rounded-lg hidden">
-
-            </span>
+              class="badge badge-success badge-outline border-2 text-[10px] font-black uppercase px-2 py-3 hidden rounded-lg"></span>
           </div>
         </div>
 
-        <div class="flex flex-wrap gap-2 mb-4">
+        <div class="sm:hidden flex gap-2 mb-3">
           {{#each catgs}}
           <a href="/explore/{{catgName}}"
-            class=" btn sm:btn-sm  btn-xs hover:btn-success p-0  px-2 sm:px-4 rounded-full ">
+            class="text-[10px] font-black uppercase text-primary/90 tracking-wide hover:underline">
             #{{catgName}}
           </a>
           {{/each}}
         </div>
 
-        <a id="{{key}}-link" href="/posts/view?key={{key}}" class="block ">
+        <a id="{{key}}-link" href="/posts/view?key={{key}}" class="block mb-4 group cursor-pointer">
           <h2 id="{{key}}-title"
-            class="title text-success sm:text-base-content text-2xl md:text-3xl font-black tracking-tight leading-[1.1] mb-3 group-hover:text-success transition-colors line-clamp-2">
+            class="text-xl md:text-2xl font-black tracking-tight leading-[1.2] mb-2 group-hover:text-primary transition-colors">
             {{title}}
           </h2>
-          <div id="{{key}}-body" class="text-base-content text-sm md:text-base line-clamp-3 leading-relaxed">
+          <div id="{{key}}-body" class="text-base-content/80 text-sm md:text-base line-clamp-3 leading-relaxed">
             {{{body}}}
           </div>
         </a>
 
-        <div class="card-actions justify-between items-center mt-6 pt-5 border-t border-base-200/60">
+        {{#if coverPic}}
+        <a href="/posts/view?key={{key}}"
+          class="block mb-4 aspect-16/8 overflow-hidden rounded-2xl border border-base-200 bg-base-200/30">
+          <img src="{{coverPic}}" alt="{{title}}" class="w-full h-full object-cover rounded-2xl" />
+        </a>
+        {{/if}}
+
+        <div class="flex items-center justify-between mt-2">
           <div class="flex items-center gap-1">
-            <button  data-postkey="{{key}}" class="like-btn btn btn-ghost btn-sm rounded-xl gap-2 text-success ">
+            <button data-postkey="{{key}}"
+              class="like-btn flex items-center gap-2 px-3 py-2 rounded-xl text-base-content/60 hover:text-success hover:bg-success/10 transition-colors">
               <span id="{{key}}-likeLogo" data-feather="thumbs-up" class="h-4 w-4"></span>
               <span id="{{key}}-likes" class="font-black text-xs">{{_count.likes}}</span>
             </button>
 
-            <div class="btn btn-ghost btn-sm rounded-xl gap-2 text-info pointer-events-none opacity-80">
+            <div class="flex items-center gap-2 px-3 py-2 rounded-xl text-base-content/60 cursor-default">
               <span data-feather="message-circle" class="h-4 w-4"></span>
               <span id="{{key}}-comments" class="font-black text-xs">{{_count.comments}}</span>
             </div>
           </div>
 
-          <a href="/posts/view?key={{key}}" class="btn  btn-sm sm:btn-md btn-ghost p-0 px-2 text-base-content/90 group-hover:text-success ">
-           Read <span data-feather="arrow-right" class="h-5 w-9"></span>
+          <a href="/posts/view?key={{key}}"
+            class="btn btn-ghost btn-sm rounded-xl px-4 text-xs font-black  tracking-widest hover:text-primary transition-colors">
+            Read <span data-feather="arrow-right" class="h-5 w-9"></span>
           </a>
         </div>
+
       </div>
     </div>
     {{/each}}
@@ -382,103 +411,8 @@
   const postlist = document.getElementById('postlist');
   const emptyDiv = document.getElementById('emptydiv'); // Reference to hide this if a post comes in
   const ws = new WebSocket("{{wsURL}}")
-  ws.addEventListener("message", (event) => {
-    const data = JSON.parse(event.data);
-    if (data.type === 'connection') {
-      console.log(data.message);
-    } else if (data.type === 'postcreated') {
-      // 1. Hide empty div if it exists
-      if (emptyDiv) emptyDiv.style.display = 'none';
-
-      // 2. Create the wrapper
-      const postDiv = document.createElement('div');
-      postDiv.id = data.post.key;
-      // Matches the CSS of the Handlebars loop above
-      postDiv.className = "card bg-base-100 shadow-xl border border-base-300 transition-all hover:shadow-2xl";
-
-      // 3. Construct HTML (Matches structure above)
-      // post: Added safe checks for data.post properties
-      const username = data.post.auther ? data.post.auther.username : 'User';
-
-
-      postDiv.innerHTML = `
-        <div class="card-body p-6">
-          <div class="flex items-center justify-between mb-2">
-            <div class="flex items-center gap-3">
-              <div class="avatar placeholder">
-                 <div class="">
-                <img class="bg-purple-300 rounded-full dark:bg-neutral w-10 h-10" src="/assets/users/photo/${username}">
-              </div>
-              </div>
-              <div class="flex flex-col">
-                <span class="font-bold text-base">${username}</span>
-                <span class="text-sm text-base-content/60">Just now</span> 
-              </div>
-            </div>
-            <span id="${data.post.key}-info" class="badge badge-accent badge-sm">New</span>
-          </div>
-
-          <a id="${data.post.key}-link" href="/posts/view?key=${data.post.key}" class="group block space-y-2">
-            <h2 id="${data.post.key}-title" class="card-title text-2xl group-hover:text-primary transition-colors">
-              ${data.post.title}
-            </h2>
-            <p id="${data.post.key}-body" class="text-base-content/80 text-lg leading-relaxed">
-              ${data.post.body}
-            </p>
-          </a>
-
-          <div class="card-actions justify-between items-center mt-4 pt-4 border-t border-base-200">
-             <div class="flex gap-4">
-                <button class="btn btn-ghost btn-sm gap-2 text-success">
-                  <span id="${data.post.key}-likes">0</span>
-                  <span data-feather="thumbs-up" class=" h-4 w-4"></span>
-                </button>
-                <button class="btn btn-ghost btn-sm gap-2 text-info">
-                  <span id="${data.post.key}-comments">0</span>
-                  <span data-feather="message-circle" class=" h-4 w-4"></span>
-                </button>
-             </div>
-          </div>
-        </div>
-      `;
-      // Prepend to top of list (social feeds usually show newest first)
-      postlist.prepend(postDiv);
-    } else if (data.type === 'postdestroyed') {
-      const postCard = document.getElementById(data.key);
-      const postInfo = document.getElementById(data.key + "-info");
-      const postLink = document.getElementById(data.key + "-link");
-
-      if (postCard && postLink) {
-        // Disable link
-        postLink.onclick = (event) => event.preventDefault();
-        postLink.removeAttribute("href");
-
-        // Visual updates to look "Deleted"
-        postCard.classList.add("opacity-50", "grayscale", "cursor-not-allowed");
-
-        if (postInfo) {
-          postInfo.textContent = "Deleted";
-          postInfo.className = "badge badge-error badge-sm";
-        }
-      }
-    } else if (data.type === "commentcreated") {
-      const cSpan = document.getElementById(data.postkey + "-comments")
-      cSpan.textContent = Number(cSpan.textContent) + 1;
-      const infoSpan = document.getElementById(`${data.postkey}-info`)
-      infoSpan.textContent = "New Comment"
-
-    } else if (data.type === "commentdestroyed") {
-      const cSpan = document.getElementById(data.postkey + "-comments")
-      cSpan.textContent = Number(cSpan.textContent) - 1;
-      const infoSpan = document.getElementById(`${data.postkey}-info`)
-      infoSpan.textContent = "Comment deleted"
-
-    } else if (data.type === "postupdated") {
-      const infoSpan = document.getElementById(`${data.post.key}-info`)
-      infoSpan.textContent = "Updated"
-    }
-  });
 </script>
+<script src="/assets/javascripts/index-ws.js"></script>
 <script src="/assets/javascripts/relative-time.js"></script>
 
 {{#if user }}

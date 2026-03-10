@@ -1,17 +1,20 @@
-<div class="max-w-4xl lg:w-4xl mx-auto p-4 md:p-6">
+<div class="max-w-4xl lg:w-4xl mx-auto p-2 md:p-6">
   <div class="mb-10 text-center lg:text-left">
-    <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-success/10 border-0 sm:border border-success/20 text-xs font-bold text-success uppercase tracking-widest mb-4">
+    <div
+      class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-success/10 border-0 sm:border border-success/20 text-xs font-bold text-success uppercase tracking-widest mb-4">
       <span data-feather="edit-3" class="h-3 w-3"></span>
       Publisher Tools
     </div>
     <h1 class="text-4xl md:text-5xl font-black tracking-tight text-base-content">
-      {{#if docreate}}Create New <span class="text-transparent bg-clip-text bg-linear-to-r from-green-500 to-purple-600">Post</span>{{else}}Edit <span class="text-transparent bg-clip-text bg-linear-to-r from-green-500 to-purple-600">Post</span>{{/if}}
+      {{#if docreate}}Create New <span
+        class="text-transparent bg-clip-text bg-linear-to-r from-green-500 to-purple-600">Post</span>{{else}}Edit <span
+        class="text-transparent bg-clip-text bg-linear-to-r from-green-500 to-purple-600">Post</span>{{/if}}
     </h1>
     <p class="text-base-content/60 mt-3 text-lg">Organize your thoughts and share them with the PostBase community.</p>
   </div>
 
   <div class="bg-base-100 rounded-[2.5rem] md:border border-base-300 shadow-base-content/5 overflow-hidden">
-    <form id="postForm" class="p-2 md:p-12 space-y-10" method='POST' action='/posts/save'>
+    <form id="postForm" class="p-2 md:p-12 space-y-10" method='POST' action='/posts/save' enctype="multipart/form-data">
 
       {{#if docreate}}
       <input type='hidden' name='docreate' value="create">
@@ -23,30 +26,76 @@
       <section class="space-y-4">
         <div class="flex items-center gap-2">
           <span class="p-2 bg-secondary/10 rounded-lg text-secondary">
-             <span data-feather="grid" class="h-4 w-4"></span>
+            <span data-feather="grid" class="h-4 w-4"></span>
           </span>
           <h3 class="font-bold text-lg tracking-tight">Taxonomy</h3>
         </div>
-        
-        <div id="catgDiv" class="grid grid-cols-1 md:grid-cols-3 gap-6 bg-base-200/50 p-6 rounded-3xl border border-base-300/50">
+
+        <div id="catgDiv"
+          class="grid grid-cols-1 md:grid-cols-3 gap-6 bg-base-200/50 p-6 rounded-3xl border border-base-300/50">
           <label class="flex flex-col gap-2">
             <span class="text-xs font-black uppercase opacity-80 ml-1">Primary Category</span>
-            <select name="catg1" id="catg1" required="" class="select select-bordered rounded-2xl bg-base-100 focus:border-success">
+            <select name="catg1" id="catg1" required=""
+              class="select select-bordered rounded-2xl bg-base-100 focus:border-success">
               <option value="" selected disabled="">Select Category</option>
               {{#each catgNameList}}
               <option>{{catgName}}</option>
               {{/each}}
             </select>
-          </label> 
-          </div>
-        <p class="text-xs opacity-80 ml-2  "><span data-feather="info" class="h-4 w-4 px-0.5 inline-flex"></span> Select at least one category.</p>
+          </label>
+        </div>
+        <p class="text-xs opacity-80 ml-2  "><span data-feather="info" class="h-4 w-4 px-0.5 inline-flex"></span> Select
+          at least one category.</p>
       </section>
       {{/if}}
-
       <section class="space-y-4">
         <div class="flex items-center gap-2">
-           <span class="p-2 bg-success/10 rounded-lg text-success">
-             <span data-feather="type" class="h-4 w-4"></span>
+          <span class="p-2 bg-blue-500/10 rounded-lg text-blue-500">
+            <span data-feather="image" class="h-4 w-4"></span>
+          </span>
+          <h3 class="font-bold text-lg tracking-tight">Cover Image <span
+              class="text-xs font-normal opacity-50 ml-2">(Optional)</span></h3>
+        </div>
+
+        <div class="bg-base-200/50 p-4  md-p-6 rounded-4xl border border-base-300/50 space-y-6">
+          <div class="tabs tabs-boxed bg-base-300/30 w-fit join join-horizontal rounded-xl">
+            <button type="button" id="tab-url" class="tab  btn btn-ghost join-item tab-active transition-all">Image URL</button>
+            <button type="button" id="tab-upload" class="tab btn  btn-ghost join-item  transition-all">Upload File</button>
+          </div>
+
+          <div id="urlInputArea" class="space-y-4">
+            <input id="imageURL" type='url' name='imageURL' value='{{#if post.coverPic }}{{post.coverPic}}{{/if}}'
+              class="input w-full rounded-2xl bg-base-100"
+              placeholder="Paste image URL..." />
+          </div>
+
+          <div id="uploadInputArea" class="hidden space-y-4">
+            <div class="flex items-center justify-center w-full">
+              <label
+                class="flex flex-col items-center justify-center w-full h-18 border-2 border-dashed border-base-300 rounded-2xl cursor-pointer bg-base-100 hover:bg-base-200/50 transition-all">
+                <div class="flex flex-col items-center justify-center pt-5 pb-6">
+                  <span data-feather="upload-cloud" class="h-6 w-6 mb-2 opacity-70"></span>
+                  <p class="text-sm opacity-60">Click to upload</p>
+                </div>
+                <input id="imageFile" type="file" name="imageFile" class="hidden" accept="image/*" />
+              </label>
+            </div>
+          </div>
+
+          <div id="imagePreviewContainer"
+            class=" {{#if post.coverPic}}{{else}} hidden {{/if}} relative group aspect-video w-full bg-base-100 rounded-2xl overflow-hidden border border-base-300">
+            <img id="imagePreview" src="{{#if post.coverPic}}{{post.coverPic}}{{/if}}" alt="Preview" class="w-full h-full object-cover" />
+            <button type="button" id="clearImage"
+              class="absolute top-4 right-4 btn btn-circle btn-sm btn-error shadow-lg">
+              <span data-feather="x" class="h-4 w-4"></span>
+            </button>
+          </div>
+        </div>
+      </section>
+      <section class="space-y-4">
+        <div class="flex items-center gap-2">
+          <span class="p-2 bg-success/10 rounded-lg text-success">
+            <span data-feather="type" class="h-4 w-4"></span>
           </span>
           <h3 class="font-bold text-lg tracking-tight">Title</h3>
         </div>
@@ -57,23 +106,27 @@
 
       <section class="space-y-4">
         <div class="flex items-center gap-2">
-           <span class="p-2 bg-purple-500/10 rounded-lg text-purple-500">
-             <span data-feather="align-left" class="h-4 w-4"></span>
+          <span class="p-2 bg-purple-500/10 rounded-lg text-purple-500">
+            <span data-feather="align-left" class="h-4 w-4"></span>
           </span>
           <h3 class="font-bold text-lg tracking-tight">Content</h3>
         </div>
-        
-        <div class="prose-container bg-base-100 border border-base-300 rounded-xl overflow-hidden focus-within:border-success/50 transition-all">
+
+        <div
+          class="prose-container bg-base-100 border border-base-300 rounded-xl overflow-hidden focus-within:border-success/50 transition-all">
           <input required id="x" type="hidden" name="body">
           <trix-toolbar class="border-b border-base-200 bg-base-200/30 p-2" id="my_toolbar"></trix-toolbar>
-          <trix-editor toolbar="my_toolbar" input="x" class="prose max-w-full p-6 md:p-8 min-h-100 focus:outline-none">{{#if post}}{{{post.body}}}{{/if}}</trix-editor>
+          <trix-editor toolbar="my_toolbar" input="x"
+            class="prose max-w-full p-6 md:p-8 min-h-100 focus:outline-none">{{#if
+            post}}{{{post.body}}}{{/if}}</trix-editor>
         </div>
       </section>
 
       <div class="flex flex-col sm:flex-row justify-end items-center gap-4 pt-6 border-t border-base-200">
         <a href="/" class="btn btn-ghost rounded-full px-8 order-2 sm:order-1">Discard Draft</a>
 
-        <button id="submit" type='submit' class="btn btn-success btn-wide rounded-full gap-2 shadow-lg shadow-success/20 order-1 sm:order-2">
+        <button id="submit" type='submit'
+          class="btn btn-success btn-wide rounded-full gap-2 shadow-lg shadow-success/20 order-1 sm:order-2">
           <span class="font-bold">{{#if docreate}}Publish Post{{else}}Update Post{{/if}}</span>
           <span data-feather="send" class="h-4 w-4"></span>
         </button>
@@ -83,10 +136,9 @@
   </div>
 </div>
 
-
+<script src="/assets/javascripts/postImage.js"></script>
 
 <script>
-  // Hide file tools as per requirements
   const observer = new MutationObserver((mutations, obs) => {
     const fileToolbar = document.querySelector(".trix-button-group--file-tools")
     if (fileToolbar) {
@@ -102,20 +154,20 @@
       this.catgsList = catgsList
       this.addEvents()
     }
-    
+
     createSelector(lableText, name) {
       const wrapper = document.createElement("label");
       wrapper.className = "flex flex-col gap-2 transition-all animate-in fade-in slide-in-from-top-2";
-      
+
       const span = document.createElement("span");
       span.className = "text-xs font-black uppercase opacity-80 ml-1";
       span.textContent = lableText + " Category";
-      
+
       const select = document.createElement("select");
       select.name = name;
       select.id = name;
       select.className = "select select-bordered rounded-2xl bg-base-100 focus:border-success";
-      
+
       wrapper.appendChild(span);
       wrapper.appendChild(select);
       this.parent.appendChild(wrapper);
@@ -130,7 +182,7 @@
         }
         select.appendChild(option);
       });
-      
+
       return select;
     }
 
@@ -159,7 +211,7 @@
       const catgsList = await fetch("/posts/categories-names-list").then(res => res.json());
       {{#if docreate}}
       new Categoreis(["Select Category", ...catgsList]);
-      {{/if}}
+      {{/if }}
       submit.disabled = false;
       // Refresh icons
       if (typeof feather !== 'undefined') feather.replace();

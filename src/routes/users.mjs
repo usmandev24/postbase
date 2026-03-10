@@ -191,7 +191,6 @@ router.get('/profile/:username', async (req, res, next) => {
 });
 router.get("/likes/keys/", ensureAuthenticated, async (req, res, next) => {
   const likeKeys = await postsUsersStore.getLikedPosts(req.user.username, true)
-  console.log(likeKeys)
   res.type('application/json')
   res.send(likeKeys)
 })
@@ -311,6 +310,12 @@ router.post('/update/photo/:username', ensureAuthenticated, async (req, res, nex
 })
 
 assetRouter.get('/users/pictures/:id', async (req, res, next) => {
+  const pic = await picStore.get(req.params.id)
+  res.type(req.params.id.substring(req.params.id.lastIndexOf(".") + 1))
+  res.setHeader("cache-control", "public, max-age=31536000")
+  res.send(pic.blob)
+})
+assetRouter.get('/posts/pictures/:id', async (req, res, next) => {
   const pic = await picStore.get(req.params.id)
   res.type(req.params.id.substring(req.params.id.lastIndexOf(".") + 1))
   res.setHeader("cache-control", "public, max-age=31536000")
