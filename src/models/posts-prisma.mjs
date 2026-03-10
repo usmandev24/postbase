@@ -178,6 +178,7 @@ export default class PrismaPostsStore {
         },
       });
       await postCache.setPost(key, post)
+      await postCache.updateKeyList(key, "created");
       this.emitUpdated(post);
       return post;
     }
@@ -275,11 +276,11 @@ export default class PrismaPostsStore {
     return fetchTask
   }
 
-  async getUserPosts(autherId, pb) {
+  async getUserPosts(autherId, publicOnly) {
     let postKeys;
-    if (pb) {
+    if (publicOnly) {
       postKeys = await prisma.posts.findMany({
-        where: { autherId, public: pb },
+        where: { autherId, public: true },
         select: { key: true },
         orderBy: { updatedAt: "desc" },
       });

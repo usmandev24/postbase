@@ -202,10 +202,14 @@ export class PrismaPostsUsersStore {
   async getLikedPosts(username, onlyKeys) {
     const user = await this.readByUserName(username)
     if (!user) return null;
-    
+     /**
+      * @type {[]String}
+      */
+
     let likesKeys;  // string[]
     if (await userCache.getLikeKeys(user.id)) {
       likesKeys = await userCache.getLikeKeys(user.id)
+      likesKeys = likesKeys.reverse()
     } else {
       const likes = await likestore.getUserLikes(user.id);
       if (!likes) return null

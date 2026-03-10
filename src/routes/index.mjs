@@ -101,7 +101,8 @@ router.get('/', async (req, res, next) => {
       homepage: true,
       user: req.user ? req.user : undefined,
       level: req.query.level,
-      massage: req.query.massage
+      massage: req.query.massage, 
+      updates: true
     });
   } catch (err) {
     next(err);

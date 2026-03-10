@@ -21,8 +21,8 @@
         </h1>
 
         <p class="text-lg opacity-80 leading-relaxed mb-12 max-w-md font-medium">
-          A premium content platform engineered by <a
-            class="text-base-content font-bold underline decoration-success/30" href="/about-postbase#usman-ghani"
+          A modern content platform engineered by <a
+            class="text-base-content font-bold underline decoration-success/50" href="/about-postbase#usman-ghani"
             target="_blank">Usman Ghani</a> to demonstrate
           excellence in full-stack architecture, real-time interactions, and modern UI design.
         </p>
@@ -99,7 +99,7 @@
             </div>
           </div>
 
-          <div class="p-8">
+          <div class="md:p-8 p-5 ">
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
               <div
                 class="group p-4 rounded-2xl bg-base-200/30 border border-transparent hover:border-success/20 hover:bg-success/5 transition-all">
@@ -273,7 +273,7 @@
   {{#if postlist}}
 
   <h2 class="text-sm font-bold opacity-70 uppercase px-2 tracking-widest mb-5">
-    {{#if homepage}}Recent Posts{{else}}Latest Posts{{/if}}
+    {{#if homepage}}Recent Updates{{else}} <span class=" opacity-45">Sort by:</span> Latest Posts{{/if}}
   </h2>
 
   <div id="postlist" class="flex flex-col gap-6">
@@ -296,7 +296,7 @@
                 {{auther.username}}
               </a>
               <div class="flex items-center gap-2 mt-0.5">
-                <span data-time="{{updatedAt}}"
+                <span data-time={{#if @root.updates}}"{{updatedAt}}"{{else}}"{{createdAt}}"{{/if}}
                   class="updatedAt text-[11px] font-bold opacity-70 uppercase tracking-widest"></span>
                 <span class="w-1 h-1 rounded-full bg-base-300"></span>
                 <div class=" hidden sm:flex gap-2 flex-wrap">
@@ -369,10 +369,10 @@
   </div>
 
   {{#if homepage}}
-  <div class="mt-16 mb-20 flex justify-center">
+  <div class="mt-14 mb-16 flex justify-center">
     <a class="btn btn-outline btn-wide rounded-full border-base-300 hover:bg-base-200 hover:text-base-content group"
       href="/explore/All%20Posts">
-      Explore All Insights
+      Explore All Posts
       <span data-feather="chevron-right" class="h-4 w-4 transition-transform group-hover:translate-x-1"></span>
     </a>
   </div>
