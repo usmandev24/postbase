@@ -346,12 +346,12 @@
         <div class="flex items-center justify-between mt-2">
           <div class="flex items-center gap-1">
             <button data-postkey="{{key}}"
-              class="like-btn flex items-center gap-2 px-3 py-2 rounded-xl text-base-content/60 hover:text-success hover:bg-success/10 transition-colors">
+              class="like-btn btn btn-ghost btn-sm rounded-xl gap-2 text-success ">
               <span id="{{key}}-likeLogo" data-feather="thumbs-up" class="h-4 w-4"></span>
               <span id="{{key}}-likes" class="font-black text-xs">{{_count.likes}}</span>
             </button>
 
-            <div class="flex items-center gap-2 px-3 py-2 rounded-xl text-base-content/60 cursor-default">
+            <div class="btn btn-ghost btn-sm rounded-xl gap-2 text-info pointer-events-none opacity-80">
               <span data-feather="message-circle" class="h-4 w-4"></span>
               <span id="{{key}}-comments" class="font-black text-xs">{{_count.comments}}</span>
             </div>

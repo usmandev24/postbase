@@ -259,7 +259,7 @@ export default class PrismaPostsStore {
 
         debug("post key list read");
         const posts = await prisma.posts.findMany({
-          orderBy: { updatedAt: "desc" },
+          orderBy: { createdAt: "desc" },
           select: { key: true },
         });
         const keys = posts.map((post) => post.key);
@@ -288,7 +288,7 @@ export default class PrismaPostsStore {
       postKeys = await prisma.posts.findMany({
         where: { autherId },
         select: { key: true },
-        orderBy: { createdAt: "desc" },
+        orderBy: { updatedAt: "desc" },
       });
     }
     const posts = postKeys.map((post) => {

@@ -160,12 +160,10 @@
     </div>
 
     <div id="my-posts" class="tab-content">
-      <div class="grid grid-cols-1 gap-4">
+      <div class="grid grid-cols-1">
         {{#if postlist}}
-        <h2 class="text-sm opacity-70 font-semibold px-2  tracking-widest mb-5 flex items-center gap-4">
-          <span>
-            Recently Added
-          </span>
+        <h2 class="text-sm opacity-70 font-semibold px-2  tracking-wide uppercase mb-5 flex items-center gap-8">
+           <p><span class=" opacity-45 pr-2">Sort by:</span> Date Updated</p>
 
           {{#if postLength}}
           <span class="opacity-80 text-[10px] font-mono">Total: {{postLength}}</span>
@@ -191,7 +189,7 @@
                       {{auther.username}}
                     </a>
                     <div class="flex items-center gap-2 mt-0.5">
-                      <span data-time="{{createdAt}}"
+                      <span data-time="{{updatedAt}}"
                         class="updatedAt text-[11px] font-bold opacity-70 uppercase tracking-widest"></span>
                       <span class="w-1 h-1 rounded-full bg-base-300"></span>
                       <div class=" hidden sm:flex gap-2 flex-wrap">
