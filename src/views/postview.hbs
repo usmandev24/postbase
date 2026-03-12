@@ -62,8 +62,8 @@
         {{post.title}}
       </h1>
 
-      <div id="postBody" class="prose prose-neutral md:prose-lg max-w-none text-base-content/90 leading-relaxed 
-      prose-headings:font-black prose-headings:tracking-tighter prose-a:text-primary prose-strong:text-base-content">
+      <div id="postBody" class="prose prose-neutral  max-w-none text-base-content/90 leading-relaxed 
+      prose-headings:font-black prose-pre:bg-neutral/30 dark:prose-pre:text-secondary-content prose-pre:text-green-800 prose-h1:text-3xl prose-headings:tracking-tighte">
         {{{post.body}}}
       </div>
     </section>
@@ -303,6 +303,12 @@
     if (updateSpan.textContent == createSpan.textContent) {
       updateDiv.classList.add("hidden")
     }
+  })
+ 
+  const bodyLinks = postBody.querySelectorAll("a");
+  bodyLinks.forEach(e => {
+    e.setAttribute("target", "_blank")
+    
   })
 </script>
 {{> welcome }}
