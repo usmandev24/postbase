@@ -59,14 +59,14 @@
 
         <div class="bg-base-200/50 p-4  md-p-6 rounded-4xl border border-base-300/50 space-y-6">
           <div class="tabs tabs-boxed bg-base-300/30 w-fit join join-horizontal rounded-xl">
-            <button type="button" id="tab-upload" class="tab btn  btn-ghost join-item tab-active transition-all">Upload File</button>
+            <button type="button" id="tab-upload" class="tab btn  btn-ghost join-item tab-active transition-all">Upload
+              File</button>
             <button type="button" id="tab-url" class="tab  btn btn-ghost join-item  transition-all">Image URL</button>
           </div>
 
           <div id="urlInputArea" class="space-y-4 hidden">
             <input id="imageURL" type='text' name='imageURL' value='{{#if post.coverPic }}{{post.coverPic}}{{/if}}'
-              class="input w-full rounded-2xl bg-base-100"
-              placeholder="Paste image URL..." />
+              class="input w-full rounded-2xl bg-base-100" placeholder="Paste image URL..." />
           </div>
 
           <div id="uploadInputArea" class=" space-y-4">
@@ -84,7 +84,8 @@
 
           <div id="imagePreviewContainer"
             class=" {{#if post.coverPic}}{{else}} hidden {{/if}} relative group aspect-video w-full bg-base-100 rounded-2xl overflow-hidden border border-base-300">
-            <img id="imagePreview" src="{{#if post.coverPic}}{{post.coverPic}}{{/if}}" alt="Preview" class="w-full h-full object-cover" />
+            <img id="imagePreview" src="{{#if post.coverPic}}{{post.coverPic}}{{/if}}" alt="Preview"
+              class="w-full h-full object-cover" />
             <button type="button" id="clearImage"
               class="absolute top-4 right-4 btn btn-circle btn-sm btn-error shadow-lg">
               <span data-feather="x" class="h-4 w-4"></span>
@@ -220,4 +221,44 @@
       submit.disabled = false;
     }
   }
+  const customize = (fragment) => {
+    // 1. Collapse multiple consecutive <br> tags into one
+    const breaks = Array.from(fragment.querySelectorAll("br"));
+    breaks.forEach(br => {
+      if (br.previousSibling && (br.previousSibling.nodeName === "BR" ||
+        (br.previousSibling.nodeType === Node.TEXT_NODE && !br.previousSibling.textContent.trim()))) {
+        br.remove();
+      }
+    });
+
+    // 2. Remove <br> tags that are the ONLY child of a block (div/p)
+    // Tailwind Prose adds margin to the block, so the <br> is redundant spacing.
+    const blocks = fragment.querySelectorAll("div, p");
+    blocks.forEach(block => {
+      if (block.children.length === 1 && block.firstElementChild.tagName === "BR" && !block.textContent.trim()) {
+        block.firstElementChild.remove();
+      }
+    });
+
+    // 3. Remove trailing breaks at the end of blocks
+    blocks.forEach(block => {
+      if (block.lastChild && block.lastChild.nodeName === "BR") {
+        block.lastChild.remove();
+      }
+    });
+  };
+
+
+  document.addEventListener("trix-before-render", (event) => {
+    const defaultRender = event.render
+
+    event.render = function (editorElement, documentFragment) {
+      // modify the documentFragment…
+      customize(documentFragment)
+
+      // render it with the default rendering function
+      defaultRender(editorElement, documentFragment)
+    }
+  })
+
 </script>

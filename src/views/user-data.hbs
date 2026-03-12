@@ -161,7 +161,7 @@
                     {{#if coverPic}}
                         <img src="{{coverPic}}" class="cover-thumb" alt="Cover">
                     {{/if}}
-                    <div class="body-text">{{body}}</div>
+                    <div class="body-text">{{{body}}}</div>
                 </div>
             </div>
         {{else}}
@@ -174,7 +174,7 @@
                 <div class="metadata">
                     On Post: <strong>{{postkey}}</strong> | Date: {{createdAt}}
                 </div>
-                <div class="body-text" style="color: #333; border-left: 3px solid #eee; padding-left: 10px;">{{body}}</div>
+                <div class="body-text" style="color: #333; border-left: 3px solid #eee; padding-left: 10px;">{{{body}}}</div>
             </div>
         {{else}}
             <p class="metadata">No comment history recorded.</p>
@@ -195,7 +195,7 @@
                     {{#if coverPic}}
                         <img src="{{coverPic}}" class="cover-thumb" alt="Cover">
                     {{/if}}
-                    <div class="body-text">{{body}}</div>
+                    <div class="body-text">{{{body}}}</div>
                 </div>
             </div>
             {{else}}
