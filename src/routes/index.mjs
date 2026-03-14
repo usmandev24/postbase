@@ -29,7 +29,7 @@ router.get("/explore/:catgName", async (req, res, next) => {
   });
 
   const pageNo = req.query.page ? Number(req.query.page) : 1;
-  const sort = req.query.sort ? req.query.sort : "latest"
+  const sort = req.query.sort === "oldest" ? "oldest" : "latest";
   if (sort === "oldest") keylist.reverse()
   const limit = req.query.limit ? Number(req.query.limit) : 5;
 
@@ -96,7 +96,7 @@ router.get("/your-feed", async (req, res, next) => {
   const keylist = await catgsStore.getFeed(user.feedCatgs);
 
   const pageNo = req.query.page ? Number(req.query.page) : 1;
-  const sort = req.query.sort ? req.query.sort : "latest"
+  const sort = req.query.sort === "oldest" ? "oldest" : "latest";
   if (sort === "oldest") keylist.reverse()
   const limit = req.query.limit ? Number(req.query.limit) : 5;
 
