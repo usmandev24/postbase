@@ -20,7 +20,7 @@
   "author": "Usman Ghani",
   "license": "",
   "dependencies": {
-    "@dotenvx/dotenvx": "^1.52.0",
+    "@dotenvx/dotenvx": "^1.55.1",
     "@prisma/adapter-pg": "^7.4.2",
     "@prisma/client": "^7.5.0",
     "bcryptjs": "^3.0.3",
