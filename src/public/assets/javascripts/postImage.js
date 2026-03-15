@@ -106,7 +106,40 @@
     }
   };
 
+  const isSafeImageSrc = (src) => {
+    if (!src || typeof src !== 'string') {
+      return false;
+    }
+
+    const trimmed = src.trim();
+
+    // Allow blob URLs (created via URL.createObjectURL)
+    if (trimmed.startsWith('blob:')) {
+      return true;
+    }
+
+    // If it looks like an absolute URL, parse and validate scheme
+    if (/^[a-zA-Z][a-zA-Z0-9+.-]*:/.test(trimmed)) {
+      try {
+        const url = new URL(trimmed, window.location.origin);
+        return url.protocol === 'http:' || url.protocol === 'https:';
+      } catch (e) {
+        return false;
+      }
+    }
+
+    // Otherwise treat as relative URL/path and allow
+    return true;
+  };
+
   const showPreview = (src) => {
+    if (!isSafeImageSrc(src)) {
+      // Hide and clear preview if the source is not considered safe
+      previewImg.src = '';
+      previewContainer.classList.add('hidden');
+      return;
+    }
+
     previewImg.src = src;
     previewContainer.classList.remove('hidden');
   };
