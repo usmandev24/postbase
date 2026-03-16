@@ -21,7 +21,7 @@
   "license": "",
   "dependencies": {
     "@dotenvx/dotenvx": "^1.55.1",
-    "@prisma/adapter-pg": "^7.4.2",
+    "@prisma/adapter-pg": "^7.5.0",
     "@prisma/client": "^7.5.0",
     "bcryptjs": "^3.0.3",
     "connect-pg-simple": "^10.0.0",
