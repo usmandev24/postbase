@@ -227,17 +227,10 @@
     }
   }
   const customize = (fragment) => {
-    // 1. Collapse multiple consecutive <br> tags into one
-    const breaks = Array.from(fragment.querySelectorAll("br"));
-    breaks.forEach(br => {
-      if (br.previousSibling && (br.previousSibling.nodeName === "BR" ||
-        (br.previousSibling.nodeType === Node.TEXT_NODE && !br.previousSibling.textContent.trim()))) {
-        br.remove();
-      }
-    });
 
     // 2. Remove <br> tags that are the ONLY child of a block (div/p)
     // Tailwind Prose adds margin to the block, so the <br> is redundant spacing.
+    
     const blocks = fragment.querySelectorAll("div, p");
     blocks.forEach(block => {
       if (block.children.length === 1 && block.firstElementChild.tagName === "BR" && !block.textContent.trim()) {
@@ -251,6 +244,7 @@
         block.lastChild.remove();
       }
     });
+    
   };
 
 
