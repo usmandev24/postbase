@@ -50,7 +50,7 @@
     "serve-favicon": "^2.5.1",
     "superagent": "^10.3.0",
     "trix": "^2.1.17",
-    "ws": "^8.19.0"
+    "ws": "^8.20.0"
   },
   "devDependencies": {
     "@tailwindcss/cli": "^4.2.2",
