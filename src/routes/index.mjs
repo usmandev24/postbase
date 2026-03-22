@@ -44,11 +44,9 @@ router.get("/explore/:catgName", async (req, res, next) => {
   const postlist = await Promise.all(
     pageKeys.map((key) => postsStore.read(key)),
   );
-  console.log(sort, pageNo, limit)
-  console.log(req.url);
+  
   let baseUrl = req.url.substring(0, req.url.lastIndexOf("?"));
 
-  console.log(baseUrl)
   res.render("index", {
     title: "Exploring " + req.params.catgName,
     postlist: postlist,

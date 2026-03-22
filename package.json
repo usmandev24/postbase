@@ -4,18 +4,20 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "start": "dotenvx run --env-file=.env.production -- cross-env DEBUG=posts:* node ./dist/app.mjs",
-    "dev": "dotenvx run --env-file=.env.development -- cross-env DEBUG=posts:* tsx ./src/app.mjs",
+    "start": "dotenvx run --env-file=.env.production bun ./dist/app.mjs",
+    "dev": "dotenvx run --env-file=.env.development -- cross-env DEBUG=posts:* bun ./src/app.mjs",
     "watch": "tailwindcss -i ./src/public/assets/stylesheets/input.css -o ./src/public/assets/stylesheets/styles.css --watch --minify",
     "prisma": "dotenvx run --env-file=.env.development -- prisma --config=./src/prisma.config.ts",
+    
     "init-catg": "dotenvx run --env-file=.env.development -- tsx ./src/models/init-categories.mjs",
     "init-pics": "dotenvx run --env-file=.env.development -- tsx ./src/models/set-prisma-pics.mjs",
-    "build": "pnpm run pris-gen-pro; tsc; pnpm run copy-assets",
+    "build": "bun run pris-gen-pro; tsc; bun run copy-assets",
+
     "copy-assets": "cp -r src/public/assets dist/public; cp -r src/views dist/; cp -r src/partials dist/",
-    "pris-dbpull-pro": "dotenvx run --env-file=.env.production -- prisma db push --config=./src/prisma.config.ts",
-    "pris-gen-pro": "dotenvx run --env-file=.env.production -- prisma generate --config=./src/prisma.config.ts",
-    "init-catg-pro": "dotenvx run --env-file=.env.production -- node ./dist/models/init-categories.mjs ",
-    "init-pics-pro": "dotenvx run --env-file=.env.production -- node ./dist/models/set-prisma-pics.mjs"
+    "pris-dbpull-pro": "dotenvx run --env-file=.env.production -- bunx --bun prisma db push --config=./src/prisma.config.ts",
+    "pris-gen-pro": "dotenvx run --env-file=.env.production -- bunx --bun prisma generate --config=./src/prisma.config.ts",
+    "init-catg-pro": "dotenvx run --env-file=.env.production -- bun ./dist/models/init-categories.mjs ",
+    "init-pics-pro": "dotenvx run --env-file=.env.production -- bun ./dist/models/set-prisma-pics.mjs"
   },
   "author": "Usman Ghani",
   "license": "",

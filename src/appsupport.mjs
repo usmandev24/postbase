@@ -63,16 +63,67 @@ export function onListening() {
     const bind = typeof addr === 'string'
         ? 'pipe ' + addr
         : addr.port;
-    debug(`Listening on http://localhost:${bind}`);
+    console.log(`Listening on http://localhost:${bind}`);
 }
 
 
 export function handle404(req, res, next) {
     res.status(404)
-    res.render("404", {
-        user: req.user,
-        title: "404"
-    })
+    res.end(`
+        <!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>404 - Page Not Found</title>
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            text-align: center;
+        }
+        .container {
+            max-width: 500px;
+        }
+        h1 {
+            font-size: 6rem;
+            margin: 0;
+            
+        }
+        h2 {
+            margin: 10px 0;
+            font-weight: normal;
+        }
+        p {
+      
+        }
+        a {
+            display: inline-block;
+            margin-top: 20px;
+            padding: 10px 20px;
+            
+            border-radius: 5px;
+            font-weight: bold;
+        }
+        a:hover {
+           
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>404</h1>
+        <h2>Page Not Found</h2>
+        <p>The page you are looking for does not exist or has been moved.</p>
+        <a href="/">Go Back Home</a>
+    </div>
+</body>
+</html>`)
     
 }
 
