@@ -5,9 +5,9 @@
     "": {
       "name": "postbase",
       "dependencies": {
-        "@dotenvx/dotenvx": "^1.57.0",
-        "@prisma/adapter-pg": "^7.5.0",
-        "@prisma/client": "^7.5.0",
+        "@dotenvx/dotenvx": "^1.59.1",
+        "@prisma/adapter-pg": "^7.6.0",
+        "@prisma/client": "^7.6.0",
         "bcryptjs": "^3.0.3",
         "connect-pg-simple": "^10.0.0",
         "cookie-parser": "^1.4.7",
@@ -16,7 +16,7 @@
         "express": "^5.2.1",
         "express-session": "^1.19.0",
         "feather-icons": "^4.29.2",
-        "hbs": "^4.2.0",
+        "hbs": "^4.2.1",
         "http-errors": "^2.0.1",
         "jsonwebtoken": "^9.0.3",
         "keyv": "^5.6.0",
@@ -32,22 +32,22 @@
         "sanitize-html": "^2.17.2",
         "serve-favicon": "^2.5.1",
         "superagent": "^10.3.0",
-        "trix": "^2.1.17",
-        "ws": "^8.19.0",
+        "trix": "^2.1.18",
+        "ws": "^8.20.0",
       },
       "devDependencies": {
         "@tailwindcss/cli": "^4.2.2",
         "@tailwindcss/typography": "^0.5.19",
         "@types/express": "^5.0.6",
         "@types/multer": "^2.1.0",
-        "@types/node": "^24.12.0",
+        "@types/node": "^24.12.2",
         "@types/pg": "^8.20.0",
         "@types/sanitize-html": "^2.16.1",
         "daisyui": "^5.5.19",
         "nodemon": "^3.1.14",
         "prettier": "^3.8.1",
-        "prettier-plugin-tailwindcss": "^0.6.14",
-        "prisma": "^7.5.0",
+        "prettier-plugin-tailwindcss": "^0.7.2",
+        "prisma": "^7.6.0",
         "tailwindcss": "^4.2.2",
         "tsx": "^4.21.0",
         "typescript": "^5.9.3",
@@ -745,7 +745,7 @@
 
     "prettier": ["prettier@3.8.1", "", { "bin": { "prettier": "bin/prettier.cjs" } }, "sha512-UOnG6LftzbdaHZcKoPFtOcCKztrQ57WkHDeRD9t/PTQtmT0NHSeWWepj6pS0z/N7+08BHFDQVUrfmfMRcZwbMg=="],
 
-    "prettier-plugin-tailwindcss": ["prettier-plugin-tailwindcss@0.6.14", "", { "peerDependencies": { "prettier": "3.8.1" } }, "sha512-pi2e/+ZygeIqntN+vC573BcW5Cve8zUB0SSAGxqpB4f96boZF4M3phPVoOFCeypwkpRYdi7+jQ5YJJUwrkGUAg=="],
+    "prettier-plugin-tailwindcss": ["prettier-plugin-tailwindcss@0.7.2", "", { "peerDependencies": { "@ianvs/prettier-plugin-sort-imports": "*", "@prettier/plugin-hermes": "*", "@prettier/plugin-oxc": "*", "@prettier/plugin-pug": "*", "@shopify/prettier-plugin-liquid": "*", "@trivago/prettier-plugin-sort-imports": "*", "@zackad/prettier-plugin-twig": "*", "prettier": "^3.0", "prettier-plugin-astro": "*", "prettier-plugin-css-order": "*", "prettier-plugin-jsdoc": "*", "prettier-plugin-marko": "*", "prettier-plugin-multiline-arrays": "*", "prettier-plugin-organize-attributes": "*", "prettier-plugin-organize-imports": "*", "prettier-plugin-sort-imports": "*", "prettier-plugin-svelte": "*" }, "optionalPeers": ["@ianvs/prettier-plugin-sort-imports", "@prettier/plugin-hermes", "@prettier/plugin-oxc", "@prettier/plugin-pug", "@shopify/prettier-plugin-liquid", "@trivago/prettier-plugin-sort-imports", "@zackad/prettier-plugin-twig", "prettier-plugin-astro", "prettier-plugin-css-order", "prettier-plugin-jsdoc", "prettier-plugin-marko", "prettier-plugin-multiline-arrays", "prettier-plugin-organize-attributes", "prettier-plugin-organize-imports", "prettier-plugin-sort-imports", "prettier-plugin-svelte"] }, "sha512-LkphyK3Fw+q2HdMOoiEHWf93fNtYJwfamoKPl7UwtjFQdei/iIBoX11G6j706FzN3ymX9mPVi97qIY8328vdnA=="],
 
     "prisma": ["prisma@7.6.0", "", { "dependencies": { "@prisma/config": "7.6.0", "@prisma/dev": "0.24.3", "@prisma/engines": "7.6.0", "@prisma/studio-core": "0.27.3", "mysql2": "3.15.3", "postgres": "3.4.7" }, "peerDependencies": { "better-sqlite3": ">=9.0.0", "typescript": ">=5.4.0" }, "optionalPeers": ["better-sqlite3", "typescript"], "bin": { "prisma": "build/index.js" } }, "sha512-OKJIPT81K3+F+AayIkY/Y3mkF2NWoFh7lZApaaqPYy7EHILKdO0VsmGkP+hDKYTySHsFSyLWXm/JgcR1B8fY1Q=="],
 
