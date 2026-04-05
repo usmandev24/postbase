@@ -5,9 +5,9 @@
     "": {
       "name": "postbase",
       "dependencies": {
-        "@dotenvx/dotenvx": "^1.57.0",
-        "@prisma/adapter-pg": "^7.5.0",
-        "@prisma/client": "^7.5.0",
+        "@dotenvx/dotenvx": "^1.59.1",
+        "@prisma/adapter-pg": "^7.6.0",
+        "@prisma/client": "^7.6.0",
         "bcryptjs": "^3.0.3",
         "connect-pg-simple": "^10.0.0",
         "cookie-parser": "^1.4.7",
@@ -16,7 +16,7 @@
         "express": "^5.2.1",
         "express-session": "^1.19.0",
         "feather-icons": "^4.29.2",
-        "hbs": "^4.2.0",
+        "hbs": "^4.2.1",
         "http-errors": "^2.0.1",
         "jsonwebtoken": "^9.0.3",
         "keyv": "^5.6.0",
@@ -32,25 +32,25 @@
         "sanitize-html": "^2.17.2",
         "serve-favicon": "^2.5.1",
         "superagent": "^10.3.0",
-        "trix": "^2.1.17",
-        "ws": "^8.19.0",
+        "trix": "^2.1.18",
+        "ws": "^8.20.0",
       },
       "devDependencies": {
         "@tailwindcss/cli": "^4.2.2",
         "@tailwindcss/typography": "^0.5.19",
         "@types/express": "^5.0.6",
         "@types/multer": "^2.1.0",
-        "@types/node": "^24.12.0",
+        "@types/node": "^24.12.2",
         "@types/pg": "^8.20.0",
         "@types/sanitize-html": "^2.16.1",
         "daisyui": "^5.5.19",
         "nodemon": "^3.1.14",
         "prettier": "^3.8.1",
         "prettier-plugin-tailwindcss": "^0.6.14",
-        "prisma": "^7.5.0",
+        "prisma": "^7.6.0",
         "tailwindcss": "^4.2.2",
         "tsx": "^4.21.0",
-        "typescript": "^5.9.3",
+        "typescript": "^6.0.2",
       },
     },
   },
@@ -869,7 +869,7 @@
 
     "typedarray": ["typedarray@0.0.6", "", {}, "sha512-/aCDEGatGvZ2BIk+HmLf4ifCJFwvKFNb9/JeZPMulfgFracn9QFcAf5GO8B/mweUjSoblS5In0cWhqpfs/5PQA=="],
 
-    "typescript": ["typescript@5.9.3", "", { "bin": { "tsc": "bin/tsc", "tsserver": "bin/tsserver" } }, "sha512-jl1vZzPDinLr9eUt3J/t7V6FgNEw9QjvBPdysz9KfQDD41fQrC2Y4vKQdiaUpFT4bXlb1RHhLpp8wtm6M5TgSw=="],
+    "typescript": ["typescript@6.0.2", "", { "bin": { "tsc": "bin/tsc", "tsserver": "bin/tsserver" } }, "sha512-bGdAIrZ0wiGDo5l8c++HWtbaNCWTS4UTv7RaTH/ThVIgjkveJt83m74bBHMJkuCbslY8ixgLBVZJIOiQlQTjfQ=="],
 
     "uglify-js": ["uglify-js@3.19.3", "", { "bin": { "uglifyjs": "bin/uglifyjs" } }, "sha512-v3Xu+yuwBXisp6QYTcH4UbH+xYJXqnq2m/LtQVWKWzYc1iehYnLixoQDN9FH6/j9/oybfd6W9Ghwkl8+UMKTKQ=="],
 
@@ -958,6 +958,8 @@
     "readdirp/picomatch": ["picomatch@2.3.1", "", {}, "sha512-JU3teHTNjmE2VCGFzuY8EXzCDVwEqB2a8fsIvwaStHhAWJEeVd1o1QD80CU6+ZdEXXSLbSsuLwJjkCBWqRQUVA=="],
 
     "serve-favicon/fresh": ["fresh@0.5.2", "", {}, "sha512-zJ2mQYM18rEFOudeV4GShTGIQ7RbzA7ozbU9I/XBpm7kqgMywgmylMwXHxZJmkVoYkna9d2pVXVXPdYTP9ej8Q=="],
+
+    "valibot/typescript": ["typescript@5.9.3", "", { "bin": { "tsc": "bin/tsc", "tsserver": "bin/tsserver" } }, "sha512-jl1vZzPDinLr9eUt3J/t7V6FgNEw9QjvBPdysz9KfQDD41fQrC2Y4vKQdiaUpFT4bXlb1RHhLpp8wtm6M5TgSw=="],
 
     "c12/chokidar/readdirp": ["readdirp@4.1.2", "", {}, "sha512-GDhwkLfywWL2s6vEjyhri+eXmfH6j1L7JE27WhqLeYzoh/A3DBaYGEj2H/HFZCn/kMfim73FXxEJTw06WtxQwg=="],
 
